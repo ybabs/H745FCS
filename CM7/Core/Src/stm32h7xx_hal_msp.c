@@ -75,59 +75,15 @@ void HAL_MspInit(void)
 
   /* Peripheral interrupt init */
   /* CM4_SEV_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(CM4_SEV_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(CM4_SEV_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(CM4_SEV_IRQn);
   /* HSEM1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(HSEM1_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(HSEM1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(HSEM1_IRQn);
 
   /* USER CODE BEGIN MspInit 1 */
 
   /* USER CODE END MspInit 1 */
-}
-
-/**
-* @brief UART MSP Initialization
-* This function configures the hardware resources used in this example
-* @param huart: UART handle pointer
-* @retval None
-*/
-void HAL_UART_MspInit(UART_HandleTypeDef* huart)
-{
-  if(huart->Instance==USART3)
-  {
-  /* USER CODE BEGIN USART3_MspInit 0 */
-
-  /* USER CODE END USART3_MspInit 0 */
-    /* Peripheral clock enable */
-    __HAL_RCC_USART3_CLK_ENABLE();
-  /* USER CODE BEGIN USART3_MspInit 1 */
-
-  /* USER CODE END USART3_MspInit 1 */
-  }
-
-}
-
-/**
-* @brief UART MSP De-Initialization
-* This function freeze the hardware resources used in this example
-* @param huart: UART handle pointer
-* @retval None
-*/
-void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
-{
-  if(huart->Instance==USART3)
-  {
-  /* USER CODE BEGIN USART3_MspDeInit 0 */
-
-  /* USER CODE END USART3_MspDeInit 0 */
-    /* Peripheral clock disable */
-    __HAL_RCC_USART3_CLK_DISABLE();
-  /* USER CODE BEGIN USART3_MspDeInit 1 */
-
-  /* USER CODE END USART3_MspDeInit 1 */
-  }
-
 }
 
 /* USER CODE BEGIN 1 */
