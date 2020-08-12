@@ -22,13 +22,19 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
+#include <stdio.h>
 #include "cmsis_os.h"
-#include "pwm.h"
+#include "lsm303ldhc.h"
 
 /* Private includes ----------------------------------------------------------*/
+#include "usart.h"
+#include <string.h>
 /* USER CODE BEGIN Includes */
-uint16_t duty_cycle = 1060;
-Motor motor_pwm;
+//uint16_t duty_cycle = 1060;
+//Motor motor_pwm;
+//LSM303AccData* data;
+int16_t data[3];
+uint8_t buf[30];
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -116,15 +122,20 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	  motor_pwm.motor1 = duty_cycle;
-	  SetMotorPWM(&motor_pwm);
-	  duty_cycle+=50;
-	 if(duty_cycle > 1900)
-	 {
-		 duty_cycle = 1000;
-	 }
+//	  motor_pwm.motor1 = duty_cycle;
+//	  SetMotorPWM(&motor_pwm);
+//	  duty_cycle+=50;
+//	 if(duty_cycle > 1900)
+//	 {
+//		 duty_cycle = 1000;
+//	 }
+	  LSM303ReadAcc(data);
+	  sprintf ((char*)buf, "X:% 06d Y:% 06d Z:% 06d \r\n", data[0], data[1], data[2]);
 
-    osDelay(1000);
+	  	 HAL_UART_Transmit(&huart3, buf, strlen((char*)buf), HAL_MAX_DELAY);
+	  	//LED2_ON();
+
+    osDelay(250);
   }
   /* USER CODE END StartDefaultTask */
 }

@@ -1,0 +1,12 @@
+lsm303ldhc.c:9:6:LSM303StartUp	8	static
+lsm303ldhc.c:27:6:LSM303AccInit	16	static
+lsm303ldhc.c:49:6:FilterConfig	24	static
+lsm303ldhc.c:62:6:LSM303MagInit	4	static
+lsm303ldhc.c:67:6:LSM303Write	16	static
+lsm303ldhc.c:73:9:LSM303Read	16	static
+lsm303ldhc.c:78:6:AccGetXYZ	40	static
+lsm303ldhc.c:155:6:LSM303ReadAcc	24	static
+lsm303ldhc.c:172:9:I2CRead	40	static
+lsm303ldhc.c:191:6:I2CWrite	40	static
+lsm303ldhc.c:206:6:ErrorHandler	8	static
+lsm303ldhc.c:211:9:ReadSensorID	16	static
