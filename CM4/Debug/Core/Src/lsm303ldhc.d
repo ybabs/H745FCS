@@ -31,7 +31,7 @@ Core/Src/lsm303ldhc.o: ../Core/Src/lsm303ldhc.c ../Core/Inc/lsm303ldhc.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- ../Core/Inc/i2c.h ../Core/Inc/main.h ../Core/Inc/usart.h \
+ ../Core/Inc/i2c.h ../Core/Inc/main.h \
  C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc/common.h
 
 ../Core/Inc/lsm303ldhc.h:
@@ -103,7 +103,5 @@ Core/Src/lsm303ldhc.o: ../Core/Src/lsm303ldhc.c ../Core/Inc/lsm303ldhc.h \
 ../Core/Inc/i2c.h:
 
 ../Core/Inc/main.h:
-
-../Core/Inc/usart.h:
 
 C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc/common.h:

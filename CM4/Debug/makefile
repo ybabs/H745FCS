@@ -49,7 +49,7 @@ all: H745ZI-Q_CM4.elf secondary-outputs
 
 # Tool invocations
 H745ZI-Q_CM4.elf: $(OBJS) $(USER_OBJS) C:\Users\Home\STM32CubeIDE\workspace_1.1.0\H745ZI-Q\CM4\STM32H745ZITX_FLASH.ld
-	arm-none-eabi-gcc -o "H745ZI-Q_CM4.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Home\STM32CubeIDE\workspace_1.1.0\H745ZI-Q\CM4\STM32H745ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="H745ZI-Q_CM4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "H745ZI-Q_CM4.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Home\STM32CubeIDE\workspace_1.1.0\H745ZI-Q\CM4\STM32H745ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="H745ZI-Q_CM4.map" -Wl,--gc-sections -static -u_printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

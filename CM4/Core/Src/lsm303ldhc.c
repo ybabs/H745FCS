@@ -1,3 +1,6 @@
+// Adapted from https://github.com/JoeMerten/Stm32-Tools-Evaluation/tree/master/Stm32F4-SW-cubehal-source-freertos/Utilities/Components
+
+
 #include "lsm303ldhc.h"
 #include "common.h"
 
@@ -61,7 +64,20 @@ void FilterConfig(uint8_t FilterStruct)
 
 void LSM303MagInit()
 {
-	//uint8_t ctrl = OD
+	uint8_t ctrl = 0x00;
+	uint32_t InitStruct = 0x00;
+
+	InitStruct |= (TEMP_ENABLE | ODR_220HZ );
+	InitStruct |= (LSM303_MAGGAIN_4_0) << 8;
+	InitStruct |=  (CONTINUOUS_CONVERSION) << 16;
+
+	ctrl = (uint8_t)InitStruct;
+	LSM303Write(LSM303_MAG_ADDR, CRA_REG_M, ctrl);
+	ctrl = (uint8_t) (InitStruct << 8);
+	LSM303Write(LSM303_MAG_ADDR, CRB_REG_M, ctrl);
+	ctrl = (uint8_t) (InitStruct << 16);
+	LSM303Write(LSM303_MAG_ADDR, MR_REG_M, ctrl);
+
 }
 
 void LSM303Write(uint16_t DeviceAddr, uint8_t reg, uint8_t value)
@@ -140,17 +156,7 @@ void AccGetXYZ(int16_t* pData)
 
 }
 
-//void LSM303ReadAcc(LSM303AccData* data)
-//{
-//	int16_t buffer[3] = {0};
-//	//LSM303AccData* sensor_acc = {0};
-//
-//	AccGetXYZ(buffer);
-//	data->x = buffer[0];
-//	data->y = buffer[1];
-//	data->z = buffer[2];
-//
-//}
+
 
 void LSM303ReadAcc(int16_t* pData)
 {
@@ -167,6 +173,89 @@ void LSM303ReadAcc(int16_t* pData)
 
 }
 
+void LSM303ReadMag(int16_t* pData)
+{
+	int16_t buffer[3] = {0};
+
+	static int16_t tmp16;
+
+	MagGetXYZ(buffer);
+
+	// correct for overflow
+	tmp16 = buffer[0];
+	if(tmp16 != -4096)
+	{
+		pData[0] = tmp16;
+	}
+
+	tmp16 = buffer[1];
+	if(tmp16 != -4096)
+	{
+		pData[1] = tmp16;
+	}
+
+	tmp16 = buffer[2];
+	if(tmp16 != -4096)
+	{
+		pData[2] = tmp16;
+	}
+
+
+}
+
+float_t LSM303GetTemp()
+{
+	uint8_t TEMP_H;
+	uint8_t TEMP_L;
+	float_t temp;
+	uint16_t pData;
+
+	TEMP_H = LSM303Read(LSM303_MAG_ADDR, TEMP_OUT_H_M);
+	TEMP_L = LSM303Read(LSM303_MAG_ADDR, TEMP_OUT_L_M);
+
+    pData = (TEMP_H << 8);
+    pData |= TEMP_L;
+
+    // ALternatively
+    // pData = (uint16_t)(TEMP_H << 4 | TEMP_L >> 4
+
+
+	pData = ((uint16_t) pData >> 4);
+
+	//2s complement
+	if(pData > 0xF77 )
+	{
+		pData |= 0xF000;
+	}
+   // pData = ((uint16_t) ((TEMP_H << 8) | TEMP_L) >> 4);
+
+	temp =  (pData / 256.0) + 20;
+    // temp = pData / 256.0;
+
+     return temp;
+}
+
+
+void MagGetXYZ(int16_t* pData)
+{
+	uint8_t buffer[6];
+	uint8_t i = 0;
+
+	buffer[0] = LSM303Read(LSM303_MAG_ADDR, OUT_X_H_M);
+	buffer[1] = LSM303Read(LSM303_MAG_ADDR, OUT_X_L_M);
+	buffer[2] = LSM303Read(LSM303_MAG_ADDR, OUT_Y_H_M);
+	buffer[3] = LSM303Read(LSM303_MAG_ADDR, OUT_Y_L_M);
+	buffer[4] = LSM303Read(LSM303_MAG_ADDR, OUT_Z_H_M);
+	buffer[5] = LSM303Read(LSM303_MAG_ADDR, OUT_Z_L_M);
+
+	for(i = 0; i < 3; i++)
+	{
+		if(pData[i] != -4096 )
+		{
+			pData[i] = ((uint16_t)((uint16_t)buffer[2*i] << 8) + buffer[2*i + 1]);
+		}
+	}
+}
 
 
 uint8_t I2CRead(uint16_t Address, uint8_t reg)
@@ -212,6 +301,7 @@ uint8_t ReadSensorID (uint16_t DeviceAddr, uint8_t reg)
 {
 	return I2CRead(DeviceAddr, reg);
 }
+
 
 
 

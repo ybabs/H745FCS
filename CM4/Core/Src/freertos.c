@@ -34,7 +34,9 @@
 //Motor motor_pwm;
 //LSM303AccData* data;
 int16_t data[3];
+int16_t mag_data[3];
 uint8_t buf[30];
+float_t temp;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -129,8 +131,14 @@ void StartDefaultTask(void *argument)
 //	 {
 //		 duty_cycle = 1000;
 //	 }
-	  LSM303ReadAcc(data);
-	  sprintf ((char*)buf, "X:% 06d Y:% 06d Z:% 06d \r\n", data[0], data[1], data[2]);
+	  //LSM303ReadAcc(data);
+	  //LSM303ReadMag(mag_data);
+	 temp =  LSM303GetTemp();
+	  temp*=100;
+
+	 // sprintf ((char*)buf, "X:% 06d Y:% 06d Z:% 06d \r\n", data[0], data[1], data[2]);
+	 // sprintf ((char*)buf, "X:% 06d Y:% 06d Z:% 06d \r\n", mag_data[0], mag_data[1], mag_data[2]);
+	  sprintf ((char*)buf, ":%u.%02u C\r\n", (unsigned int) temp/100, (unsigned int)temp % 100);
 
 	  	 HAL_UART_Transmit(&huart3, buf, strlen((char*)buf), HAL_MAX_DELAY);
 	  	//LED2_ON();

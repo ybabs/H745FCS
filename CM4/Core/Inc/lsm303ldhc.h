@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include<stm32h7xx_hal.h>
 #include "i2c.h"
-#include "usart.h"
 
 /* I2C Addresses */
 #define LSM303_ACC_ADDR    0x32   //  0011001x Last Bit R/W
@@ -141,7 +140,6 @@ typedef enum{
 
 
 /***************************MAgnetometer Register Data */
-
 typedef enum{
 	CRA_REG_M  = 	0x00,
 	CRB_REG_M  = 	0x01,
@@ -159,8 +157,7 @@ typedef enum{
 	TEMP_OUT_H_M = 	0x31,
 	TEMP_OUT_L_M = 	0x32
 
-}LSM303MagRegisters;
-
+}L3GD20MagRegisters;
 
 typedef enum{
 	ODR_0_75HZ = ((uint8_t)0x00),
@@ -172,6 +169,9 @@ typedef enum{
 	ODR_75HZ =  ((uint8_t)0x18),
 	ODR_220HZ =  ((uint8_t)0x1C)
 } DataRateMagConfig;
+
+
+
 
 typedef enum
 {
@@ -201,6 +201,8 @@ typedef enum{
  M_SENSITIVITY_Z_8_1Ga    =  205   /*!< magnetometer Z axis sensitivity for 8.1 Ga full scale [LSB/Ga] */
 }MagSensitivity;
 
+
+
 typedef enum{
 	CONTINUOUS_CONVERSION = 0x00,
 	SINGLE_CONVERSION = 0x01,
@@ -220,7 +222,7 @@ typedef struct{
 
 HAL_StatusTypeDef ret;
 
-void  LSM303AccInit();
+void  LSM303AccInit(void);
 void  LSM303MagInit(void);
 uint8_t  ReadSensorID (uint16_t DeviceAddr, uint8_t reg);
 
@@ -229,7 +231,10 @@ uint8_t LSM303Read(uint16_t DeviceAddr, uint8_t reg);
 void LSM303StartUp(void);
 void FilterConfig(uint8_t FilterStruct);
 void AccGetXYZ(int16_t* pData);
-//void LSM303ReadAcc(LSM303AccData* data);
+void MagGetXYZ(int16_t* pData);
 void LSM303ReadAcc(int16_t* pData);
+void LSM303ReadMag(int16_t* pData);
+float_t LSM303GetTemp();
+
 
 #endif
