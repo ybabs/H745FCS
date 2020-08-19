@@ -24,6 +24,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "l3gd20.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -107,8 +108,9 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM1_Init();
   MX_I2C1_Init();
-  LSM303AccInit();
-  LSM303MagInit();
+  L3GD20Startup();
+  //LSM303AccInit();
+  //LSM303MagInit();
   /* USER CODE BEGIN 2 */
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);

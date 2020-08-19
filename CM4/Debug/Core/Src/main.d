@@ -43,7 +43,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/Inc/i2c.h ../Core/Inc/main.h ../Core/Inc/tim.h \
- ../Core/Inc/usart.h ../Core/Inc/gpio.h \
+ ../Core/Inc/usart.h ../Core/Inc/gpio.h ../Core/Inc/l3gd20.h \
+ ../Core/Inc/i2c.h \
  C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc/common.h
 
 ../Core/Inc/main.h:
@@ -143,5 +144,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/usart.h:
 
 ../Core/Inc/gpio.h:
+
+../Core/Inc/l3gd20.h:
+
+../Core/Inc/i2c.h:
 
 C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc/common.h:

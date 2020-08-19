@@ -4,9 +4,7 @@
 #include "lsm303ldhc.h"
 #include "common.h"
 
-uint8_t I2CRead(uint16_t Address, uint8_t reg);
-void I2CWrite(uint16_t Address, uint8_t reg, uint8_t value);
-void ErrorHandler(void);
+
 
 
 void LSM303StartUp(void)
@@ -258,49 +256,6 @@ void MagGetXYZ(int16_t* pData)
 }
 
 
-uint8_t I2CRead(uint16_t Address, uint8_t reg)
-{
-	HAL_StatusTypeDef status;
-	uint8_t value = 0x00;
-
-	status = HAL_I2C_Mem_Read(&hi2c1, Address, reg, I2C_MEMADD_SIZE_8BIT, &value, 1, 50);
-
-	if(status !=HAL_OK)
-	{
-		ErrorHandler();
-	}
-//	else
-//	{
-//		LED1_ON();
-//	}
-
-	return value;
-}
-
-void I2CWrite(uint16_t Address, uint8_t reg, uint8_t value)
-{
-	HAL_StatusTypeDef status;
-	status = HAL_I2C_Mem_Write(&hi2c1, Address, (uint16_t) reg, I2C_MEMADD_SIZE_8BIT, &value, 1, 50);
-	if(status != HAL_OK)
-	{
-		ErrorHandler();
-	}
-	else
-	{
-		LED1_ON();
-	}
-
-}
-
-void ErrorHandler(void)
-{
-	LED2_ON();
-}
-
-uint8_t ReadSensorID (uint16_t DeviceAddr, uint8_t reg)
-{
-	return I2CRead(DeviceAddr, reg);
-}
 
 
 

@@ -19,6 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "i2c.h"
+#include "common.h"
 
 /* USER CODE BEGIN 0 */
 
@@ -114,6 +115,50 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
 }
 
 /* USER CODE BEGIN 1 */
+uint8_t I2CRead(uint16_t Address, uint8_t reg)
+{
+	HAL_StatusTypeDef status;
+	uint8_t value = 0x00;
+
+	status = HAL_I2C_Mem_Read(&hi2c1, Address, reg, I2C_MEMADD_SIZE_8BIT, &value, 1, 50);
+
+	if(status !=HAL_OK)
+	{
+		ErrorHandler();
+	}
+//	else
+//	{
+//		LED1_ON();
+//	}
+
+	return value;
+}
+
+void I2CWrite(uint16_t Address, uint8_t reg, uint8_t value)
+{
+	HAL_StatusTypeDef status;
+	status = HAL_I2C_Mem_Write(&hi2c1, Address, (uint16_t) reg, I2C_MEMADD_SIZE_8BIT, &value, 1, 50);
+	if(status != HAL_OK)
+	{
+		ErrorHandler();
+	}
+	else
+	{
+		LED1_ON();
+	}
+
+}
+
+void ErrorHandler(void)
+{
+	LED3_ON();
+}
+
+uint8_t ReadSensorID (uint16_t DeviceAddr, uint8_t reg)
+{
+	return I2CRead(DeviceAddr, reg);
+}
+
 
 /* USER CODE END 1 */
 

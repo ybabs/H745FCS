@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include "cmsis_os.h"
 #include "lsm303ldhc.h"
+#include "l3gd20.h"
 
 /* Private includes ----------------------------------------------------------*/
 #include "usart.h"
@@ -33,9 +34,10 @@
 //uint16_t duty_cycle = 1060;
 //Motor motor_pwm;
 //LSM303AccData* data;
-int16_t data[3];
-int16_t mag_data[3];
+//int16_t data[3];
+//int16_t mag_data[3];
 uint8_t buf[30];
+//float_t temp;
 float_t temp;
 /* USER CODE END Includes */
 
@@ -133,17 +135,19 @@ void StartDefaultTask(void *argument)
 //	 }
 	  //LSM303ReadAcc(data);
 	  //LSM303ReadMag(mag_data);
-	 temp =  LSM303GetTemp();
-	  temp*=100;
+ 	 //temp =  LSM303GetTemp();
+	  temp = L3GD20GetTemp();
+      temp*=100;
 
-	 // sprintf ((char*)buf, "X:% 06d Y:% 06d Z:% 06d \r\n", data[0], data[1], data[2]);
-	 // sprintf ((char*)buf, "X:% 06d Y:% 06d Z:% 06d \r\n", mag_data[0], mag_data[1], mag_data[2]);
-	  sprintf ((char*)buf, ":%u.%02u C\r\n", (unsigned int) temp/100, (unsigned int)temp % 100);
-
-	  	 HAL_UART_Transmit(&huart3, buf, strlen((char*)buf), HAL_MAX_DELAY);
+      //temp = L3GD20Startup();
+//	 // sprintf ((char*)buf, "X:% 06d Y:% 06d Z:% 06d \r\n", data[0], data[1], data[2]);
+//	 // sprintf ((char*)buf, "X:% 06d Y:% 06d Z:% 06d \r\n", mag_data[0], mag_data[1], mag_data[2]);
+      sprintf ((char*)buf, ":%u.%02u C\r\n", (unsigned int) temp/100, (unsigned int)temp % 100);
+//
+      HAL_UART_Transmit(&huart3, buf, strlen((char*)buf), HAL_MAX_DELAY);
 	  	//LED2_ON();
 
-    osDelay(250);
+    osDelay(1000);
   }
   /* USER CODE END StartDefaultTask */
 }
