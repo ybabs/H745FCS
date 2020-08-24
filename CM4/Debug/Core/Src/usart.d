@@ -31,7 +31,9 @@ Core/Src/usart.o: ../Core/Src/usart.c ../Core/Inc/usart.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
- ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
+ ../Core/Inc/lsm303ldhc.h ../Core/Inc/i2c.h ../Core/Inc/l3gd20.h \
+ ../Core/Inc/bmp180.h
 
 ../Core/Inc/usart.h:
 
@@ -100,3 +102,11 @@ Core/Src/usart.o: ../Core/Src/usart.c ../Core/Inc/usart.h \
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
+
+../Core/Inc/lsm303ldhc.h:
+
+../Core/Inc/i2c.h:
+
+../Core/Inc/l3gd20.h:
+
+../Core/Inc/bmp180.h:

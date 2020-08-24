@@ -29,6 +29,9 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
+#include "lsm303ldhc.h"
+#include "l3gd20.h"
+#include "bmp180.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -64,7 +67,6 @@ void Error_Handler(void);
 #define LD1_Pin GPIO_PIN_0
 #define LD1_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

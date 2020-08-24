@@ -25,6 +25,8 @@
 #include "usart.h"
 #include "gpio.h"
 #include "l3gd20.h"
+#include "lsm303ldhc.h"
+#include "bmp180.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -108,7 +110,8 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM1_Init();
   MX_I2C1_Init();
-  L3GD20Startup();
+
+  //L3GD20Init();
   //LSM303AccInit();
   //LSM303MagInit();
   /* USER CODE BEGIN 2 */

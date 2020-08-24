@@ -1,4 +1,4 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+Core/Src/bmp180.o: ../Core/Src/bmp180.c ../Core/Inc/bmp180.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -31,25 +31,11 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- ../Core/Inc/lsm303ldhc.h ../Core/Inc/i2c.h ../Core/Inc/main.h \
+ ../Core/Inc/i2c.h ../Core/Inc/main.h ../Core/Inc/lsm303ldhc.h \
  ../Core/Inc/l3gd20.h ../Core/Inc/bmp180.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- ../Core/Inc/FreeRTOSConfig.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- ../Core/Inc/i2c.h ../Core/Inc/tim.h ../Core/Inc/usart.h \
- ../Core/Inc/gpio.h ../Core/Inc/l3gd20.h ../Core/Inc/lsm303ldhc.h \
- ../Core/Inc/bmp180.h \
  C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc/common.h
 
-../Core/Inc/main.h:
+../Core/Inc/bmp180.h:
 
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 
@@ -115,49 +101,13 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 
-../Core/Inc/lsm303ldhc.h:
-
 ../Core/Inc/i2c.h:
 
 ../Core/Inc/main.h:
 
-../Core/Inc/l3gd20.h:
-
-../Core/Inc/bmp180.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
-
-../Core/Inc/FreeRTOSConfig.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-
-../Core/Inc/i2c.h:
-
-../Core/Inc/tim.h:
-
-../Core/Inc/usart.h:
-
-../Core/Inc/gpio.h:
-
-../Core/Inc/l3gd20.h:
-
 ../Core/Inc/lsm303ldhc.h:
+
+../Core/Inc/l3gd20.h:
 
 ../Core/Inc/bmp180.h:
 

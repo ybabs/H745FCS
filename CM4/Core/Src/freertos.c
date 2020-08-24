@@ -24,8 +24,7 @@
 #include "main.h"
 #include <stdio.h>
 #include "cmsis_os.h"
-#include "lsm303ldhc.h"
-#include "l3gd20.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 #include "usart.h"
@@ -35,10 +34,15 @@
 //Motor motor_pwm;
 //LSM303AccData* data;
 //int16_t data[3];
+bmp180Sensor bmpSensor ;
 //int16_t mag_data[3];
 uint8_t buf[30];
 //float_t temp;
 float_t temp;
+float_t pressure;
+float_t altitude;
+float_t data[3];
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -84,7 +88,7 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-
+	BMP180InitDevice(&bmpSensor);
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -134,17 +138,23 @@ void StartDefaultTask(void *argument)
 //		 duty_cycle = 1000;
 //	 }
 	  //LSM303ReadAcc(data);
+	//  L3GD20ReadXYZAngRate(data);
 	  //LSM303ReadMag(mag_data);
  	 //temp =  LSM303GetTemp();
-	  temp = L3GD20GetTemp();
-      temp*=100;
+	  //temp = L3GD20GetTemp();
+      //temp*=100;
+	  BMP180ReadTemperature(&bmpSensor);
+	  temp = bmpSensor.temperature;
 
+	  //float temp = data[0];
+	  //temp*=100;
       //temp = L3GD20Startup();
-//	 // sprintf ((char*)buf, "X:% 06d Y:% 06d Z:% 06d \r\n", data[0], data[1], data[2]);
+	  //snprintf((char*)buf, sizeof(buf), "X: %.2f, Y: %.2f Z: %.2f", data[0], data[1], data[2]);
+     	// sprintf ((char*)buf, "X:%f Y:%f Z:%f \r\n", data[0], data[1], data[2]);
 //	 // sprintf ((char*)buf, "X:% 06d Y:% 06d Z:% 06d \r\n", mag_data[0], mag_data[1], mag_data[2]);
-      sprintf ((char*)buf, ":%u.%02u C\r\n", (unsigned int) temp/100, (unsigned int)temp % 100);
+      //sprintf ((char*)buf, ":%u.%02u \r\n", (unsigned int) temp/100, (unsigned int)temp % 100);
 //
-      HAL_UART_Transmit(&huart3, buf, strlen((char*)buf), HAL_MAX_DELAY);
+      //HAL_UART_Transmit(&huart3, buf, strlen((char*)buf), HAL_MAX_DELAY);
 	  	//LED2_ON();
 
     osDelay(1000);

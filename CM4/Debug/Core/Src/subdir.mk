@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/Src/bmp180.c \
 ../Core/Src/freertos.c \
 ../Core/Src/gpio.c \
 ../Core/Src/i2c.c \
@@ -20,6 +21,7 @@ C_SRCS += \
 ../Core/Src/usart.c 
 
 OBJS += \
+./Core/Src/bmp180.o \
 ./Core/Src/freertos.o \
 ./Core/Src/gpio.o \
 ./Core/Src/i2c.o \
@@ -36,6 +38,7 @@ OBJS += \
 ./Core/Src/usart.o 
 
 C_DEPS += \
+./Core/Src/bmp180.d \
 ./Core/Src/freertos.d \
 ./Core/Src/gpio.d \
 ./Core/Src/i2c.d \
@@ -53,6 +56,8 @@ C_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
+Core/Src/bmp180.o: ../Core/Src/bmp180.c
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DCORE_CM4 -DDEBUG -DSTM32H745xx -c -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I"C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc" -I../Core/Inc -I../../Middlewares/Third_Party/FreeRTOS/Source/include -I../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../../Drivers/STM32H7xx_HAL_Driver/Inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/bmp180.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Core/Src/freertos.o: ../Core/Src/freertos.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DCORE_CM4 -DDEBUG -DSTM32H745xx -c -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I"C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc" -I../Core/Inc -I../../Middlewares/Third_Party/FreeRTOS/Source/include -I../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../../Drivers/STM32H7xx_HAL_Driver/Inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/freertos.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Core/Src/gpio.o: ../Core/Src/gpio.c

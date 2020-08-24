@@ -49,7 +49,7 @@ void L3GD20Init(void)
 
 void GyroFilterConfig(uint8_t FilterStruct)
 {
-	uint8_t tmpreg;
+	uint8_t tmpreg = 0x00;
 
 	L3GD20Read(L3GD20_ADDRESS, CTRL2_REG);
 
@@ -80,12 +80,12 @@ void  L3GD20ReadXYZAngRate(float *pfData)
 
 	ctrlx = L3GD20Read(L3GD20_ADDRESS, CTRL4_REG);
 
-	buffer[0] = LSM303Read(L3GD20_ADDRESS, OUT_X_L_REG);
-	buffer[1] = LSM303Read(L3GD20_ADDRESS, OUT_X_H_REG);
-	buffer[2] = LSM303Read(L3GD20_ADDRESS, OUT_Y_L_REG);
-	buffer[3] = LSM303Read(L3GD20_ADDRESS, OUT_Y_H_REG);
-	buffer[4] = LSM303Read(L3GD20_ADDRESS, OUT_Z_L_REG);
-	buffer[5] = LSM303Read(L3GD20_ADDRESS, OUT_Z_H_REG);
+	buffer[0] = L3GD20Read(L3GD20_ADDRESS, OUT_X_L_REG);
+	buffer[1] = L3GD20Read(L3GD20_ADDRESS, OUT_X_H_REG);
+	buffer[2] = L3GD20Read(L3GD20_ADDRESS, OUT_Y_L_REG);
+	buffer[3] = L3GD20Read(L3GD20_ADDRESS, OUT_Y_H_REG);
+	buffer[4] = L3GD20Read(L3GD20_ADDRESS, OUT_Z_L_REG);
+	buffer[5] = L3GD20Read(L3GD20_ADDRESS, OUT_Z_H_REG);
 
 	if(!(ctrlx & L3GD20_BLE_MSB))
 	{
