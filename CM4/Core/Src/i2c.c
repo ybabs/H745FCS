@@ -19,10 +19,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "i2c.h"
-#include "common.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "common.h"
 /* USER CODE END 0 */
 
 I2C_HandleTypeDef hi2c1;
@@ -144,7 +143,7 @@ void I2CWrite(uint16_t Address, uint8_t reg, uint8_t value)
 	}
 	else
 	{
-		LED1_ON();
+		//LED1_ON();
 	}
 
 }

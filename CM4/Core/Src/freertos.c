@@ -22,26 +22,25 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
-#include <stdio.h>
 #include "cmsis_os.h"
 
-
 /* Private includes ----------------------------------------------------------*/
-#include "usart.h"
-#include <string.h>
 /* USER CODE BEGIN Includes */
+#include "common.h"
+//#include "ublox.h"
+//#include "usart.h"
 //uint16_t duty_cycle = 1060;
 //Motor motor_pwm;
 //LSM303AccData* data;
 //int16_t data[3];
-bmp180Sensor bmpSensor ;
-//int16_t mag_data[3];
-uint8_t buf[30];
+//bmp180Sensor bmpSensor ;
+////int16_t mag_data[3];
+//uint8_t buf[30];
+////float_t temp;
 //float_t temp;
-float_t temp;
-float_t pressure;
-float_t altitude;
-float_t data[3];
+//float_t pressure;
+//float_t altitude;
+//float_t data[3];
 
 /* USER CODE END Includes */
 
@@ -88,7 +87,7 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-	BMP180InitDevice(&bmpSensor);
+	//BMP180InitDevice(&bmpSensor);
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -143,8 +142,8 @@ void StartDefaultTask(void *argument)
  	 //temp =  LSM303GetTemp();
 	  //temp = L3GD20GetTemp();
       //temp*=100;
-	  BMP180ReadTemperature(&bmpSensor);
-	  temp = bmpSensor.temperature;
+//	  BMP180ReadTemperature(&bmpSensor);
+//	  temp = bmpSensor.temperature;
 
 	  //float temp = data[0];
 	  //temp*=100;
@@ -164,7 +163,7 @@ void StartDefaultTask(void *argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-     
+
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

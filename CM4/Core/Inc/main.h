@@ -29,13 +29,12 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
-#include "lsm303ldhc.h"
-#include "l3gd20.h"
-#include "bmp180.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "lsm303ldhc.h"
+#include "l3gd20.h"
+#include "bmp180.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -63,10 +62,9 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define LD2_Pin GPIO_PIN_1
 #define LD2_GPIO_Port GPIOE
-
+/* USER CODE BEGIN Private defines */
 #define LD1_Pin GPIO_PIN_0
 #define LD1_GPIO_Port GPIOB
-/* USER CODE BEGIN Private defines */
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

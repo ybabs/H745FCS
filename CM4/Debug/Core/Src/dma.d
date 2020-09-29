@@ -1,14 +1,4 @@
-Core/Src/freertos.o: ../Core/Src/freertos.c \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- ../Core/Inc/FreeRTOSConfig.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../Core/Inc/main.h \
+Core/Src/dma.o: ../Core/Src/dma.c ../Core/Inc/dma.h ../Core/Inc/main.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -41,29 +31,10 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- ../Core/Inc/lsm303ldhc.h ../Core/Inc/i2c.h ../Core/Inc/main.h \
- ../Core/Inc/l3gd20.h ../Core/Inc/bmp180.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
- ../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc/common.h
+ ../Core/Inc/lsm303ldhc.h ../Core/Inc/i2c.h ../Core/Inc/l3gd20.h \
+ ../Core/Inc/bmp180.h
 
-../../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
-
-../Core/Inc/FreeRTOSConfig.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
+../Core/Inc/dma.h:
 
 ../Core/Inc/main.h:
 
@@ -135,14 +106,6 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
 
 ../Core/Inc/i2c.h:
 
-../Core/Inc/main.h:
-
 ../Core/Inc/l3gd20.h:
 
 ../Core/Inc/bmp180.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
-
-../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-
-C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc/common.h:

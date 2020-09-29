@@ -1,7 +1,7 @@
-i2c.c:31:6:MX_I2C1_Init	8	static
-i2c.c:62:6:HAL_I2C_MspInit	48	static
-i2c.c:92:6:HAL_I2C_MspDeInit	16	static
-i2c.c:118:9:I2CRead	40	static
-i2c.c:137:6:I2CWrite	40	static
-i2c.c:152:6:ErrorHandler	8	static
-i2c.c:157:9:ReadSensorID	16	static
+i2c.c:30:6:MX_I2C1_Init	8	static
+i2c.c:61:6:HAL_I2C_MspInit	48	static
+i2c.c:91:6:HAL_I2C_MspDeInit	16	static
+i2c.c:117:9:I2CRead	40	static
+i2c.c:136:6:I2CWrite	40	static
+i2c.c:151:6:ErrorHandler	8	static
+i2c.c:156:9:ReadSensorID	16	static

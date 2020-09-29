@@ -46,6 +46,8 @@ MEMORY
 {
 FLASH (rx)      : ORIGIN = 0x08100000, LENGTH = 1024K
 RAM (xrw)      : ORIGIN = 0x10000000, LENGTH = 288K
+RAM_D3 (xrw)       : ORIGIN = 0x38000000, LENGTH = 64K
+
 }
 
 /* Define output sections */
@@ -144,6 +146,21 @@ SECTIONS
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
   } >RAM
+  
+   /* used by the startup to initialize data */
+  _siRAM_D3 = LOADADDR(.RAM_D3);
+
+  /* Initialized data sections goes into RAM_D3, load LMA copy after code */
+  .RAM_D3 : 
+  {
+    . = ALIGN(4);
+    _sRAM_D3 = .;        /* create a global symbol at data start */
+    *(.RAM_D3)           /* .data sections */
+    *(.RAM_D3*)          /* .data* sections */
+
+    . = ALIGN(4);
+    _eRAM_D3 = .;        /* define a global symbol at data end */
+  } >RAM_D3 AT> FLASH 
 
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
@@ -168,5 +185,4 @@ SECTIONS
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }
-
 
