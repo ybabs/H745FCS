@@ -27,6 +27,12 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "common.h"
+#include "lsm303ldhc.h"
+
+// Sensors //
+Acceleration* accData;
+Gauss* magData;
+
 //#include "ublox.h"
 //#include "usart.h"
 //uint16_t duty_cycle = 1060;
@@ -48,6 +54,9 @@
 /* USER CODE BEGIN PTD */
 
 /* USER CODE END PTD */
+// Sample times
+const uint32_t ACC_DT_MS =  3;
+const uint32_t MAG_DT_MS = 5;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
@@ -71,9 +80,25 @@ const osThreadAttr_t defaultTask_attributes = {
   .stack_size = 128 * 4
 };
 
+osThreadId_t magTaskHandle;
+const osThreadAttr_t magTask_attributes = {
+		.name = "magTask",
+		.priority = (osPriority_t) osPriorityRealtime,
+		.stack_size = 128 * 4
+};
+
+osThreadId_t accTaskHandle;
+const osThreadAttr_t accTask_attributes = {
+		.name = "accTask",
+		.priority = (osPriority_t) osPriorityRealtime,
+		.stack_size = 128 * 4
+};
+
+
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-   
+void StartMagTask(void  *argument);
+void StartAccTask(void  *argument);
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -109,6 +134,9 @@ void MX_FREERTOS_Init(void) {
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  accTaskHandle = osThreadNew(StartAccTask, NULL, &accTask_attributes);
+  magTaskHandle = osThreadNew(StartMagTask, NULL, &magTask_attributes);
+
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -163,7 +191,23 @@ void StartDefaultTask(void *argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+void StartMagTask(void *argument)
+{
+	for(;;)
+	{
+		LSM303GetGauss(magData);
+		osDelay(MAG_DT_MS);
+	}
+}
 
+void StartAccTask(void *argument)
+{
+	for(;;)
+	{
+		LSM303GetGs(accData);
+		osDelay(ACC_DT_MS);
+	}
+}
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

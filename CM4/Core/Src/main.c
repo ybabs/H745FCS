@@ -25,6 +25,8 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "lsm303ldhc.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -105,7 +107,8 @@ int main(void)
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
-
+  LSM303AccInit();
+  LSM303MagInit();
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */

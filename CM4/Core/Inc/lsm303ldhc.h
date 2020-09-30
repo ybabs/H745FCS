@@ -10,6 +10,7 @@
 #define LSM303_MAG_ADDR    0x3C   //  0011110x
 #define LSM303_REG_WHO_AM_I 0x0F
 
+#define G_TO_MS2 9.80665
 
 // Linear Acceleration registers
 typedef enum {
@@ -214,11 +215,24 @@ typedef enum{
 	TEMP_DISABLE = 0x00
 }TempSensor;
 
+
 typedef struct{
 	int16_t x;
 	int16_t y;
 	int16_t z;
 }LSM303AccData;
+
+typedef struct{
+	float_t x;
+	float_t y;
+	float_t z;
+}Gauss;
+
+typedef struct{
+	float_t x;
+	float_t y;
+	float_t z;
+}Acceleration;
 
 HAL_StatusTypeDef ret;
 
@@ -227,6 +241,8 @@ void  LSM303MagInit(void);
 uint8_t  ReadSensorID (uint16_t DeviceAddr, uint8_t reg);
 
 void LSM303Write(uint16_t DeviceAddr, uint8_t reg, uint8_t value);
+void LSM303GetGs(Acceleration* data);
+void LSM303GetGauss(Gauss* data);
 uint8_t LSM303Read(uint16_t DeviceAddr, uint8_t reg);
 void LSM303StartUp(void);
 void FilterConfig(uint8_t FilterStruct);
@@ -234,7 +250,6 @@ void AccGetXYZ(int16_t* pData);
 void MagGetXYZ(int16_t* pData);
 void LSM303ReadAcc(int16_t* pData);
 void LSM303ReadMag(int16_t* pData);
-float_t LSM303GetTemp();
 
 
 #endif

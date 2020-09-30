@@ -45,7 +45,8 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
  ../Core/Inc/l3gd20.h ../Core/Inc/bmp180.h \
  ../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc/common.h
+ C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc/common.h \
+ ../Core/Inc/lsm303ldhc.h
 
 ../../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -146,3 +147,5 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
 ../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 
 C:/Users/Home/STM32CubeIDE/workspace_1.1.0/H745ZI-Q/Common/Inc/common.h:
+
+../Core/Inc/lsm303ldhc.h:
