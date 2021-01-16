@@ -57,6 +57,7 @@ Gauss* magData;
 // Sample times
 const uint32_t ACC_DT_MS =  3;
 const uint32_t MAG_DT_MS = 5;
+const uint32_t LED_DT_MS = 1000;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
@@ -91,6 +92,13 @@ osThreadId_t accTaskHandle;
 const osThreadAttr_t accTask_attributes = {
 		.name = "accTask",
 		.priority = (osPriority_t) osPriorityRealtime,
+		.stack_size = 128 * 4
+};
+
+osThreadId_t heartbeatTaskHandle;
+const osThreadAttr_t heartbeatTask_attributes = {
+		.name = "heartbeatTask",
+		.priority = (osPriority_t) osPriorityLow,
 		.stack_size = 128 * 4
 };
 
