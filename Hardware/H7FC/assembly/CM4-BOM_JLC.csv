@@ -1,0 +1,60 @@
+Comment,Designator,Footprint,LCSC
+10u,"C1,C2,C10,C41,C43",Capacitor_SMD:C_0603_1608Metric,C19702
+10n,"C12,C13",Capacitor_SMD:C_0402_1005Metric,C15195
+4.7u,"C15,C47",Capacitor_Tantalum_SMD:CP_EIA-3216-18_Kemet-A,C129235
+1u,"C25,C27",Capacitor_Tantalum_SMD:CP_EIA-3216-18_Kemet-A,C7176
+1u,"C3,C4,C53,C54",Capacitor_SMD:C_0603_1608Metric,C15849
+220p,C42,Capacitor_SMD:C_0402_1005Metric,C1530
+1u_X5R_0603,C44,Capacitor_SMD:C_0603_1608Metric,C15849
+4.7u,"C45,C46",Capacitor_SMD:C_0603_1608Metric,C19666
+2.2u,C49,Capacitor_SMD:C_0603_1608Metric,C117025
+100n,"C5,C6,C7,C8,C11,C14,C16,C17,C18,C19,C20,C21,C22,C23,C24,C26,C28,C29,C30,C31,C32,C33,C34,C35,C36,C37,C38,C39,C40,C48,C52",Capacitor_SMD:C_0402_1005Metric,C1525
+12p,"C50,C51",Capacitor_SMD:C_0402_1005Metric,C1547
+22p,C9,Capacitor_SMD:C_0402_1005Metric,C1555
+LED,D1,LED_SMD:LED_0603_1608Metric,C72043
+SS14,D2,Diode_SMD:D_SMA,C111631
+SD103AWS-TP,D3,SamacSys_Parts:SOD2512X115N,C181207
+LED_Red,"D4,D5,D6,D7",LED_SMD:LED_0603_1608Metric,C72043
+Polyfuse,F1,Fuse:Fuse_1206_3216Metric,
+600 @ 100MHz,FB1,Inductor_SMD:L_0805_2012Metric,
+100 @ 100 MHz,FB2,Inductor_SMD:L_0603_1608Metric,
+100 @100Mhz,FB3,Inductor_SMD:L_0603_1608Metric,
+18 @100Mhz,FB4,Inductor_SMD:L_0603_1608Metric,
+ADP7156ARDZ-3.3-R7,IC1,SamacSys_Parts:SOIC127P600X175-9N,
+STM32H747IIT6,IC2,SamacSys_Parts:QFP50P2600X2600X160-176N,C730199
+UART,J1,Connector_Molex:Molex_PicoBlade_53261-0371_1x03-1MP_P1.25mm_Horizontal,
+Conn_01x04,J10,Connector_Molex:Molex_PicoBlade_53261-0471_1x04-1MP_P1.25mm_Horizontal,
+Conn_01x06,J11,Connector_Molex:Molex_PicoBlade_53261-0671_1x06-1MP_P1.25mm_Horizontal,
+USB_B_Micro,J13,Connector_USB:USB_Micro-B_Molex-105017-0001,
+SWDIO,J14,Connector_PinHeader_1.27mm:PinHeader_2x05_P1.27mm_Vertical,
+Micro_SD_Card,J15,Connector_Card:microSD_HC_Hirose_DM3AT-SF-PEJM5,
+Conn_01x03_Female,J16,Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical,
+USB_C_Receptacle_USB2.0,J2,Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12,C165948
+Conn_01x02,J3,Connector_Molex:Molex_PicoBlade_53261-0271_1x02-1MP_P1.25mm_Horizontal,
+32K101-400L5,J4,SamacSys_Parts:32K101-400L5,
+TSW-101-08-G-T-RA,"J5,J6,J7,J8,J12",SamacSys_Parts:HDRRA3W64P254_3X1_254X254X810P,
+Conn_01x02,J9,Connector_Molex:Molex_PicoBlade_53048-0210_1x02_P1.25mm_Horizontal,
+Jumper_3_Open,JP1,Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm,
+SolderJumper_3_Open,JP2,Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm,
+27n,L2,Inductor_SMD:L_0402_1005Metric_Pad0.77x0.64mm_HandSolder,C18830
+2.2uH,L3,SamacSys_Parts:LQM2MPN1R0NG0L,C86093
+ComputeModule4-CM4,Module1,CM4IO:Raspberry-Pi-4-Compute-Module,
+AO3401A,Q1,SamacSys_Parts:SOT95P280X125-3N,C15127
+BC817W,Q2,Package_TO_SOT_SMD:SOT-323_SC-70,C148104
+2.2k,R1,Resistor_SMD:R_0603_1608Metric, C4190
+1k,R12,Resistor_SMD:R_0402_1005Metric,C21190
+47,"R13,R26",Resistor_SMD:R_0402_1005Metric,C23182
+4k7,"R15,R16,R17,R18",Resistor_SMD:R_0402_1005Metric,C23162
+560,R21,Resistor_SMD:R_0402_1005Metric,C23204
+2k2,"R22,R23,R24,R25",Resistor_SMD:R_0603_1608Metric,C4190
+47k,"R27,R28,R29,R30,R31",Resistor_SMD:R_0402_1005Metric,C25792
+5.1k,"R3,R4",Resistor_SMD:R_1206_3216Metric,C26033
+10,R5,Resistor_SMD:R_0402_1005Metric,C22859
+10k,"R6,R7,R8,R9,R10,R11,R14,R32",Resistor_SMD:R_0402_1005Metric,C25744
+TL1105CF160Q,S1,SamacSys_Parts:TL1105CF160Q,
+TDD01H0SB1R,S2,SamacSys_Parts:SOT175P420X230-3N,
+BMP280,U1,Package_LGA:Bosch_LGA-8_2x2.5mm_P0.65mm_ClockwisePinNumbering,
+MAX-M8Q,U2,RF_GPS:ublox_MAX,
+LSM9DS1,U3,Package_LGA:LGA-24L_3x3.5mm_P0.43mm,C2655096
+USBLC6-2SC6,U4,Package_TO_SOT_SMD:SOT-23-6,C7519
+16MHz,Y1,Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm, C13738

@@ -1,0 +1,8 @@
+bmp180.c:5:19:BMP180InitDevice	24	static
+bmp180.c:30:19:BMPReadCalibCoefficients	64	static
+bmp180.c:74:9:BMP180ReadUP	48	static
+bmp180.c:110:9:BMP180ReadUT	40	static
+bmp180.c:132:6:BMP180ReadTemperature	40	static
+bmp180.c:154:6:BMP180ReadPressue	80	static
+bmp180.c:199:6:BMP180ReadAltitude	32	static
+bmp180.c:218:9:BaroReadSensorID	16	static

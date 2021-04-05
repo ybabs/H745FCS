@@ -1,0 +1,60 @@
+﻿Designator,Manufacturer Part Number or Seeed SKU,Link,Qty
+    C1,CL32B106KAJNNNE,https://www.digikey.co.uk/en/products/detail/samsung-electro-mechanics/CL32A106KAULNNE/3887512,1
+    C2,CL32A226KAJNNNE,https://www.digikey.co.uk/en/products/detail/samsung-electro-mechanics/CL32A226KAJNNNE/3886759,1
+    C3,302010179,,1
+    C4,302010139,,1
+    C9,302010018,,1
+" C10, C41, C43",302010103,,3
+" C5,C6,C7,C8, C11, C14, C16-C24, C26, C28-C40, C48, C52",302010024,,31
+" C12, C13",302010006,,2
+" C15, C47",302020039,,2
+" C25, C27",PCT1/6AK,https://www.digikey.co.uk/en/products/detail/nemco/PCT1-6AK/13236721,2
+    C42,302010013,,1
+    C44,302010139,,1
+" C45, C46",302010111,,2
+    C49,302010054,,1
+" C50, C51",302010049,,2
+    D1,304090042,,1
+    D2,SS14G,https://www.digikey.co.uk/product-detail/en/on-semiconductor/SS14/SS14CT-ND/965729,1
+    D3,SD103AWS-TP,https://www.digikey.co.uk/product-detail/en/micro-commercial-co/SD103AWS-TP/SD103AWSTPMSTR-ND/717306,1
+" D4, D5,D6,D7",304090042,,4
+    F1,1206L050YR,https://www.digikey.co.uk/en/products/detail/littelfuse-inc/1206L050YR/455698,1
+    FB1,BLM21PG600SH1D,,1
+    FB2,MPZ1608S101ATAH0,https://www.digikey.co.uk/en/products/detail/tdk-corporation/MPZ1608S101ATAH0/571871?s=N4IgTCBcDaILIAUBaBGAbABgBwGUUZQEEAVQgCQxAF0BfIA,1
+    FB3,MPZ1608S101ATAH0,https://www.digikey.co.uk/en/products/detail/tdk-corporation/MPZ1608S101ATAH0/571871?s=N4IgTCBcDaILIAUBaBGAbABgBwGUUZQEEAVQgCQxAF0BfIA,1
+    FB4,FBMJ1608HM180NTR,https://www.digikey.co.uk/en/products/detail/taiyo-yuden/FBMJ1608HM180NTW/4875439,1
+    IC1,TPS62111RSAT,https://www.digikey.co.uk/en/products/detail/texas-instruments/TPS62111RSAT/1133727,1
+    IC2,STM32H747IIT6,https://www.digikey.co.uk/en/products/detail/stmicroelectronics/STM32H747IIT6/10326796?s=N4IgTCBcDaIMoBUCyBmMAJA7AFkwSTwQDYBaAOQBEQBdAXyA,1
+    J1,532610371,https://www.digikey.co.uk/en/products/detail/molex/0532610371/699095?s=N4IgTCBcDaIKwGYwDYCMAGBB2VIC6AvkA,1
+    J2,TYPE-C-31-M-12,,1
+    J3,532610271,https://www.digikey.co.uk/en/products/detail/molex/0532610271/699094?s=N4IgTCBcDaIAwFYDMYBsBGOYDs6QF0BfIA,1
+    J4,32K101-400L5,https://www.digikey.co.uk/en/products/detail/rosenberger/32K101-400L5/7926882?s=N4IgTCBcDaIIwA4BsCC0dF1QOQCIB0AXEAXQF8g,1
+    J9,530480210,https://www.digikey.co.uk/en/products/detail/molex/0530480210/242864?s=N4IgTCBcDaIOoFkCMB2ALGAtAOQCIB0AXEAXQF8g,1
+    J10,532610471,https://www.digikey.co.uk/en/products/detail/molex/0532610471/699096?s=N4IgTCBcDaIAwFYDMYBsBGOAWA7OkAugL5A,1
+    J11,532610671,https://www.digikey.co.uk/en/products/detail/molex/0532610671/699098?s=N4IgTCBcDaIAwFYDMYBsBGOqDs6QF0BfIA,1
+" J5, J6, J7, J8, J12",HTSW-101-08-G-T-RA,https://www.digikey.co.uk/en/products/detail/samtec-inc/TSW-101-08-G-T-RA/6691678?s=N4IgTCBcDaIMoEECyBGMYCcB2AtAOQBEQBdAXyA,5
+    J13,1050170001,https://www.digikey.co.uk/en/products/detail/molex/1050170001/2350832?s=N4IgTCBcDaIIwAYCsC4HYGbiAugXyA,1
+    J15,DM3AT-SF-PEJM5,https://www.digikey.co.uk/en/products/detail/hirose-electric-co-ltd/DM3AT-SF-PEJM5/2533565,1
+    L1,SLF7032T-6R8M1R6-2PF,https://www.digikey.co.uk/en/products/detail/tdk-corporation/SLF7032T-6R8M1R6-2PF/755365,1
+    L2,LQG15HS27NJ02D,https://www.digikey.co.uk/en/products/detail/murata-electronics/LQG15HS27NJ02D/662877?s=N4IgTCBcDaIDIEUDiBGArACQMpgOwDkApABjABEQBdAXyA,1
+    L3,303010086,,1
+    Module1,320210381,https://www.digikey.co.uk/en/products/detail/hirose-electric-co-ltd/DF40HC-3-0-100DS-0-4V-58/4282912?s=N4IgTCBcDaIBIEYwBYBsAGMAVASgWgDkARAHQBcQBdAXyA,2
+    Q1,AO3401A,https://www.digikey.co.uk/en/products/detail/alpha-omega-semiconductor-inc/AO3401A/1855773,1
+    Q2,BC817W115,https://www.digikey.co.uk/en/products/detail/nexperia-usa-inc/BC817W115/1232257,1
+    R1,301012157,,1
+    R2,301010124,,1
+" R3, R4",RC1206JR-075K1L,https://www.digikey.co.uk/en/products/detail/yageo/RC1206JR-075K1L/729305?s=N4IgTCBcDaIEoGECMYAMA2AUnAtKg7AKwDSSAMiALoC%2BQA,2
+    R5,301010075,,1
+" R6,R7,R8,R9,R10,R11, R14, R32",301010004,,8
+    R12,301010006,,1
+" R15, R16, R17, R18",301010010,,4
+    R21,CR0402-JW-561GLF,https://www.digikey.co.uk/en/products/detail/bourns-inc/CR0402-JW-561GLF/3783629,1
+" R22, R23, R24,R25",301010124,,4
+" R13, R26",301010878,,2
+" R27,R28,R29,R30,R31",301010005,,5
+    S1,TL1105CF160Q,https://www.digikey.co.uk/en/products/detail/e-switch/TL1105CF160Q/287641?s=N4IgTCBcDaICoBkCMSAMBWAwgMSQNlQEUQBdAXyA,1
+    S2,TDD01H0SB1R,https://www.digikey.co.uk/en/products/detail/c-k/TDD01H0SB1R/4966368?s=N4IgTCBcDaICoBEEAYCMAJZBlAQqgSiALoC%2BQA,1
+    U1,314030010,,1
+    U2,MAX-M8Q-0,https://www.digikey.co.uk/product-detail/en/u-blox/MAX-M8Q-0/672-MAX-M8Q-0CT-ND/6150666,1
+    U4,USBLC6-2SC6,https://www.digikey.co.uk/en/products/detail/stmicroelectronics/USBLC6-2SC6/1040559,1
+    Y1,X322516MLB4SI,,1
