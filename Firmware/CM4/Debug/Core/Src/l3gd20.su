@@ -1,8 +1,0 @@
-l3gd20.c:5:6:L3GD20Startup	16	static
-l3gd20.c:28:6:L3GD20Init	16	static
-l3gd20.c:50:6:GyroFilterConfig	24	static
-l3gd20.c:63:6:L3GD20Write	16	static
-l3gd20.c:68:9:L3GD20Read	16	static
-l3gd20.c:73:7:L3GD20ReadXYZAngRate	40	static
-l3gd20.c:128:9:L3GD20GetTemp	24	static
-l3gd20.c:149:9:GyroReadSensorID	16	static

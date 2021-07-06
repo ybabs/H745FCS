@@ -1,7 +1,0 @@
-﻿  NAV_PVT.c
-C:\Users\Home\source\repos\GPSParser\GPSParser\NAV_PVT.c(41,38): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Home\source\repos\GPSParser\GPSParser\NAV_PVT.c(42,40): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Home\source\repos\GPSParser\GPSParser\NAV_PVT.c(33,16): warning C4101: 'checksum': unreferenced local variable
-  main.c
-  Generating Code...
-  GPSParser.vcxproj -> C:\Users\Home\source\repos\GPSParser\x64\Debug\GPSParser.exe

@@ -13,7 +13,7 @@ stm32h7xx_hal_pwr_ex.c:1136:19:HAL_PWREx_HoldCore	24	static
 stm32h7xx_hal_pwr_ex.c:1185:6:HAL_PWREx_ReleaseCore	16	static
 stm32h7xx_hal_pwr_ex.c:1213:6:HAL_PWREx_EnableFlashPowerDown	4	static
 stm32h7xx_hal_pwr_ex.c:1227:6:HAL_PWREx_DisableFlashPowerDown	4	static
-stm32h7xx_hal_pwr_ex.c:1303:6:HAL_PWREx_EnableWakeUpPin	64	static,ignoring_inline_asm
+stm32h7xx_hal_pwr_ex.c:1303:6:HAL_PWREx_EnableWakeUpPin	80	static,ignoring_inline_asm
 stm32h7xx_hal_pwr_ex.c:1345:6:HAL_PWREx_DisableWakeUpPin	16	static
 stm32h7xx_hal_pwr_ex.c:1370:10:HAL_PWREx_GetWakeupFlag	16	static
 stm32h7xx_hal_pwr_ex.c:1395:19:HAL_PWREx_ClearWakeupFlag	16	static

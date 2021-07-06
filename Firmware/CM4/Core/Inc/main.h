@@ -32,9 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "lsm303ldhc.h"
-#include "l3gd20.h"
-#include "bmp180.h"
+#include "common.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -60,11 +58,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LD2_Pin GPIO_PIN_1
-#define LD2_GPIO_Port GPIOE
+#define LSM9DS1_INT2_AG_Pin GPIO_PIN_11
+#define LSM9DS1_INT2_AG_GPIO_Port GPIOG
+#define LSM9DS1_INT_AG_Pin GPIO_PIN_12
+#define LSM9DS1_INT_AG_GPIO_Port GPIOG
+#define LSM9DS1_INT_M_Pin GPIO_PIN_13
+#define LSM9DS1_INT_M_GPIO_Port GPIOG
 /* USER CODE BEGIN Private defines */
-#define LD1_Pin GPIO_PIN_0
-#define LD1_GPIO_Port GPIOB
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

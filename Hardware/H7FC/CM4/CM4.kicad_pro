@@ -45,7 +45,7 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.508
+          "min_clearance": 0.254
         }
       },
       "diff_pair_dimensions": [
@@ -111,7 +111,8 @@
         "min_through_hole_diameter": 0.254,
         "min_track_width": 0.15239999999999998,
         "min_via_annular_width": 0.127,
-        "min_via_diameter": 0.508
+        "min_via_diameter": 0.508,
+        "use_height_for_length_calcs": true
       },
       "track_widths": [
         0.0,
@@ -387,8 +388,10 @@
         "microvia_drill": 0.254,
         "name": "USB Data",
         "nets": [
-          "/MCU/USB_CONN_D+",
-          "/MCU/USB_CONN_D-"
+          "/MCU/USB_D_N",
+          "/MCU/USB_D_P",
+          "/Power/USB_D+",
+          "/Power/USB_D-"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
@@ -399,7 +402,7 @@
       }
     ],
     "meta": {
-      "version": 0
+      "version": 1
     },
     "net_colors": null
   },
@@ -452,7 +455,7 @@
   },
   "sheets": [
     [
-      "fc4c71a5-1008-4ac4-98db-57c838c57d91",
+      "354989db-f087-407a-a954-f1fafdc70b92",
       ""
     ],
     [

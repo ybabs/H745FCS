@@ -1,5 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
+# Toolchain: GNU Tools for STM32 (9-2020-q2-update)
 ################################################################################
 
 ELF_SRCS := 
@@ -23,5 +24,8 @@ Common/Src \
 Core/Src \
 Core/Startup \
 Drivers/STM32H7xx_HAL_Driver \
+FATFS/App \
+FATFS/Target \
+Middlewares/Third_Party/FatFs \
 Middlewares/Third_Party/FreeRTOS \
 

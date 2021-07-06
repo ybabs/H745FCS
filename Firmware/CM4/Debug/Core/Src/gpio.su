@@ -1,1 +1,2 @@
-gpio.c:35:6:MX_GPIO_Init	48	static
+gpio.c:36:6:MX_GPIO_Init	32	static
+gpio.c:52:6:GPIO_Port_Config	32	static
