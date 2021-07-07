@@ -57,8 +57,6 @@ void MX_GPIO_Init(void)
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
-  GPIO_Port_Config();
-
 }
 
 /* USER CODE BEGIN 2 */
@@ -96,6 +94,14 @@ void GPIO_Port_Config(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(LED_D_GPIO_Port, &GPIO_InitStruct);
+
+	// Pull SPI Chip select pin high to start with
+	HAL_GPIO_WritePin(SPI1_NCS_Port, SPI1_NCS_Pin, GPIO_PIN_SET);
+	GPIO_InitStruct.Pin = SPI1_NCS_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(SPI1_NCS_Port, &GPIO_InitStruct);
 
 
 
