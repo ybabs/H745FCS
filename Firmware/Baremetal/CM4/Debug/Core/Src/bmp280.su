@@ -1,0 +1,12 @@
+bmp280.c:4:9:CheckChipID	16	static
+bmp280.c:29:9:Read8Bit	16	static
+bmp280.c:33:10:Read16Bit	32	static
+bmp280.c:46:10:Read24Bit	32	static
+bmp280.c:57:6:ReadTemp	32	static
+bmp280.c:80:6:ReadPressure	144	static
+bmp280.c:117:6:ReadCalibCoefficients	16	static
+bmp280.c:133:6:WriteRegister	16	static
+bmp280.c:137:9:setConfig	24	static
+bmp280.c:166:7:HAL_SPI_TxRxCpltCallback	16	static
+bmp280.c:180:6:ReadComplete	8	static
+bmp280.c:188:9:ResetChip	16	static
