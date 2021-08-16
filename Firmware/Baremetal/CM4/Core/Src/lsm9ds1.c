@@ -14,15 +14,6 @@ uint8_t CheckSensorID(uint8_t address, uint8_t reg)
 
 void init(LSM9DS1Handle* imu)
 {
-   // sensor biases
-//  int16_t gBiasRaw[3];
-//  int16_t aBiasRaw[3];
-//  int16_t mBiasRaw[3];
-//
-//  float gBias[3];
-//  float aBias[3];
-//  float mBias[3];
-
   // Setup Gyroscope
   imu->gyro_settings.enabled = 1;
   imu->gyro_settings.enableX = 1;
@@ -70,16 +61,6 @@ void init(LSM9DS1Handle* imu)
 
   imu->temp_settings.enabled = 1;
 
-//  for (int i=0; i<3; i++)
-//    {
-//      gBias[i] = 0;
-//      aBias[i] = 0;
-//      mBias[i] = 0;
-//      gBiasRaw[i] = 0;
-//      aBiasRaw[i] = 0;
-//      mBiasRaw[i] = 0;
-//    }
-
 }
 
 uint16_t setup(LSM9DS1Handle* imu)
@@ -105,7 +86,7 @@ uint16_t setup(LSM9DS1Handle* imu)
   if(imu_response != ((WHO_AM_I_AG_RSP << 8 ) | WHO_AM_I_M_RSP))
   {
           return 0;
-   }
+  }
 
   // initialise gyro
   initGyro(imu);
@@ -113,12 +94,8 @@ uint16_t setup(LSM9DS1Handle* imu)
   initAccel(imu);
   // init Mag
  initMag(imu);
-
   return imu_response;
-
-
 }
-
 
 
 void initGyro(LSM9DS1Handle* imu)
@@ -197,10 +174,6 @@ void initGyro(LSM9DS1Handle* imu)
    }
 
    WriteByte(LSM9DS1_AG_ADDR, ORIENT_CFG_G, tempRegValue);
-
-
-
-
 }
 
 void initAccel(LSM9DS1Handle* imu)
@@ -264,9 +237,7 @@ void initAccel(LSM9DS1Handle* imu)
     tempRegValue |= (1 << 7);
     tempRegValue |= (imu->accel_settings.highResBandwidth & 0x3) << 5;
   }
-
   WriteByte(LSM9DS1_AG_ADDR, CTRL_REG7_XL, tempRegValue);
-
 }
 
 
@@ -326,7 +297,6 @@ void initMag(LSM9DS1Handle* imu)
    tempRegValue = 0;
    WriteByte(LSM9DS1_M_ADDR, CTRL_REG5_M, tempRegValue);
 
-
 }
 
 
@@ -382,8 +352,6 @@ void readGyro(LSM9DS1Handle* imu)
   imu->gyro_values.x = calcGyro(gx);
   imu->gyro_values.y = calcGyro(gy);
   imu->gyro_values.z = calcGyro(gz);
-
-
 }
 void readMag(LSM9DS1Handle* imu)
 {
@@ -421,18 +389,14 @@ void readAccel(LSM9DS1Handle* imu)
 }
 float readTemp()
 {
-
   int16_t temp;
   uint8_t buffer[2];
-
   I2CReadBytes(LSM9DS1_AG_ADDR, OUT_TEMP_L, buffer, 2);
-
   // sensor reads 0 at 25 deg C so use as offset
   int16_t offset = 25;
   int16_t reg_values = (buffer[1] << 8) | buffer[0];
 
   temp = reg_values + offset;
-
   return temp;
 
 }
@@ -441,13 +405,11 @@ void setGyroScale(LSM9DS1Handle* imu,uint16_t gyro_scale)
 {
 
   uint8_t temp = I2CReadByte(LSM9DS1_AG_ADDR, CTRL_REG1_G);
-
    // Mask out the scale bits
    temp &= 0xE7;
 
    switch(gyro_scale)
    {
-
      case 500:
        temp |= (0x1 << 3);
        imu->gyro_settings.scale = 500;
@@ -533,8 +495,6 @@ void setAccelScale(LSM9DS1Handle* imu, uint8_t accel_scale)
   }
   WriteByte(LSM9DS1_AG_ADDR, CTRL_REG6_XL, temp);
   calcAccResoltuion(imu);
-
-
 }
 
 
@@ -542,11 +502,9 @@ void setAccelScale(LSM9DS1Handle* imu, uint8_t accel_scale)
 
 void setGyroODR(LSM9DS1Handle* imu, uint8_t gyro_Rate)
 {
-
   // only do this if accel_rate is not 0 (which would disable the accel
   if((gyro_Rate & 0x07) != 0)
   {
-
     // preserve the other bytes in CTRL_REG1_G so read first
     uint8_t temp = I2CReadByte(LSM9DS1_AG_ADDR, CTRL_REG1_G);
     // mask MAG ODR bits
@@ -593,9 +551,6 @@ void setMagODR(LSM9DS1Handle* imu, uint8_t mag_Rate)
   // write new register valye back into CTRL_REG5_XM
   WriteByte(LSM9DS1_M_ADDR, CTRL_REG1_M, temp);
 }
-
-
-
 
 
 
@@ -694,8 +649,6 @@ void calcMagResolution(LSM9DS1Handle* imu)
 
 }
 
-
-
 uint8_t I2CReadByte(uint8_t address, uint8_t reg)
 {
    uint8_t value = 0x00;
@@ -739,12 +692,6 @@ HAL_StatusTypeDef WriteByte(uint8_t address, uint8_t reg, uint8_t data)
 
 }
 
-
-void I2CWriteBytes(uint8_t dev_address, uint8_t reg, uint8_t address, uint8_t data)
-{
-
-}
-
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
 
@@ -757,18 +704,4 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
 
 }
 
-//void magOffset(uint8_t axis, int16_t offset)
-//{
-//  if (axis > 2)
-//  {
-//    return;
-//  }
-//
-//  uint8_t msb, lsb;
-//  msb = (offset & 0xFF00) >> 8;
-//  lsb = offset & 0x00FF;
-//  WriteByte(LSM9DS1_M_ADDR, OFFSET_X_REG_M_L + (2 * axis), lsb);
-//  WriteByte(LSM9DS1_M_ADDR, OFFSET_X_REG_M_H + (2 * axis), msb);
-//
-//}
 

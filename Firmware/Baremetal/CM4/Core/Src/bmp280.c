@@ -1,27 +1,19 @@
 #include "bmp280.h"
 
-
 uint8_t CheckChipID()
 {
-
-  volatile uint8_t SerialData[3] = {(BMP280_REG_ID | 0x80), 0, 0};
+  uint8_t SerialData[3] = {(BMP280_REG_ID | 0x80), 0, 0};
   volatile uint8_t aRxBuffer[3]= {0};
   HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
   if(HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData,  (uint8_t*)aRxBuffer, 2) == HAL_OK)
   {
-    if(aRxBuffer[1] == BMP280_CHIP_ID)
+    if(aRxBuffer[1] != BMP280_CHIP_ID)
     {
-      return HAL_OK;
+      return HAL_ERROR;
     }
-
   }
 
-  else
-  {
-    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
-    return HAL_ERROR;
-
-  }
+  return HAL_OK;
 
 }
 
@@ -30,6 +22,7 @@ uint8_t Read8Bit(BMP280Handle* baro)
 {
   return HAL_OK;
 }
+
 uint16_t Read16Bit(uint8_t reg)
 {
    volatile uint16_t result;
@@ -111,6 +104,20 @@ void ReadPressure(BMP280Handle* baro)
 
 }
 
+void ReadAltitude(BMP280Handle* baro)
+{
+  float altitude = 0;
+  float pressure = baro->pressure;
+  altitude = PRESSURE_COEFFICENT * (1.0f - pow((pressure/ SEA_LEVEL_PRESSURE), (1/5.255)));
+
+  if((altitude <= MIN_ALTITUDE) || altitude >= MAX_ALTITUDE)
+  {
+    return;
+  }
+
+  baro->altitude = altitude;
+
+}
 
 
 
@@ -157,23 +164,14 @@ uint8_t setConfig(BMP280Handle* baro)
      return HAL_ERROR;
    }
 
-
 }
-
-
-
 
 void  HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 {
     if(hspi->Instance == SPI1)
     {
-
       HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
-      //ReadComplete();
-
     }
-
-
 }
 
 

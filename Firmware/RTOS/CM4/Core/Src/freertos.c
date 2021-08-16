@@ -116,12 +116,12 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void *argument)
 {
   /* init code for USB_DEVICE */
-  MX_USB_DEVICE_Init();
+  //MX_USB_DEVICE_Init();
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
   for(;;)
   {
-	  int status = BMP280ReadSensorID();
+	  //int status = BMP280ReadSensorID();
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */

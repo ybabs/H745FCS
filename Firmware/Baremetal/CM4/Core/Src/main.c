@@ -22,12 +22,14 @@
 #include "dma.h"
 #include "i2c.h"
 #include "spi.h"
+#include "usart.h"
 #include "gpio.h"
-#include "lsm9ds1.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "ublox.h"
+#include "lsm9ds1.h"
+#include "bmp280.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,15 +51,20 @@ float ax, ay, az, gx, gy, gz, mx, my, mz;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-LSM9DS1Handle  imu;
-/* USER CODE BEGIN PV */
 
+/* USER CODE BEGIN PV */
+LSM9DS1Handle imu;
+GPSHandle gps;
+BMP280Handle baro;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 static void MPU_Config(void);
 /* USER CODE BEGIN PFP */
-
+void GpsTask(void);
+void AccelTask(void);
+void GyroTask(void);
+void MagTask(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -111,14 +118,16 @@ int main(void)
   MX_DMA_Init();
   MX_SPI1_Init();
   MX_I2C1_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
   //begin(0x6B,0x1E,&hi2c1);    // 0x6B I2C Address of accelerometer and gyroscope // 0x1E I2C Address of magnetometer
    // setMagScale(16);
    // setAccelScale(16);
    // setGyroScale(2000);
-  uint16_t res = setup(&imu);
+ // uint16_t res = setup(&imu);
   //CheckSensorID();
+  ConfigGPS();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -128,9 +137,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-      readGyro(&imu);
-      readMag(&imu);
-      readAccel(&imu);
+      //readGyro(&imu);
+     // readMag(&imu);
+
+    processGPS(&gps);
+     // readAccel(&imu);
 
       HAL_Delay(100);
   }

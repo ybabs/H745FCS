@@ -44,7 +44,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/Inc/dma.h ../Core/Inc/main.h ../Core/Inc/usart.h \
  ../Core/Inc/gpio.h \
- C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Common/Inc/common.h
+ C:/Users/Home/OneDrive/WaffleFlyer/Firmware/RTOS/Common/Inc/common.h
 
 ../Core/Inc/main.h:
 
@@ -142,4 +142,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../Core/Inc/gpio.h:
 
-C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Common/Inc/common.h:
+C:/Users/Home/OneDrive/WaffleFlyer/Firmware/RTOS/Common/Inc/common.h:

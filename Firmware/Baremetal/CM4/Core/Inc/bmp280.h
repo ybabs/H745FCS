@@ -7,21 +7,27 @@
 
 
 
-#define BMP280_CHIP_ID      0x58
-#define BMP280_REG_ID       0xD0
-#define BMP280_REG_RESET      0xE0
-#define BMP280_REG_STATUS   0xF3
-#define BMP280_REG_CTRL_MEAS  0xF4
-#define BMP280_REG_CONFIG   0xF5
-#define BMP280_REG_PRESS_MSB    0xF7 // 19:12
-#define BMP280_REG_PRESS_LSB    0xF8 // 4:11
-#define BMP280_REG_PRESS_XLSB   0xF9  //bits 4 - 7
-#define BMP280_REG_TEMP_MSB     0xFA
-#define BMP280_REG_TEMP_LSB     0xFB
-#define BMP280_REG_TEMP_XLSB    0xFC
-#define BMP280_RESET_VALUE  0xB6   // readout value is always 0x00
-#define SPI_READ            0x80
-#define SPI_WRITE           0X7F
+#define BMP280_CHIP_ID         0x58
+#define BMP280_REG_ID          0xD0
+#define BMP280_REG_RESET       0xE0
+#define BMP280_REG_STATUS      0xF3
+#define BMP280_REG_CTRL_MEAS   0xF4
+#define BMP280_REG_CONFIG      0xF5
+#define BMP280_REG_PRESS_MSB   0xF7 // 19:12
+#define BMP280_REG_PRESS_LSB   0xF8 // 4:11
+#define BMP280_REG_PRESS_XLSB  0xF9  //bits 4 - 7
+#define BMP280_REG_TEMP_MSB    0xFA
+#define BMP280_REG_TEMP_LSB    0xFB
+#define BMP280_REG_TEMP_XLSB   0xFC
+#define BMP280_RESET_VALUE     0xB6   // readout value is always 0x00
+#define SPI_READ               0x80
+#define SPI_WRITE              0X7F
+
+
+#define SEA_LEVEL_PRESSURE (101325.0f) // in Pa from 1013.25hPa
+#define PRESSURE_COEFFICENT (44330.0f)
+#define MAX_ALTITUDE (9000) // in metres above sea-level
+#define MIN_ALTITUDE (-500) // in metres
 
 
 typedef struct{
@@ -111,11 +117,9 @@ typedef struct{
 
 
 typedef struct {
-
-
   float temperature;
   float pressure;
-
+  float altitude;
   volatile uint8_t tempRxBuffer[3];
   volatile uint8_t pressRxBuffer[3];
 
@@ -124,27 +128,21 @@ typedef struct {
 
 }BMP280Handle;
 
-uint8_t Read8Bit(BMP280Handle* baro);
 uint16_t Read16Bit(uint8_t reg);
 uint32_t Read24Bit(uint8_t reg);
-void ReadCalibCoefficients(BMP280Handle* baro);
+
 uint8_t setConfig(BMP280Handle* baro);
-void ReadTemp(BMP280Handle* baro);
 uint8_t ResetChip(void);
-void ReadPressure(BMP280Handle* baro);
-void ReadComplete();
 uint8_t CheckChipID();
+uint8_t Read8Bit(BMP280Handle* baro);
+
+void ReadCalibCoefficients(BMP280Handle* baro);
+void ReadTemp(BMP280Handle* baro);
+void ReadPressure(BMP280Handle* baro);
+void ReadAltitude(BMP280Handle* baro);
+void ReadComplete();
 
 int32_t t_fine;
-
-
-
-
-
-
-
-
-
 
 
 #endif

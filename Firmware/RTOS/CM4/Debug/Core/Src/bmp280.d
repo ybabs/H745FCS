@@ -44,7 +44,7 @@ Core/Src/bmp280.o: ../Core/Src/bmp280.c ../Core/Inc/bmp280.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
  ../Core/Inc/spi.h ../Core/Inc/main.h \
- C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Common/Inc/common.h
+ C:/Users/Home/OneDrive/WaffleFlyer/Firmware/RTOS/Common/Inc/common.h
 
 ../Core/Inc/bmp280.h:
 
@@ -140,4 +140,4 @@ Core/Src/bmp280.o: ../Core/Src/bmp280.c ../Core/Inc/bmp280.h \
 
 ../Core/Inc/main.h:
 
-C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Common/Inc/common.h:
+C:/Users/Home/OneDrive/WaffleFlyer/Firmware/RTOS/Common/Inc/common.h:

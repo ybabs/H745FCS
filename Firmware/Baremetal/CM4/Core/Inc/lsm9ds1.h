@@ -490,7 +490,6 @@ void sleepGyro(uint8_t enable);
 
 uint8_t I2CReadByte(uint8_t address, uint8_t reg);
 uint8_t I2CReadBytes(uint8_t address, uint8_t reg, uint8_t* buffer, uint8_t numBytes);
-void I2CWriteBytes(uint8_t dev_address, uint8_t reg, uint8_t address, uint8_t data);
 HAL_StatusTypeDef WriteByte(uint8_t address, uint8_t reg, uint8_t data);
 
 
@@ -519,8 +518,6 @@ void WriteByteXG(uint8_t address, uint8_t data);
 void calcGyroResolution(LSM9DS1Handle* imu);
 void calcAccResoltuion(LSM9DS1Handle* imu);
 void calcMagResolution(LSM9DS1Handle* imu);
-
-
 
 
 float gyro_res;

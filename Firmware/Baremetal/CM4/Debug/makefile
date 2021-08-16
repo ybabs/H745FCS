@@ -62,8 +62,8 @@ all: main-build
 main-build: baremetal_CM4.elf secondary-outputs
 
 # Tool invocations
-baremetal_CM4.elf: $(OBJS) $(USER_OBJS) C:\Users\Home\STM32CubeIDE\workspace_1.1.0\baremetal\CM4\STM32H745ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "baremetal_CM4.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Home\STM32CubeIDE\workspace_1.1.0\baremetal\CM4\STM32H745ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="baremetal_CM4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+baremetal_CM4.elf: $(OBJS) $(USER_OBJS) C:\Users\Home\OneDrive\WaffleFlyer\Firmware\Baremetal\CM4\STM32H745ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "baremetal_CM4.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Home\OneDrive\WaffleFlyer\Firmware\Baremetal\CM4\STM32H745ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="baremetal_CM4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

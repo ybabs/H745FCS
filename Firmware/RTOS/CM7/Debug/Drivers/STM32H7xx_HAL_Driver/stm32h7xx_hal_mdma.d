@@ -1,5 +1,5 @@
 Drivers/STM32H7xx_HAL_Driver/stm32h7xx_hal_mdma.o: \
- C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c \
+ C:/Users/Home/OneDrive/WaffleFlyer/Firmware/RTOS/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
