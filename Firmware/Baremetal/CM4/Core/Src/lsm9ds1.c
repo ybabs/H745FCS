@@ -2,12 +2,24 @@
 #include <stm32h7xx_hal.h>
 
 
-uint8_t CheckSensorID(uint8_t address, uint8_t reg)
+uint8_t CheckIMUSensorID(uint8_t address, uint8_t reg)
 {
 
-   uint8_t result = I2CReadByte(address, reg);
+//  HAL_Delay(100);
+//   uint8_t result = I2CReadByte(address, reg);
+//
 
-   return result;
+    uint8_t value = 0x00;
+    HAL_StatusTypeDef status;
+//    status = HAL_I2C_Mem_Read_DMA(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, &value, 1);
+    status = HAL_I2C_Mem_Read(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, &value, 1,100);
+
+    if(status != HAL_OK)
+    {
+       return HAL_ERROR;
+    }
+    return value;
+   //return result;
 
 
 }
@@ -78,8 +90,8 @@ uint16_t setup(LSM9DS1Handle* imu)
   calcMagResolution(imu);
 
   // check that sensors are detected
-  uint8_t ag_check = CheckSensorID(LSM9DS1_AG_ADDR, WHO_AM_I_XG);
-  uint8_t mag_check = CheckSensorID(LSM9DS1_M_ADDR, WHO_AM_I_M);
+  uint8_t ag_check = CheckIMUSensorID(LSM9DS1_AG_ADDR, WHO_AM_I_XG);
+  uint8_t mag_check = CheckIMUSensorID(LSM9DS1_M_ADDR, WHO_AM_I_M);
 
   uint16_t imu_response = (ag_check << 8) | mag_check;
 
@@ -665,7 +677,8 @@ uint8_t I2CReadBytes(uint8_t address, uint8_t reg, uint8_t* buffer, uint8_t numB
 {
   HAL_StatusTypeDef status;
 
-  status = HAL_I2C_Mem_Read_DMA(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, buffer, numBytes);
+  //status = HAL_I2C_Mem_Read_DMA(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, buffer, numBytes);
+  status = HAL_I2C_Mem_Read(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, buffer, numBytes,100);
 
   if(status !=HAL_OK)
   {
@@ -681,7 +694,8 @@ HAL_StatusTypeDef WriteByte(uint8_t address, uint8_t reg, uint8_t data)
 
   HAL_StatusTypeDef status;
 
-  status = HAL_I2C_Mem_Write_DMA(&hi2c1, address<<1, (uint16_t) reg, I2C_MEMADD_SIZE_8BIT, &data, 1);
+//  status = HAL_I2C_Mem_Write_DMA(&hi2c1, address<<1, (uint16_t) reg, I2C_MEMADD_SIZE_8BIT, &data, 1);
+  status = HAL_I2C_Mem_Write(&hi2c1, address<<1, (uint16_t) reg, I2C_MEMADD_SIZE_8BIT, &data, 1,100);
 
   if(status !=HAL_OK)
   {

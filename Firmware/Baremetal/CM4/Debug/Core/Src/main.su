@@ -1,3 +1,11 @@
-main.c:79:5:main	16	static
-main.c:157:6:MPU_Config	24	static
-main.c:187:6:Error_Handler	4	static,ignoring_inline_asm
+main.c:94:5:main	16	static
+main.c:154:6:GpsTask	8	static
+main.c:165:6:AccelTask	8	static
+main.c:176:6:GyroTask	8	static
+main.c:187:6:MagTask	8	static
+main.c:200:6:BaroTask	8	static
+main.c:214:6:ReadSensors	8	static
+main.c:227:6:M4DataToM7	4	static
+main.c:236:6:ConfigSensors	16	static
+main.c:264:6:MPU_Config	24	static
+main.c:294:6:Error_Handler	4	static,ignoring_inline_asm

@@ -34,7 +34,18 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+// Update Rates of sensors in milliseconds
+const uint32_t GPS_SAMPLE_TIME =  100; // GPS has 10HZ update rate
+const uint32_t MAG_SAMPLE_TIME =  13; // 80 Hz
+const uint32_t IMU_SAMPLE_TIME =  1; // 952HZ
+const uint32_t BARO_SAMPLE_TIME = 38; // 26.3 Hz
 
+
+uint32_t gps_timer = 0;
+uint32_t accel_timer = 0;
+uint32_t gyro_timer = 0;
+uint32_t mag_timer = 0;
+uint32_t baro_timer = 0;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -47,7 +58,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-float ax, ay, az, gx, gy, gz, mx, my, mz;
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -65,6 +76,10 @@ void GpsTask(void);
 void AccelTask(void);
 void GyroTask(void);
 void MagTask(void);
+void BaroTask(void);
+void ReadSensors(void);
+void ConfigSensors(void);
+void M4DataToM7(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -83,7 +98,7 @@ int main(void)
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
-  MPU_Config();
+//  MPU_Config();
 
 /* USER CODE BEGIN Boot_Mode_Sequence_1 */
   /*HW semaphore Clock enable*/
@@ -120,14 +135,7 @@ int main(void)
   MX_I2C1_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-  //begin(0x6B,0x1E,&hi2c1);    // 0x6B I2C Address of accelerometer and gyroscope // 0x1E I2C Address of magnetometer
-   // setMagScale(16);
-   // setAccelScale(16);
-   // setGyroScale(2000);
- // uint16_t res = setup(&imu);
-  //CheckSensorID();
-  ConfigGPS();
+   ConfigSensors();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -137,19 +145,118 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-      //readGyro(&imu);
-     // readMag(&imu);
-
-    processGPS(&gps);
-     // readAccel(&imu);
-
-      HAL_Delay(100);
+    ReadSensors();
   }
   /* USER CODE END 3 */
 }
 
 /* USER CODE BEGIN 4 */
+void GpsTask(void)
+{
+  // Setup an update of the GPS sensor accroding to the update rate
+  if(HAL_GetTick() - gps_timer >= GPS_SAMPLE_TIME)
+  {
+     processGPS(&gps);
 
+     gps_timer += GPS_SAMPLE_TIME;
+  }
+
+}
+void AccelTask(void)
+{
+  if(HAL_GetTick() - accel_timer >= IMU_SAMPLE_TIME)
+  {
+    readAccel(&imu);
+
+    accel_timer+=IMU_SAMPLE_TIME;
+
+  }
+
+}
+void GyroTask(void)
+{
+  if(HAL_GetTick() - gyro_timer >= IMU_SAMPLE_TIME)
+  {
+    readGyro(&imu);
+
+    gyro_timer+=IMU_SAMPLE_TIME;
+
+  }
+
+}
+void MagTask(void)
+{
+
+  if(HAL_GetTick() - mag_timer >= MAG_SAMPLE_TIME)
+  {
+    readMag(&imu);
+
+    mag_timer+=MAG_SAMPLE_TIME;
+
+  }
+
+}
+
+void BaroTask(void)
+{
+  if(HAL_GetTick() - baro_timer >= BARO_SAMPLE_TIME)
+  {
+
+    ReadTemp(&baro);
+    ReadPressure(&baro);
+    ReadAltitude(&baro);
+    baro_timer+=BARO_SAMPLE_TIME;
+
+  }
+
+
+}
+void ReadSensors(void)
+{
+  //GpsTask();
+
+  AccelTask();
+
+  GyroTask();
+
+  MagTask();
+
+  BaroTask();
+
+}
+void M4DataToM7(void)
+{
+
+}
+
+
+
+
+
+void ConfigSensors(void)
+{
+
+  // COnfigure GPS Sensor
+  ConfigGPS();
+
+  // Configure BMP280
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+  uint8_t baro_res = CheckBMP280ChipID();
+  if(baro_res == HAL_OK)
+  {
+    uint8_t reset_chip_ok = ResetBMP280();
+    HAL_Delay(1000);
+    uint8_t set_config_ok = setConfig(&baro);
+    ReadCalibCoefficients(&baro);
+  }
+
+  HAL_Delay(1000);
+
+  // Configure IMU;
+  uint16_t imu_res = setup(&imu);
+
+
+}
 /* USER CODE END 4 */
 
 /* MPU Configuration */

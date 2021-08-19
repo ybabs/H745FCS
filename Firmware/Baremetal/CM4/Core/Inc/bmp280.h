@@ -132,8 +132,8 @@ uint16_t Read16Bit(uint8_t reg);
 uint32_t Read24Bit(uint8_t reg);
 
 uint8_t setConfig(BMP280Handle* baro);
-uint8_t ResetChip(void);
-uint8_t CheckChipID();
+uint8_t ResetBMP280(void);
+uint8_t CheckBMP280ChipID();
 uint8_t Read8Bit(BMP280Handle* baro);
 
 void ReadCalibCoefficients(BMP280Handle* baro);

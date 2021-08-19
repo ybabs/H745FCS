@@ -1,6 +1,6 @@
 #include "bmp280.h"
 
-uint8_t CheckChipID()
+uint8_t CheckBMP280ChipID()
 {
   uint8_t SerialData[3] = {(BMP280_REG_ID | 0x80), 0, 0};
   volatile uint8_t aRxBuffer[3]= {0};
@@ -144,15 +144,16 @@ void WriteRegister(uint8_t reg, uint8_t data)
 uint8_t setConfig(BMP280Handle* baro)
 {
 
+    // Ultra High resolution 26.3 Hz
    baro->config.mode = NORMAL;
-   baro->config.pressure_oversampling = X2;
+   baro->config.pressure_oversampling = X16;
    baro->config.temp_oversampling = X2;
 
    uint8_t SerialData[2] = {0};
    volatile uint8_t aRxBuffer[3]= {0};
    SerialData[0] = BMP280_REG_CTRL_MEAS & ~0x80;
-   SerialData[1] = baro->config.temp_oversampling | baro->config.pressure_oversampling | baro->config.mode ;
-   SerialData[1] = 0x27;
+   SerialData[1] = baro->config.temp_oversampling << 5 | baro->config.pressure_oversampling << 2 | baro->config.mode ;
+   //SerialData[1] = 0x27;
 
    if(HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData, (uint8_t*)aRxBuffer, 3) == HAL_OK)
    {
@@ -183,7 +184,7 @@ void ReadComplete()
 
 }
 
-uint8_t ResetChip(void)
+uint8_t ResetBMP280(void)
 {
    uint8_t SerialData[2] = {(BMP280_REG_RESET & ~0x80), BMP280_RESET_VALUE}; // Register address, Data,
    volatile uint8_t aRxBuffer[3]= {0};
