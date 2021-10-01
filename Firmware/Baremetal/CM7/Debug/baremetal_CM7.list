@@ -554,11 +554,7 @@ __STATIC_FORCEINLINE void __DSB(void)
   timeout = 0xFFFF;
  8000564:	f64f 73ff 	movw	r3, #65535	; 0xffff
  8000568:	617b      	str	r3, [r7, #20]
-//  while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) && (timeout-- > 0));
-//  if ( timeout < 0 )
-//  {
-//  Error_Handler();
-//  }
+
   while(__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) { asm("NOP"); }
  800056a:	e000      	b.n	800056e <main+0xda>
  800056c:	bf00      	nop

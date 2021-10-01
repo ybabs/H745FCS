@@ -98,7 +98,7 @@ int main(void)
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
-//  MPU_Config();
+  MPU_Config();
 
 /* USER CODE BEGIN Boot_Mode_Sequence_1 */
   /*HW semaphore Clock enable*/
@@ -146,6 +146,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     ReadSensors();
+
   }
   /* USER CODE END 3 */
 }
@@ -154,66 +155,67 @@ int main(void)
 void GpsTask(void)
 {
   // Setup an update of the GPS sensor accroding to the update rate
-  if(HAL_GetTick() - gps_timer >= GPS_SAMPLE_TIME)
-  {
+  //if(HAL_GetTick() - gps_timer >= GPS_SAMPLE_TIME)
+ // {
      processGPS(&gps);
 
-     gps_timer += GPS_SAMPLE_TIME;
-  }
+  //   gps_timer += GPS_SAMPLE_TIME;
+ // }
 
 }
 void AccelTask(void)
 {
-  if(HAL_GetTick() - accel_timer >= IMU_SAMPLE_TIME)
-  {
+ // if(HAL_GetTick() - accel_timer >= IMU_SAMPLE_TIME)
+  //{
     readAccel(&imu);
 
-    accel_timer+=IMU_SAMPLE_TIME;
+    //accel_timer+=IMU_SAMPLE_TIME;
 
-  }
+  //}
 
 }
 void GyroTask(void)
 {
-  if(HAL_GetTick() - gyro_timer >= IMU_SAMPLE_TIME)
-  {
+  //if(HAL_GetTick() - gyro_timer >= IMU_SAMPLE_TIME)
+//  {
     readGyro(&imu);
 
-    gyro_timer+=IMU_SAMPLE_TIME;
+ //   gyro_timer+=IMU_SAMPLE_TIME;
 
-  }
+//  }
 
 }
 void MagTask(void)
 {
 
-  if(HAL_GetTick() - mag_timer >= MAG_SAMPLE_TIME)
-  {
+ // if(HAL_GetTick() - mag_timer >= MAG_SAMPLE_TIME)
+ // {
     readMag(&imu);
 
-    mag_timer+=MAG_SAMPLE_TIME;
+   // mag_timer+=MAG_SAMPLE_TIME;
 
-  }
+ // }
 
 }
 
 void BaroTask(void)
 {
-  if(HAL_GetTick() - baro_timer >= BARO_SAMPLE_TIME)
-  {
+  //if(HAL_GetTick() - baro_timer >= BARO_SAMPLE_TIME)
+  //{
 
     ReadTemp(&baro);
     ReadPressure(&baro);
     ReadAltitude(&baro);
-    baro_timer+=BARO_SAMPLE_TIME;
 
-  }
+    //baro_timer+=BARO_SAMPLE_TIME;
+
+ // }
 
 
 }
 void ReadSensors(void)
 {
-  //GpsTask();
+  GpsTask();
 
   AccelTask();
 

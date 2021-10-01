@@ -1,18 +1,29 @@
 #include "bmp280.h"
+#include <string.h>
+
+int flag = 0;
+
 
 uint8_t CheckBMP280ChipID()
 {
   uint8_t SerialData[3] = {(BMP280_REG_ID | 0x80), 0, 0};
   volatile uint8_t aRxBuffer[3]= {0};
+
   HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
+  HAL_Delay(1000);
   if(HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData,  (uint8_t*)aRxBuffer, 2) == HAL_OK)
   {
-    if(aRxBuffer[1] != BMP280_CHIP_ID)
+   while(flag == 1)
     {
-      return HAL_ERROR;
+      if(aRxBuffer[1] != BMP280_CHIP_ID)
+      {
+        return HAL_ERROR;
+      }
     }
+
   }
 
+  flag = 0;
   return HAL_OK;
 
 }
@@ -25,13 +36,20 @@ uint8_t Read8Bit(BMP280Handle* baro)
 
 uint16_t Read16Bit(uint8_t reg)
 {
-   volatile uint16_t result;
+   uint16_t result;
    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
    uint8_t SerialData[3] = {(reg|0x80), 0, 0};
-   volatile uint8_t aRxBuffer[3]= {0};
-   HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData,  (uint8_t*)aRxBuffer, 3);
+   static uint8_t aRxBuffer[3]= {0};
+  HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData,  (uint8_t*)aRxBuffer, 3);
 
-   result = aRxBuffer[2] << 8 | aRxBuffer [1];
+   while(flag == 1)
+   {
+     result = aRxBuffer[2] << 8 | aRxBuffer [1];
+     flag = 0;
+
+   }
+
+
    return result;
 }
 
@@ -41,9 +59,15 @@ uint32_t Read24Bit(uint8_t reg)
   uint32_t result;
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
   uint8_t SerialData[4] = {(reg|0x80), 0, 0,0};
-  volatile uint8_t aRxBuffer[4] = {0};
+  static uint8_t aRxBuffer[4] = {0};
   HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData,  (uint8_t*)aRxBuffer, 4);
-  result = aRxBuffer[1] << 16 | aRxBuffer[2] << 8 | aRxBuffer[3] >> 4;
+  while(flag == 1)
+     {
+        result = aRxBuffer[1] << 16 | aRxBuffer[2] << 8 | aRxBuffer[3] >> 4;
+        flag = 0;
+     }
+
+
   return result;
 }
 
@@ -144,26 +168,59 @@ void WriteRegister(uint8_t reg, uint8_t data)
 uint8_t setConfig(BMP280Handle* baro)
 {
 
+
     // Ultra High resolution 26.3 Hz
    baro->config.mode = NORMAL;
-   baro->config.pressure_oversampling = X16;
-   baro->config.temp_oversampling = X2;
+   baro->config.pressure_oversampling =  X16; // X16;
+   baro->config.temp_oversampling =  X2; //X2;
 
    uint8_t SerialData[2] = {0};
-   volatile uint8_t aRxBuffer[3]= {0};
+   uint8_t aRxBuffer[3]= {0};
    SerialData[0] = BMP280_REG_CTRL_MEAS & ~0x80;
    SerialData[1] = baro->config.temp_oversampling << 5 | baro->config.pressure_oversampling << 2 | baro->config.mode ;
    //SerialData[1] = 0x27;
 
-   if(HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData, (uint8_t*)aRxBuffer, 3) == HAL_OK)
+   HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
+   HAL_Delay(1000);
+
+   HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData, (uint8_t*)aRxBuffer, 3);
+
+   while(flag == 1)
    {
-     return HAL_OK;
+        memset(SerialData, 0, sizeof(SerialData));
+        memset(aRxBuffer, 0, sizeof(aRxBuffer));
+        flag  = 0;
    }
 
-   else
-   {
-     return HAL_ERROR;
-   }
+
+       baro->config.IIR_Filter = FILTER_OFF;
+       baro->config.standby = STANDBY_0_5;
+
+       SerialData[0] = BMP280_REG_CONFIG & ~0x80;
+       SerialData[1] = baro->config.standby << 5 | baro->config.IIR_Filter ;
+       HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
+
+       uint8_t res = HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData, (uint8_t*)aRxBuffer, 3);
+
+       while(flag == 1)
+       {
+          if(res == HAL_OK)
+          {
+            flag = 0;
+            return HAL_OK;
+          }
+
+          else
+          {
+            flag = 0;
+              return HAL_ERROR;
+          }
+
+       }
+
+
+       return HAL_OK;
+
 
 }
 
@@ -171,6 +228,7 @@ void  HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 {
     if(hspi->Instance == SPI1)
     {
+      flag = 1;
       HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
     }
 }
@@ -179,7 +237,6 @@ void  HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 void ReadComplete()
 {
 
-
   HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
 
 }
@@ -187,13 +244,18 @@ void ReadComplete()
 uint8_t ResetBMP280(void)
 {
    uint8_t SerialData[2] = {(BMP280_REG_RESET & ~0x80), BMP280_RESET_VALUE}; // Register address, Data,
-   volatile uint8_t aRxBuffer[3]= {0};
+   static uint8_t aRxBuffer[3]= {0};
    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
 
    if(HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData, (uint8_t*)aRxBuffer, 2) == HAL_OK)
    {
      return HAL_OK;
    }
+
+//   if(HAL_SPI_TransmitReceive(&hspi1, SerialData, (uint8_t*)aRxBuffer, 2, HAL_MAX_DELAY) == HAL_OK)
+//   {
+//     return HAL_OK;
+//   }
 
    else
    {
