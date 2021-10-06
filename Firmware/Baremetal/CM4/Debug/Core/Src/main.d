@@ -33,7 +33,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  ../Core/Inc/dma.h ../Core/Inc/main.h ../Core/Inc/i2c.h ../Core/Inc/spi.h \
  ../Core/Inc/usart.h ../Core/Inc/gpio.h ../Core/Inc/ublox.h \
- ../Core/Inc/lsm9ds1.h ../Core/Inc/i2c.h ../Core/Inc/bmp280.h
+ ../Core/Inc/lsm9ds1.h ../Core/Inc/i2c.h ../Core/Inc/bmp280.h \
+ C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/Common/Inc/common.h
 
 ../Core/Inc/main.h:
 
@@ -120,3 +121,5 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/i2c.h:
 
 ../Core/Inc/bmp280.h:
+
+C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/Common/Inc/common.h:

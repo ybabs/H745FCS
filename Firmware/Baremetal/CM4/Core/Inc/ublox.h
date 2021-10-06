@@ -42,7 +42,7 @@ typedef struct NAV_PVT {
   long longitude;
   long latitude;
   long height; // height above ellipsoid
-  long hMSL; // height above mean sea level
+  long hMSL; // height above mean sea level in mm
   unsigned long hAcc; // // horizontal accuracy estimate
   unsigned long vAcc; // vertical accuracy estimate
 
@@ -77,6 +77,7 @@ typedef struct NAV_PVT {
   float vel_y;
   float vel_z;
   float gndSpeed;
+  int num_satellites;
 
 //  NAV_PVT pvt;
 

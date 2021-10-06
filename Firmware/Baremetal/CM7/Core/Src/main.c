@@ -22,9 +22,23 @@
 #include "dma.h"
 #include "gpio.h"
 
+
+
+void ReadGPS(void);
+void ReadMag(void);
+void ReadAcc(void);
+void ReadBaro(void);
+void ReadGyro(void);
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "common.h"
 
+
+volatile struct acc_data *acc_values_m7 = (struct acc_data*) 0x38001000;
+volatile struct gyro_data *gyro_values_m7 = (struct gyro_data*) 0x3800100D;
+volatile struct mag_data *mag_values_m7 = (struct mag_data*) 0x3800101A;
+volatile struct baro_data *baro_values_m7 = (struct baro_data*) 0x38001028;
+volatile struct gps_data *gps_values_m7 = (struct gps_data*) 0x38001032;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -34,6 +48,12 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
+struct gps_data gps_values;
+struct acc_data acc_values;
+struct gyro_data gyro_values;
+struct baro_data baro_values;
+struct mag_data mag_values;
 
 #ifndef HSEM_ID_0
 #define HSEM_ID_0 (0U) /* HW semaphore 0*/
@@ -136,10 +156,74 @@ Error_Handler();
   while (1)
   {
     /* USER CODE END WHILE */
-
+      ReadGPS();
+      ReadMag();
+      ReadAcc();
+      ReadBaro();
+      ReadGyro();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
+}
+
+
+
+void ReadGPS(void)
+{
+  if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+      {
+        gps_values.gps_latitude = gps_values_m7->gps_latitude;
+        gps_values.gps_longitude = gps_values_m7->gps_longitude;
+        gps_values.gps_altitude = gps_values_m7->gps_altitude;
+        gps_values.gps_velocity_x = gps_values_m7->gps_velocity_x;
+        gps_values.gps_velocity_y = gps_values_m7->gps_velocity_y;
+        gps_values.gps_velocity_z = gps_values_m7->gps_velocity_z;
+        gps_values.gps_satellites = gps_values_m7->gps_satellites;
+      }
+      HAL_HSEM_Release(HSEM_ID_0,0);
+
+}
+
+void ReadMag(void)
+{
+
+  if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+  {
+    mag_values.imu_mag_x = mag_values_m7->imu_mag_x;
+    mag_values.imu_mag_y = mag_values_m7->imu_mag_y;
+    mag_values.imu_mag_z = mag_values_m7->imu_mag_z;
+  }
+  HAL_HSEM_Release(HSEM_ID_0,0);
+
+}
+void ReadAcc(void)
+{
+  if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+  {
+      acc_values.imu_acc_x = acc_values_m7->imu_acc_x;
+      acc_values.imu_acc_y = acc_values_m7->imu_acc_y;
+      acc_values.imu_acc_z = acc_values_m7->imu_acc_z;
+  }
+  HAL_HSEM_Release(HSEM_ID_0,0);
+}
+void ReadBaro(void)
+{
+  if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+  {
+     baro_values.baro_altitude = baro_values_m7->baro_altitude;
+     baro_values.baro_pressure = baro_values_m7->baro_pressure;
+  }
+  HAL_HSEM_Release(HSEM_ID_0,0);
+}
+void ReadGyro(void)
+{
+  if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+  {
+     gyro_values.imu_gyro_x = gyro_values_m7->imu_gyro_x;
+     gyro_values.imu_gyro_y = gyro_values_m7->imu_gyro_y;
+     gyro_values.imu_gyro_z = gyro_values_m7->imu_gyro_z;
+  }
+  HAL_HSEM_Release(HSEM_ID_0,0);
 }
 
 /**
@@ -222,6 +306,19 @@ void MPU_Config(void)
   MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
   MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
   MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+  MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+  MPU_InitStruct.BaseAddress = 0x38000000;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_64KB;
+  MPU_InitStruct.SubRegionDisable = 0x0;
+  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+  MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /* Enables the MPU */

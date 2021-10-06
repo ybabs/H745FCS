@@ -38,13 +38,14 @@ const int data_size = sizeof(NAV_PVT);
  {
      gps->latitude = pvt.latitude * 1.0e-7;
      gps->longitude = pvt.longitude * 1.0e-7;
-     gps->altitude = pvt.height / 1000.0f;
+     gps->altitude = pvt.hMSL / 1000.0f;  // use Mean sea level instead
 
      // format to ENU
      gps->vel_x = pvt.velE / 1000.0f;
      gps->vel_y = pvt.velN / 1000.0f;
      gps->vel_z = pvt.velD / -1000.0f;
      gps->gndSpeed = pvt.gSpeed / 1000.0f;
+     gps->num_satellites = pvt.numSV;
 
 
  }

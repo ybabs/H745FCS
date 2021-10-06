@@ -438,6 +438,7 @@ typedef struct{
   struct magData mag_values;
   struct accelData accel_values;
   struct gyroData gyro_values;
+  float temperature;
 
 }LSM9DS1Handle;
 
@@ -470,7 +471,7 @@ uint8_t magAvailable();
 void readGyro(LSM9DS1Handle* imu);
 void readMag(LSM9DS1Handle* imu);
 void readAccel(LSM9DS1Handle* imu);
-float readTemp();
+void readTemp(LSM9DS1Handle* imu);
 
 float calcGyro(float gyro);
 float calcMag(float mag);

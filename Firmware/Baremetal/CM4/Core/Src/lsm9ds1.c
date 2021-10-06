@@ -349,6 +349,10 @@ float calcAccel(float accel)
   return accel * acc_res;
 }
 
+///@brief returns the gyroscope
+/// data in dps
+///@param imu struct handle
+///@returns nothing
 void readGyro(LSM9DS1Handle* imu)
 {
 
@@ -364,7 +368,13 @@ void readGyro(LSM9DS1Handle* imu)
   imu->gyro_values.x = calcGyro(gx);
   imu->gyro_values.y = calcGyro(gy);
   imu->gyro_values.z = calcGyro(gz);
+
 }
+
+///@brief returns the magnetometer
+/// data in Gauss
+///@param imu struct handle
+///@returns nothing
 void readMag(LSM9DS1Handle* imu)
 {
 
@@ -380,8 +390,12 @@ void readMag(LSM9DS1Handle* imu)
     imu->mag_values.x = calcMag(mx);
     imu->mag_values.y = calcMag(my);
     imu->mag_values.z = calcMag(mz);
-
 }
+
+///@brief returns the
+/// accelerometer data in g's
+///@param imu struct handle
+///@returns nothing
 void readAccel(LSM9DS1Handle* imu)
 {
 
@@ -398,18 +412,22 @@ void readAccel(LSM9DS1Handle* imu)
   imu->accel_values.y = calcAccel(ay);
   imu->accel_values.z = calcAccel(az);
 
+
 }
-float readTemp()
+void readTemp(LSM9DS1Handle* imu)
 {
-  int16_t temp;
+  float temp;
   uint8_t buffer[2];
   I2CReadBytes(LSM9DS1_AG_ADDR, OUT_TEMP_L, buffer, 2);
   // sensor reads 0 at 25 deg C so use as offset
   int16_t offset = 25;
-  int16_t reg_values = (buffer[1] << 8) | buffer[0];
+  int16_t reg_values = (buffer[1] << 8) | buffer[0] >> 8;
 
-  temp = reg_values + offset;
-  return temp;
+  temp = ((float)reg_values/offset) + offset;
+
+  //temp = offset + ((((int16_t)buffer[1] << 8) | buffer[0]) >> 8) ;
+
+  imu->temperature = temp;
 
 }
 

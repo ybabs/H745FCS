@@ -145,4 +145,27 @@ void ReadComplete();
 int32_t t_fine;
 
 
+//typedef struct {
+//  float baro_pressure;
+//  float baro_altitude;
+//  float gps_latitude;
+//  float gps_longitude;
+//  float gps_altitude;
+//  float gps_velocity_x;
+//  float gps_velocity_y;
+//  float gps_velocity_z;
+//  int   gps_satellites;
+//  float imu_mag_x;
+//  float imu_mag_y;
+//  float imu_mag_z;
+//  float imu_acc_x;
+//  float imu_acc_y;
+//  float imu_acc_z;
+//  float imu_gyro_x;
+//  float imu_gyro_y;
+//  float imu_gyro_z;
+//}dataPacket;
+
+
+
 #endif

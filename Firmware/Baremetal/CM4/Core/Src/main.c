@@ -30,22 +30,33 @@
 #include "ublox.h"
 #include "lsm9ds1.h"
 #include "bmp280.h"
+#include "string.h"
+#include "common.h"
+
+volatile struct acc_data *acc_values_m4 = (struct acc_data*) 0x38001000;
+volatile struct gyro_data *gyro_values_m4 = (struct gyro_data*) 0x3800100D;
+volatile struct mag_data *mag_values_m4 = (struct mag_data*) 0x3800101A;
+volatile struct baro_data *baro_values_m4 = (struct baro_data*) 0x38001028;
+volatile struct gps_data *gps_values_m4 = (struct gps_data*) 0x38001032;
+
+
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-// Update Rates of sensors in milliseconds
-const uint32_t GPS_SAMPLE_TIME =  100; // GPS has 10HZ update rate
-const uint32_t MAG_SAMPLE_TIME =  13; // 80 Hz
-const uint32_t IMU_SAMPLE_TIME =  1; // 952HZ
-const uint32_t BARO_SAMPLE_TIME = 38; // 26.3 Hz
-
 
 uint32_t gps_timer = 0;
 uint32_t accel_timer = 0;
 uint32_t gyro_timer = 0;
 uint32_t mag_timer = 0;
 uint32_t baro_timer = 0;
+
+uint32_t duration_us = 0x00;
+uint32_t nb_cycles  = 0x00;
+
+// Variable to send Notification
+volatile uint32_t notif_rx;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -64,9 +75,10 @@ uint32_t baro_timer = 0;
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-LSM9DS1Handle imu;
-GPSHandle gps;
-BMP280Handle baro;
+
+ LSM9DS1Handle imu;
+ GPSHandle gps;
+ BMP280Handle baro;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -79,12 +91,11 @@ void MagTask(void);
 void BaroTask(void);
 void ReadSensors(void);
 void ConfigSensors(void);
-void M4DataToM7(void);
+void M4DataToM7(uint8_t data_type);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 /* USER CODE END 0 */
 
 /**
@@ -98,7 +109,7 @@ int main(void)
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
-  MPU_Config();
+ // MPU_Config();
 
 /* USER CODE BEGIN Boot_Mode_Sequence_1 */
   /*HW semaphore Clock enable*/
@@ -145,7 +156,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    TimerCount_Start();
     ReadSensors();
+    TimerCount_Stop(nb_cycles);
+    duration_us = (uint32_t)(((uint64_t)US_IN_SECOND * (nb_cycles)) / SystemCoreClock);
+
 
   }
   /* USER CODE END 3 */
@@ -154,65 +169,47 @@ int main(void)
 /* USER CODE BEGIN 4 */
 void GpsTask(void)
 {
-  // Setup an update of the GPS sensor accroding to the update rate
-  //if(HAL_GetTick() - gps_timer >= GPS_SAMPLE_TIME)
- // {
      processGPS(&gps);
-
-  //   gps_timer += GPS_SAMPLE_TIME;
- // }
-
+     M4DataToM7(GPS_DATA_TYPE);
 }
 void AccelTask(void)
 {
- // if(HAL_GetTick() - accel_timer >= IMU_SAMPLE_TIME)
-  //{
     readAccel(&imu);
-
-    //accel_timer+=IMU_SAMPLE_TIME;
-
-  //}
-
+    M4DataToM7(ACC_DATA_TYPE);
 }
 void GyroTask(void)
 {
-  //if(HAL_GetTick() - gyro_timer >= IMU_SAMPLE_TIME)
-//  {
     readGyro(&imu);
-
- //   gyro_timer+=IMU_SAMPLE_TIME;
-
-//  }
-
+    //readTemp(&imu);
+    M4DataToM7(GYRO_DATA_TYPE);
 }
 void MagTask(void)
 {
-
- // if(HAL_GetTick() - mag_timer >= MAG_SAMPLE_TIME)
- // {
     readMag(&imu);
-
-   // mag_timer+=MAG_SAMPLE_TIME;
-
- // }
-
+    M4DataToM7(MAG_DATA_TYPE);
 }
 
 void BaroTask(void)
 {
-  //if(HAL_GetTick() - baro_timer >= BARO_SAMPLE_TIME)
-  //{
-
     ReadTemp(&baro);
     ReadPressure(&baro);
     ReadAltitude(&baro);
 
-    //baro_timer+=BARO_SAMPLE_TIME;
-
- // }
-
+    M4DataToM7(BARO_DATA_TYPE);
 
 }
+
+/**
+  * @brief Semaphore Released Callback.
+  * @param SemMask: Mask of Released semaphores
+  * @retval None
+  */
+void HAL_HSEM_FreeCallback(uint32_t SemMask)
+{
+  notif_rx = 1;
+}
+
+
 void ReadSensors(void)
 {
   GpsTask();
@@ -226,8 +223,90 @@ void ReadSensors(void)
   BaroTask();
 
 }
-void M4DataToM7(void)
+void M4DataToM7(uint8_t data_type)
 {
+
+  switch (data_type)
+  {
+    case GPS_DATA_TYPE:
+    {
+      if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+      {
+
+        gps_values_m4->gps_latitude = gps.latitude;
+        gps_values_m4->gps_longitude = gps.longitude;
+        gps_values_m4->gps_altitude = gps.altitude;
+        gps_values_m4->gps_velocity_x = gps.vel_x;
+        gps_values_m4->gps_velocity_y = gps.vel_y;
+        gps_values_m4->gps_velocity_z = gps.vel_z;
+        gps_values_m4->gnd_speed = gps.gndSpeed;
+        gps_values_m4->gps_satellites = gps.num_satellites;
+      }
+      // Release semaphore
+      HAL_HSEM_Release(HSEM_ID_0, 0);
+      break;
+    }
+
+    case ACC_DATA_TYPE:
+    {
+      if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+      {
+        acc_values_m4->imu_acc_x = imu.accel_values.x;
+        acc_values_m4->imu_acc_y = imu.accel_values.y;
+        acc_values_m4->imu_acc_z = imu.accel_values.z;
+      }
+       // Release semaphore
+       HAL_HSEM_Release(HSEM_ID_0, 0);
+
+      break;
+    }
+
+    case GYRO_DATA_TYPE:
+    {
+      if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+      {
+        gyro_values_m4->imu_gyro_x = imu.gyro_values.x;
+        gyro_values_m4->imu_gyro_y = imu.gyro_values.y;
+        gyro_values_m4->imu_gyro_z = imu.gyro_values.z;
+      }
+       // Release semaphore
+       HAL_HSEM_Release(HSEM_ID_0, 0);
+
+      break;
+    }
+
+    case MAG_DATA_TYPE:
+    {
+
+      if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+        {
+          mag_values_m4->imu_mag_x = imu.mag_values.x;
+          mag_values_m4->imu_mag_y = imu.mag_values.y;
+          mag_values_m4->imu_mag_z = imu.mag_values.z;
+        }
+       // Release semaphore
+       HAL_HSEM_Release(HSEM_ID_0, 0);
+      break;
+    }
+
+    case BARO_DATA_TYPE:
+    {
+      if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+      {
+          baro_values_m4->baro_altitude = baro.altitude;
+          baro_values_m4->baro_pressure = baro.pressure;
+      }
+             // Release semaphore
+       HAL_HSEM_Release(HSEM_ID_0, 0);
+      break;
+    }
+
+    default:
+      break;
+
+  }
+
+
 
 }
 
