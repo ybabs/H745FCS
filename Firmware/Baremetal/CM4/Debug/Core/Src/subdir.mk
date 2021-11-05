@@ -5,6 +5,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/Src/adc.c \
 ../Core/Src/bmp280.c \
 ../Core/Src/dma.c \
 ../Core/Src/gpio.c \
@@ -20,6 +21,7 @@ C_SRCS += \
 ../Core/Src/usart.c 
 
 OBJS += \
+./Core/Src/adc.o \
 ./Core/Src/bmp280.o \
 ./Core/Src/dma.o \
 ./Core/Src/gpio.o \
@@ -35,6 +37,7 @@ OBJS += \
 ./Core/Src/usart.o 
 
 C_DEPS += \
+./Core/Src/adc.d \
 ./Core/Src/bmp280.d \
 ./Core/Src/dma.d \
 ./Core/Src/gpio.d \

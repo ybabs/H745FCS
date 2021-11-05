@@ -20,7 +20,18 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "dma.h"
+#include "fatfs.h"
+#include "i2c.h"
+#include "sdmmc.h"
+#include "tim.h"
+#include "usart.h"
+#include "usb_otg.h"
 #include "gpio.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+#include "common.h"
+#include "usbd_cdc_if.h"
 
 
 
@@ -29,10 +40,6 @@ void ReadMag(void);
 void ReadAcc(void);
 void ReadBaro(void);
 void ReadGyro(void);
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-#include "common.h"
-
 
 volatile struct acc_data *acc_values_m7 = (struct acc_data*) 0x38001000;
 volatile struct gyro_data *gyro_values_m7 = (struct gyro_data*) 0x3800100D;
@@ -97,7 +104,7 @@ int main(void)
 /* USER CODE END Boot_Mode_Sequence_0 */
 
   /* MPU Configuration--------------------------------------------------------*/
- MPU_Config();
+  MPU_Config();
 
   /* Enable I-Cache---------------------------------------------------------*/
   SCB_EnableICache();
@@ -147,6 +154,13 @@ Error_Handler();
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
+  MX_I2C2_Init();
+  MX_SDMMC1_SD_Init();
+  MX_TIM1_Init();
+  MX_UART4_Init();
+  MX_USB_OTG_FS_PCD_Init();
+  MX_FATFS_Init();
+  MX_UART7_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -156,16 +170,15 @@ Error_Handler();
   while (1)
   {
     /* USER CODE END WHILE */
-      ReadGPS();
-      ReadMag();
-      ReadAcc();
-      ReadBaro();
-      ReadGyro();
+    ReadGPS();
+    ReadMag();
+    ReadAcc();
+    ReadBaro();
+    ReadGyro();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
-
 
 
 void ReadGPS(void)
@@ -226,6 +239,7 @@ void ReadGyro(void)
   HAL_HSEM_Release(HSEM_ID_0,0);
 }
 
+
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -243,6 +257,9 @@ void SystemClock_Config(void)
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE0);
 
   while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
+  /** Macro to configure the PLL clock source
+  */
+  __HAL_RCC_PLL_PLLSOURCE_CONFIG(RCC_PLLSOURCE_HSE);
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
@@ -253,7 +270,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 1;
   RCC_OscInitStruct.PLL.PLLN = 60;
   RCC_OscInitStruct.PLL.PLLP = 2;
-  RCC_OscInitStruct.PLL.PLLQ = 5;
+  RCC_OscInitStruct.PLL.PLLQ = 15;
   RCC_OscInitStruct.PLL.PLLR = 2;
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_3;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
