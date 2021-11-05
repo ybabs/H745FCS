@@ -26,7 +26,8 @@ Core/Startup \
 Drivers/STM32H7xx_HAL_Driver \
 FATFS/App \
 FATFS/Target \
-Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src \
-Middlewares/ST/STM32_USB_Device_Library/Core/Src \
+Middlewares/ST/STM32_USB_Device_Library \
 Middlewares/Third_Party/FatFs \
+USB_DEVICE/App \
+USB_DEVICE/Target \
 

@@ -19,7 +19,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "adc.h"
 #include "dma.h"
 #include "i2c.h"
 #include "spi.h"
@@ -110,7 +109,7 @@ int main(void)
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
-  MPU_Config();
+ // MPU_Config();
 
 /* USER CODE BEGIN Boot_Mode_Sequence_1 */
   /*HW semaphore Clock enable*/
@@ -146,7 +145,6 @@ int main(void)
   MX_SPI1_Init();
   MX_I2C1_Init();
   MX_USART3_UART_Init();
-  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
    ConfigSensors();
   /* USER CODE END 2 */
