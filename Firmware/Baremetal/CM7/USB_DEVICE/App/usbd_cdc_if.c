@@ -94,6 +94,8 @@ uint8_t UserRxBufferFS[APP_RX_DATA_SIZE];
 /** Data to send over USB CDC are stored in this buffer   */
 uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 
+uint8_t tempbuf[7];
+
 /* USER CODE BEGIN PRIVATE_VARIABLES */
 
 /* USER CODE END PRIVATE_VARIABLES */
@@ -221,10 +223,24 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
   /* 6      | bDataBits  |   1   | Number Data bits (5, 6, 7, 8 or 16).          */
   /*******************************************************************************/
     case CDC_SET_LINE_CODING:
+      tempbuf[0]=pbuf[0];
+      tempbuf[1]=pbuf[1];
+      tempbuf[2]=pbuf[2];
+      tempbuf[3]=pbuf[3];
+      tempbuf[4]=pbuf[4];
+      tempbuf[5]=pbuf[5];
+      tempbuf[6]=pbuf[6];
 
     break;
 
     case CDC_GET_LINE_CODING:
+      pbuf[0]=tempbuf[0];
+      pbuf[1]=tempbuf[1];
+      pbuf[2]=tempbuf[2];
+      pbuf[3]=tempbuf[3];
+      pbuf[4]=tempbuf[4];
+      pbuf[5]=tempbuf[5];
+      pbuf[6]=tempbuf[6];
 
     break;
 
@@ -264,6 +280,8 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   /* USER CODE BEGIN 6 */
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+  uint16_t len = *Len;
+  CDC_Transmit_FS(Buf, len);
   return (USBD_OK);
   /* USER CODE END 6 */
 }
@@ -295,7 +313,7 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 
 /**
   * @brief  CDC_TransmitCplt_FS
-  *         Data transmitted callback
+  *         Data transmited callback
   *
   *         @note
   *         This function is IN transfer complete callback used to inform user that

@@ -44,6 +44,7 @@ Middlewares/Third_Party/FatFs/ff_gen_drv.o: \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
+ C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/Common/Inc/common.h \
  ../FATFS/Target/bsp_driver_sd.h
 
 C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/Middlewares/Third_Party/FatFs/src/ff_gen_drv.h:
@@ -135,5 +136,7 @@ C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/Middlewares/Third_Party/Fa
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h:
 
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
+
+C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/Common/Inc/common.h:
 
 ../FATFS/Target/bsp_driver_sd.h:

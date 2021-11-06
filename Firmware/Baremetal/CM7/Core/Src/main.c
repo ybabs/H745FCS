@@ -30,7 +30,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "common.h"
 #include "usbd_cdc_if.h"
 #include "usb_device.h"
 
@@ -156,7 +155,7 @@ Error_Handler();
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_I2C2_Init();
-  MX_SDMMC1_SD_Init();
+ // MX_SDMMC1_SD_Init();
   MX_TIM1_Init();
   MX_UART4_Init();
   MX_FATFS_Init();
@@ -165,18 +164,31 @@ Error_Handler();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
-
+ char txBuf[8];
+ uint8_t count = 1;
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
 
-     ReadGPS();
-     ReadMag();
-     ReadAcc();
-     ReadBaro();
-     ReadGyro();
+//     ReadGPS();
+//     ReadMag();
+//     ReadAcc();
+//     ReadBaro();
+//     ReadGyro();
+
+    sprintf(txBuf, "%u\r\n", count);
+    count++;
+
+    if(count > 100)
+    {
+      count = 1;
+    }
+
+    CDC_Transmit_FS((uint8_t *) txBuf, strlen(txBuf));
+
+    HAL_Delay(100);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -263,8 +275,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 1;
@@ -296,6 +309,10 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
+  /** Enable USB Voltage detector
+  */
+  HAL_PWREx_EnableUSBVoltageDetector();
 }
 
 /* USER CODE BEGIN 4 */

@@ -24,7 +24,6 @@
 #include "stm32h7xx_hal.h"
 #include "usbd_def.h"
 #include "usbd_core.h"
-#include "usbd_cdc.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -72,18 +71,16 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle)
   {
   /* USER CODE BEGIN USB_OTG_FS_MspInit 0 */
 
+     /* USER CODE END SPI1_MspInit 0 */
+     /** Initializes the peripherals clock
+     */
+       PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USB;
+      PeriphClkInitStruct.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
+          if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+          {
+            Error_Handler();
+          }
   /* USER CODE END USB_OTG_FS_MspInit 0 */
-  /** Initializes the peripherals clock
-  */
-    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USB;
-    PeriphClkInitStruct.UsbClockSelection = RCC_USBCLKSOURCE_PLL;
-    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
-    {
-      Error_Handler();
-    }
-  /** Enable USB Voltage detector
-  */
-    HAL_PWREx_EnableUSBVoltageDetector();
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**USB_OTG_FS GPIO Configuration
@@ -373,11 +370,9 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
   HAL_PCD_RegisterIsoOutIncpltCallback(&hpcd_USB_OTG_FS, PCD_ISOOUTIncompleteCallback);
   HAL_PCD_RegisterIsoInIncpltCallback(&hpcd_USB_OTG_FS, PCD_ISOINIncompleteCallback);
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
-  /* USER CODE BEGIN TxRx_Configuration */
   HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_FS, 0x80);
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 0, 0x40);
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 1, 0x80);
-  /* USER CODE END TxRx_Configuration */
   }
   return USBD_OK;
 }
@@ -604,34 +599,14 @@ USBD_StatusTypeDef USBD_LL_PrepareReceive(USBD_HandleTypeDef *pdev, uint8_t ep_a
 }
 
 /**
-  * @brief  Returns the last transferred packet size.
+  * @brief  Returns the last transfered packet size.
   * @param  pdev: Device handle
   * @param  ep_addr: Endpoint number
-  * @retval Received Data Size
+  * @retval Recived Data Size
   */
 uint32_t USBD_LL_GetRxDataSize(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 {
   return HAL_PCD_EP_GetRxCount((PCD_HandleTypeDef*) pdev->pData, ep_addr);
-}
-/**
-  * @brief  Static single allocation.
-  * @param  size: Size of allocated memory
-  * @retval None
-  */
-void *USBD_static_malloc(uint32_t size)
-{
-  static uint32_t mem[(sizeof(USBD_CDC_HandleTypeDef)/4)+1];/* On 32-bit boundary */
-  return mem;
-}
-
-/**
-  * @brief  Dummy memory free
-  * @param  p: Pointer to allocated  memory address
-  * @retval None
-  */
-void USBD_static_free(void *p)
-{
-
 }
 
 /**
@@ -645,7 +620,7 @@ void USBD_LL_Delay(uint32_t Delay)
 }
 
 /**
-  * @brief  Returns the USB status depending on the HAL status:
+  * @brief  Retuns the USB status depending on the HAL status:
   * @param  hal_status: HAL status
   * @retval USB status
   */

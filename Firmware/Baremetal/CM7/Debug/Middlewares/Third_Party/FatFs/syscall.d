@@ -42,6 +42,7 @@ Middlewares/Third_Party/FatFs/syscall.o: \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
+ C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/Common/Inc/common.h \
  ../FATFS/Target/bsp_driver_sd.h
 
 c:\users\home\onedrive\waffleflyer\firmware\baremetal\middlewares\third_party\fatfs\src\ff.h:
@@ -129,5 +130,7 @@ c:\users\home\onedrive\waffleflyer\firmware\baremetal\middlewares\third_party\fa
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h:
 
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
+
+C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/Common/Inc/common.h:
 
 ../FATFS/Target/bsp_driver_sd.h:

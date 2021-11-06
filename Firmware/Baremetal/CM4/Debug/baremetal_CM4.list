@@ -23,23 +23,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   9 .ARM.attributes 00000030  00000000  00000000  0002008c  2**0
                   CONTENTS, READONLY
- 10 .debug_info   00032543  00000000  00000000  000200bc  2**0
+ 10 .debug_info   000324f6  00000000  00000000  000200bc  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 11 .debug_abbrev 00004f1a  00000000  00000000  000525ff  2**0
+ 11 .debug_abbrev 00004f1a  00000000  00000000  000525b2  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 12 .debug_aranges 00001748  00000000  00000000  00057520  2**3
+ 12 .debug_aranges 00001748  00000000  00000000  000574d0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_ranges 000015b0  00000000  00000000  00058c68  2**3
+ 13 .debug_ranges 000015b0  00000000  00000000  00058c18  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_macro  0003d348  00000000  00000000  0005a218  2**0
+ 14 .debug_macro  0003d3cc  00000000  00000000  0005a1c8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_line   000202f5  00000000  00000000  00097560  2**0
+ 15 .debug_line   000202f5  00000000  00000000  00097594  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_str    0018fa5e  00000000  00000000  000b7855  2**0
+ 16 .debug_str    0018fd87  00000000  00000000  000b7889  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .comment      00000053  00000000  00000000  002472b3  2**0
+ 17 .comment      00000053  00000000  00000000  00247610  2**0
                   CONTENTS, READONLY
- 18 .debug_frame  000065f0  00000000  00000000  00247308  2**2
+ 18 .debug_frame  000065f0  00000000  00000000  00247664  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -2789,8 +2789,8 @@ void MX_GPIO_Init(void)
  8101c70:	687b      	ldr	r3, [r7, #4]
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
- 8101c72:	2200      	movs	r2, #0
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+ 8101c72:	2201      	movs	r2, #1
  8101c74:	2110      	movs	r1, #16
  8101c76:	480b      	ldr	r0, [pc, #44]	; (8101ca4 <MX_GPIO_Init+0xc0>)
  8101c78:	f005 fa2e 	bl	81070d8 <HAL_GPIO_WritePin>
