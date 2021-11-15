@@ -14,12 +14,14 @@ RM := rm -rf
 -include Middlewares/Third_Party/FatFs/subdir.mk
 -include Middlewares/ST/STM32_USB_Device_Library/Core/Src/subdir.mk
 -include Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/subdir.mk
+-include Filters/Src/subdir.mk
 -include FATFS/Target/subdir.mk
 -include FATFS/App/subdir.mk
 -include Drivers/STM32H7xx_HAL_Driver/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include Common/Src/subdir.mk
+-include Buffer_Lib/Src/subdir.mk
 -include subdir.mk
 -include objects.mk
 

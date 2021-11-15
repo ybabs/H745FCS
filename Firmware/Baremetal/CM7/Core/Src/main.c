@@ -31,7 +31,12 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
-#include "usb_device.h"
+#include "ring_buffer.h"
+
+
+
+
+
 
 
 
@@ -164,35 +169,37 @@ Error_Handler();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
- char txBuf[8];
- uint8_t count = 1;
+// char txBuf[8];
+// uint8_t count = 1;
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
 
-//     ReadGPS();
-//     ReadMag();
-//     ReadAcc();
-//     ReadBaro();
-//     ReadGyro();
+     ReadGPS();
+     ReadMag();
+     ReadAcc();
+     ReadBaro();
+     ReadGyro();
 
-    sprintf(txBuf, "%u\r\n", count);
-    count++;
-
-    if(count > 100)
-    {
-      count = 1;
-    }
-
-    CDC_Transmit_FS((uint8_t *) txBuf, strlen(txBuf));
-
-    HAL_Delay(100);
+//    sprintf(txBuf, "%u\r\n", count);
+//    count++;
+//
+//    if(count > 100)
+//    {
+//      count = 1;
+//    }
+//
+//    CDC_Transmit_FS((uint8_t *) txBuf, strlen(txBuf));
+//
+//    HAL_Delay(100);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
+
+
 
 void ReadGPS(void)
 {

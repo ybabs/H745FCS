@@ -21,6 +21,9 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
+#define TIMER_FREQUENCY                ((uint32_t) 400)    /* Timer frequency (unit: Hz). With a timer 16 bits and time base freq min 1Hz, range is min=1Hz, max=32kHz. */
+#define TIMER_FREQUENCY_RANGE_MIN      ((uint32_t)    10)   /* Timer minimum frequency (unit: Hz), used to calculate frequency range. With a timer 16 bits, maximum frequency will be 32000 times this value. */
+#define TIMER_PRESCALER_MAX_VALUE      (0xFFFF-1)
 
 /* USER CODE END 0 */
 
@@ -38,14 +41,33 @@ void MX_TIM1_Init(void)
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
   TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
+  RCC_ClkInitTypeDef clk_init_struct = {0};
+
 
   /* USER CODE BEGIN TIM1_Init 1 */
 
+  uint32_t latency = 0;
+  uint32_t timer_clock_frequency = 0;
+  uint32_t timer_prescaler = 0;
   /* USER CODE END TIM1_Init 1 */
+
+  HAL_RCC_GetClockConfig(&clk_init_struct, &latency);
+
+  if(clk_init_struct.APB1CLKDivider == RCC_HCLK_DIV1)
+  {
+    timer_clock_frequency = HAL_RCC_GetPCLK1Freq();
+  }
+
+  else
+  {
+    timer_clock_frequency = HAL_RCC_GetPCLK1Freq() * 2;
+  }
+
+  timer_prescaler = (timer_clock_frequency / (TIMER_PRESCALER_MAX_VALUE * TIMER_FREQUENCY_RANGE_MIN)) +1;
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 0;
+  htim1.Init.Prescaler = (timer_prescaler - 1);
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 65535;
+  htim1.Init.Period = ((timer_clock_frequency / (timer_prescaler * TIMER_FREQUENCY)) - 1);
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -70,7 +92,7 @@ void MX_TIM1_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
+  sConfigOC.Pulse = 50;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;

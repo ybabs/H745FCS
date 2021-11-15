@@ -1,0 +1,3 @@
+fir.c:5:12:setupBuffer	8	static
+fir.c:11:12:destroyBuffer	8	static
+fir.c:18:6:FIRInit	16	static

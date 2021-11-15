@@ -1,0 +1,12 @@
+ring_buffer.c:16:13:advancePointer	16	static
+ring_buffer.c:37:13:retreatPointer	16	static
+ring_buffer.c:51:14:bufferInit	24	static
+ring_buffer.c:71:6:bufferFree	16	static
+ring_buffer.c:78:6:bufferReset	16	static
+ring_buffer.c:90:6:bufferInsertOverwrite	16	static
+ring_buffer.c:100:5:bufferInsertReject	24	static
+ring_buffer.c:118:5:bufferGet	24	static
+ring_buffer.c:138:6:BufferIsEmpty	16	static
+ring_buffer.c:146:6:BufferIsFull	16	static
+ring_buffer.c:153:8:BufferCapacity	16	static
+ring_buffer.c:160:8:BufferSize	24	static
