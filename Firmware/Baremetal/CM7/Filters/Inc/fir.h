@@ -23,18 +23,28 @@
 #include <stdint.h>
 #include <ring_buffer.h>
 
-#define RING_BUFFER_SIZE 16
+#define BUFFER_SIZE 64
 
-static float ring_buffer_storage[RING_BUFFER_SIZE] = {0};
-static buf_handle_t buffer_handle = NULL;
+//static float ring_buffer_storage[RING_BUFFER_SIZE] = {0};
+//static buf_handle_t buffer_handle = NULL;
+
+//RingBufElement buffer[RING_BUFFER_SIZE] = {0};
+//RingBuf rb;
 
 
-typedef struct {
+//typedef struct {
+//
+//  RingBuf rb;
+//  RingBufCtr buf_Index;
+//  float output;
+//
+//}FIRFilter;
 
-  buf_handle_t buffer_handle;
-  uint8_t buf_Index;
+typedef struct{
+  float buf[BUFFER_SIZE];
+  uint8_t buffer_index;
+
   float output;
-
 }FIRFilter;
 
 void FIRInit(FIRFilter *fir);

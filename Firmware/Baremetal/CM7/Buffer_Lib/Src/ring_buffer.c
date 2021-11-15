@@ -2,180 +2,67 @@
 #include  <assert.h>
 #include <stdlib.h>
 
-// Definition for buffer structure
-
-struct circular_buf_t{
-  float * buffer;
-  size_t head;
-  size_t tail;
-  size_t max; // for the buffer
-  uint8_t full;
-};
-
-
-static void advancePointer(buf_handle_t cbuf)
-{
-  assert(cbuf);
-
-  if(cbuf->full)
-  {
-
-    if(++ (cbuf->tail) == cbuf->max)
-    {
-      cbuf->tail = 0;
+void RingBuf_ctor(RingBuf * const me,
+                  RingBufElement sto[], RingBufCtr sto_len) {
+    me->buf  = &sto[0];
+    me->end  = sto_len;
+    me->head = 0U;
+    me->tail = 0U;
+}
+/*..........................................................................*/
+bool RingBuf_put(RingBuf * const me, RingBufElement const el) {
+    RingBufCtr head = me->head + 1U;
+    if (head == me->end) {
+        head = 0U;
     }
-
-  }
-
-  if(++ (cbuf->head) == cbuf->max)
-  {
-    cbuf->head = 0;
-  }
-  cbuf->full = (cbuf->head == cbuf->tail);
-}
-
-static void retreatPointer(buf_handle_t cbuf)
-{
-  assert(cbuf);
-
-  cbuf->full = false;
-  if(++(cbuf->tail)==cbuf->max)
-  {
-    cbuf->tail = 0;
-  }
-
-}
-
-
-
-buf_handle_t bufferInit(float * buffer, uint8_t size)
-{
-
-  // Check that both buffer and size are valid numbers
-  assert(buffer && size);
-
-  buf_handle_t cbuf = malloc(sizeof(circular_buf_t));
-  assert(cbuf);
-
-  cbuf->buffer = buffer;
-  cbuf->max = size;
-  bufferReset(cbuf);
-
-  assert(BufferIsEmpty(cbuf));
-
-  return cbuf;
-
-}
-
-
-void bufferFree(buf_handle_t cbuf)
-{
-  assert(cbuf);
-  free(cbuf);
-}
-
-
-void bufferReset(buf_handle_t cbuf)
-{
-
-  assert(cbuf);
-  cbuf->head = 0;
-  cbuf->tail = 0;
-  cbuf->full = false;
-
-}
-
-
-
-void bufferInsertOverwrite(buf_handle_t cbuf, float data)
-{
-  assert(cbuf && cbuf->buffer);
-
-  cbuf->buffer[cbuf->head] = data;
-  advancePointer(cbuf);
-
-}
-
-
-int bufferInsertReject(buf_handle_t cbuf, float data)
-{
-  int r = -1;
-
-  assert(cbuf && cbuf->buffer);
-
-  if(!BufferIsFull(cbuf))
-  {
-    cbuf->buffer[cbuf->head] = data;
-    advancePointer(cbuf);
-    r = 0;
-  }
-
-  return r;
-
-}
-
-
-int bufferGet(buf_handle_t cbuf, float * data)
-{
-
-  assert(cbuf && data && cbuf->buffer);
-
-  int r = -1;
-
-  if(!BufferIsEmpty(cbuf) )
-  {
-    *data = cbuf->buffer[cbuf->tail];
-    retreatPointer(cbuf);
-    r = 0;
-  }
-
-  return r;
-
-}
-
-
-
-bool BufferIsEmpty(buf_handle_t cbuf)
-{
-  assert(cbuf);
-
-  return(!cbuf->full && (cbuf->head == cbuf->tail));
-}
-
-
-bool BufferIsFull(buf_handle_t cbuf)
-{
-   assert(cbuf);
-
-   return cbuf->full;
-}
-
-size_t BufferCapacity(buf_handle_t cbuf)
-{
-  assert(cbuf);
-
-  return cbuf->max;
-}
-
-size_t BufferSize(buf_handle_t cbuf)
-{
-  assert(cbuf);
-
-  size_t size = cbuf->max;
-
-  if(!cbuf->full)
-  {
-    if(cbuf->head >= cbuf->tail)
-    {
-      size = (cbuf->head - cbuf->tail);
+    if (head != me->tail) { /* buffer NOT full? */
+        me->buf[me->head] = el;
+        me->head = head; /* update the head to a *valid* index */
+        return true;  /* element placed in the buffer */
     }
-
-    else
-    {
-      size = (cbuf->max + cbuf->head - cbuf->tail);
+    else {
+        return false; /* element NOT placed in the buffer */
     }
-  }
-
-  return size;
-
+}
+/*..........................................................................*/
+bool RingBuf_get(RingBuf * const me, RingBufElement *pel) {
+    RingBufCtr tail = me->tail;
+    if (me->head != tail) { /* ring buffer NOT empty? */
+        *pel = me->buf[tail];
+        ++tail;
+        if (tail == me->end) {
+            tail = 0U;
+        }
+        me->tail = tail; /* update the tail to a *valid* index */
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+/*..........................................................................*/
+void RingBuf_process_all(RingBuf * const me, RingBufHandler handler) {
+    RingBufCtr tail = me->tail;
+    while (me->head != tail) { /* ring buffer NOT empty? */
+        (*handler)(me->buf[tail]);
+        ++tail;
+        if (tail == me->end) {
+            tail = 0U;
+        }
+        me->tail = tail; /* update the tail to a *valid* index */
+    }
+}
+/*..........................................................................*/
+RingBufCtr RingBuf_num_free(RingBuf * const me) {
+    RingBufCtr head = me->head;
+    RingBufCtr tail = me->tail;
+    if (head == tail) { /* buffer empty? */
+        return (RingBufCtr)(me->end - 1U);
+    }
+    else if (head < tail) {
+        return (RingBufCtr)(tail - head - 1U);
+    }
+    else {
+        return (RingBufCtr)(me->end + tail - head - 1U);
+    }
 }

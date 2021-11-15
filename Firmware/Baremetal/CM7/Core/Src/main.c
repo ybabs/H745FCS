@@ -31,8 +31,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
-#include "ring_buffer.h"
+#include "fir.h"
 
+FIRFilter lpf_Acc;
 
 
 
@@ -45,6 +46,8 @@ void ReadMag(void);
 void ReadAcc(void);
 void ReadBaro(void);
 void ReadGyro(void);
+
+void FilterData(void);
 
 volatile struct acc_data *acc_values_m7 = (struct acc_data*) 0x38001000;
 volatile struct gyro_data *gyro_values_m7 = (struct gyro_data*) 0x3800100D;
@@ -168,6 +171,7 @@ Error_Handler();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
+  //FIRInit(&lpf_Acc);
   /* USER CODE END 2 */
 // char txBuf[8];
 // uint8_t count = 1;
@@ -177,11 +181,13 @@ Error_Handler();
   {
     /* USER CODE END WHILE */
 
-     ReadGPS();
-     ReadMag();
+    // ReadGPS();
+    // ReadMag();
      ReadAcc();
-     ReadBaro();
-     ReadGyro();
+
+    // FilterData();
+    // ReadBaro();
+    // ReadGyro();
 
 //    sprintf(txBuf, "%u\r\n", count);
 //    count++;
@@ -193,13 +199,23 @@ Error_Handler();
 //
 //    CDC_Transmit_FS((uint8_t *) txBuf, strlen(txBuf));
 //
-//    HAL_Delay(100);
+    HAL_Delay(10);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
 
 
+
+void FilterData()
+{
+  FIRUpdate(&lpf_Acc, acc_values.imu_acc_x);
+
+  char logBuf[128];
+
+  sprintf(logBuf, "%.4f, %.4f\r\n", acc_values.imu_acc_x, lpf_Acc.output);
+  CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
+}
 
 void ReadGPS(void)
 {
