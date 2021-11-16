@@ -32,8 +32,10 @@
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
 #include "fir.h"
+#include "rc.h"
 
-FIRFilter lpf_Acc;
+//FIRFilter lpf_Acc;
+RCFilter lpf_Acc_RC;
 
 
 
@@ -172,6 +174,7 @@ Error_Handler();
   /* USER CODE BEGIN 2 */
 
   //FIRInit(&lpf_Acc);
+  RCInit(&lpf_Acc_RC, 50.0f, 0.000525f);
   /* USER CODE END 2 */
 // char txBuf[8];
 // uint8_t count = 1;
@@ -185,7 +188,7 @@ Error_Handler();
     // ReadMag();
      ReadAcc();
 
-    // FilterData();
+     FilterData();
     // ReadBaro();
     // ReadGyro();
 
@@ -209,11 +212,11 @@ Error_Handler();
 
 void FilterData()
 {
-  FIRUpdate(&lpf_Acc, acc_values.imu_acc_x);
-
+  //FIRUpdate(&lpf_Acc, acc_values.imu_acc_x);
+  RCUpdate(&lpf_Acc_RC,  acc_values.imu_acc_x);
   char logBuf[128];
 
-  sprintf(logBuf, "%.4f, %.4f\r\n", acc_values.imu_acc_x, lpf_Acc.output);
+  sprintf(logBuf, "%.4f, %.4f\r\n", acc_values.imu_acc_x, lpf_Acc_RC.output[0]);
   CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
 }
 

@@ -45,6 +45,7 @@
 "./FATFS/Target/bsp_driver_sd.o"
 "./FATFS/Target/sd_diskio.o"
 "./Filters/Src/fir.o"
+"./Filters/Src/rc.o"
 "./Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o"
 "./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o"
 "./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o"

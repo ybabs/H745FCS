@@ -5,13 +5,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Filters/Src/fir.c 
+../Filters/Src/fir.c \
+../Filters/Src/rc.c 
 
 OBJS += \
-./Filters/Src/fir.o 
+./Filters/Src/fir.o \
+./Filters/Src/rc.o 
 
 C_DEPS += \
-./Filters/Src/fir.d 
+./Filters/Src/fir.d \
+./Filters/Src/rc.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
