@@ -2,19 +2,29 @@
 #include <stm32h7xx_hal.h>
 
 
+/*
+ * @brief Used to read WHOAMI registers for the
+ * sensors on the IC
+ * @param address of the sensor
+ * @param reg register to read
+ * @returns value from the register
+ */
 uint8_t CheckIMUSensorID(uint8_t address, uint8_t reg)
 {
-    uint8_t value = 0x00;
+    uint8_t reg_value = 0x00;
     HAL_StatusTypeDef status;
-    status = HAL_I2C_Mem_Read(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, &value, 1,100);
-
+    status = HAL_I2C_Mem_Read(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, &reg_value, 1,100);
     if(status != HAL_OK)
     {
        return HAL_ERROR;
     }
-    return value;
+    return reg_value;
 }
 
+/*
+ * @brief Initialises IMU
+ * @param imu pointer to imu struct
+ */
 void init(LSM9DS1Handle* imu)
 {
   // Setup Gyroscope
@@ -23,10 +33,12 @@ void init(LSM9DS1Handle* imu)
   imu->gyro_settings.enableY = 1;
   imu->gyro_settings.enableZ = 1;
 
-  // Set GyroScope Scale  245, 500, 2000
+  // Set GyroScope Scale 245, 500, 2000
   imu->gyro_settings.scale = 245;
   imu->gyro_settings.sampleRate = ODR_952HZ;
-  // set cutoff frequency // set this all to zero
+
+  // set cutoff frequency
+  // set this all to zero
   // and do filtering in software
   imu->gyro_settings.bandwidth = 0;
   imu->gyro_settings.lowPowerEnable = 0;
@@ -43,8 +55,6 @@ void init(LSM9DS1Handle* imu)
   imu->accel_settings.enableX = 1;
   imu->accel_settings.enableY = 1;
   imu->accel_settings.enableZ = 1;
-
-  // 2,4, 8,16
   imu->accel_settings.scale = 2;
   imu->accel_settings.sampleRate = ODR_952HZ;
   imu->accel_settings.bandwidth = -1;  // bandwidth determined by sample rate
@@ -62,13 +72,19 @@ void init(LSM9DS1Handle* imu)
   imu->mag_settings.lowPowerEnable = 0;
   imu->mag_settings.operatingMode = 0 ; // continuous
 
+  // enable temperature sensor
   imu->temp_settings.enabled = 1;
-
 }
 
+/*
+ * @brief Calls initialisation functions
+ * for various sensors
+ * @param imu pointer to imu struct
+ * @returns response from MAG and ACC/GYRO WHOAMI
+ * register
+ */
 uint16_t setup(LSM9DS1Handle* imu)
 {
-
   // initialise the sensors
   init(imu);
 
@@ -81,16 +97,14 @@ uint16_t setup(LSM9DS1Handle* imu)
   calcMagResolution(imu);
 
   // check that sensors are detected
-  uint8_t ag_check = CheckIMUSensorID(LSM9DS1_AG_ADDR, WHO_AM_I_XG);
+  uint8_t ag_check =  CheckIMUSensorID(LSM9DS1_AG_ADDR, WHO_AM_I_XG);
   uint8_t mag_check = CheckIMUSensorID(LSM9DS1_M_ADDR, WHO_AM_I_M);
 
   uint16_t imu_response = (ag_check << 8) | mag_check;
-
   if(imu_response != ((WHO_AM_I_AG_RSP << 8 ) | WHO_AM_I_M_RSP))
   {
-          return 0;
+     return -1;
   }
-
   // initialise gyro
   initGyro(imu);
   // initialise accel
@@ -100,12 +114,15 @@ uint16_t setup(LSM9DS1Handle* imu)
   return imu_response;
 }
 
-
+/*
+ * @brief initialises gyroscope
+ * @param imu ponter to imu struct
+ * @returns nothing
+ */
 void initGyro(LSM9DS1Handle* imu)
 {
-
   uint8_t tempRegValue = 0;
-  // ONly set sampleRate if gyro is enabled
+  // Only set sampleRate if gyro is enabled
   if(imu->gyro_settings.enabled == 1)
   {
     tempRegValue = (imu->gyro_settings.sampleRate & 0x07) << 5;
@@ -124,7 +141,6 @@ void initGyro(LSM9DS1Handle* imu)
   tempRegValue |= (imu->gyro_settings.bandwidth & 0x3);
   // Write settings to the register
    WriteByte(LSM9DS1_AG_ADDR, CTRL_REG1_G, tempRegValue);
-
    // reset tempValue
    tempRegValue = 0;
    WriteByte(LSM9DS1_AG_ADDR, CTRL_REG2_G, tempRegValue);
@@ -136,7 +152,6 @@ void initGyro(LSM9DS1Handle* imu)
      tempRegValue |= (1 << 6) | (imu->gyro_settings.HPFCutoff & 0x0F);
    }
    WriteByte(LSM9DS1_AG_ADDR, CTRL_REG3_G, tempRegValue);
-
 
    tempRegValue = 0;
    if(imu->gyro_settings.enableZ)
@@ -179,9 +194,13 @@ void initGyro(LSM9DS1Handle* imu)
    WriteByte(LSM9DS1_AG_ADDR, ORIENT_CFG_G, tempRegValue);
 }
 
+/*
+ * @brief initialises accelerometer
+ * @param imu ponter to imu struct
+ * @returns nothing
+ */
 void initAccel(LSM9DS1Handle* imu)
 {
-
   uint8_t tempRegValue = 0;
 
   if(imu->accel_settings.enableZ)
@@ -221,7 +240,6 @@ void initAccel(LSM9DS1Handle* imu)
     case 16:
       tempRegValue |= (0x1 << 3);
       break;
-
   }
 
   if(imu->accel_settings.bandwidth >= 0)
@@ -232,7 +250,6 @@ void initAccel(LSM9DS1Handle* imu)
   }
 
   WriteByte(LSM9DS1_AG_ADDR, CTRL_REG6_XL, tempRegValue);
-
   // reset tempValue
   tempRegValue = 0;
   if(imu->accel_settings.highResEnable == 0x1)
@@ -244,7 +261,11 @@ void initAccel(LSM9DS1Handle* imu)
 }
 
 
-
+/*
+ * @brief initialises magnetometer
+ * @param imu ponter to imu struct
+ * @returns nothing
+ */
 void initMag(LSM9DS1Handle* imu)
 {
   uint8_t tempRegValue = 0;
@@ -255,7 +276,7 @@ void initMag(LSM9DS1Handle* imu)
     // Add 1 to the 7th bit of CTRL_REG_1_M
     tempRegValue |= 1 << 7;
   }
-  // Make Operative mode Ultra High Performance
+  // Make operating mode Ultra High Performance
   tempRegValue |= (imu->mag_settings.XYPerformance & 0x3) << 5;
   // Output Data rate set to 80Hz
   tempRegValue |= (imu->mag_settings.sampleRate & 0x7) << 2;
@@ -302,11 +323,14 @@ void initMag(LSM9DS1Handle* imu)
 
 }
 
-
+/*
+ * @brief constrains scale of each
+ * sensor to max values
+ * @param pointer to imu struct
+ * @returns nothing
+ */
 void clampScales(LSM9DS1Handle* imu)
 {
-
-  // clamp gyro scales
   if((imu->gyro_settings.scale != 245) && (imu->gyro_settings.scale!= 500) && (imu->gyro_settings.scale!= 2000))
   {
      imu->gyro_settings.scale = 245;
@@ -318,35 +342,51 @@ void clampScales(LSM9DS1Handle* imu)
      imu->accel_settings.scale = 245;
   }
 
-
   if((imu->mag_settings.scale != 4) && (imu->mag_settings.scale!= 8) && (imu->mag_settings.scale!= 12) &&
       (imu->mag_settings.scale != 16))
   {
      imu->mag_settings.scale = 4;
   }
-
 }
 
+/*
+ * @brief calculates anhular rates in dps
+ * @param gyro raw gyro value read from
+ * register
+ * @returns angular rate in dps
+ */
 float calcGyro(float gyro)
 {
   return gyro * gyro_res;
 }
+/*
+ * @brief calculates strength of magnetic field in gauss
+ * @param mag raw mag value read from
+ * register
+ * @returns magnetic field strength in gauss
+ */
 float calcMag(float mag)
 {
   return mag * mag_res;
 }
+/*
+ * @brief calculates linear acceleration in gs
+ * @param gyro raw acc value read from
+ * register
+ * @returns linear acceleration in gs
+ */
 float calcAccel(float accel)
 {
   return accel * acc_res;
 }
 
-///@brief returns the gyroscope
-/// data in dps
-///@param imu struct handle
-///@returns nothing
+/*@brief returns the gyroscope
+* data in dps
+* @param imu struct handle
+* @returns nothing
+*/
 void readGyro(LSM9DS1Handle* imu)
 {
-
   int16_t gx, gy, gz;
   uint8_t buffer[6];
 
@@ -389,7 +429,6 @@ void readMag(LSM9DS1Handle* imu)
 ///@returns nothing
 void readAccel(LSM9DS1Handle* imu)
 {
-
   int16_t ax, ay, az;
   uint8_t buffer[6];
 
@@ -403,8 +442,12 @@ void readAccel(LSM9DS1Handle* imu)
   imu->accel_values.y = calcAccel(ay);
   imu->accel_values.z = calcAccel(az);
 
-
 }
+
+///@brief returns the
+/// temprature data in celsius
+///@param imu struct handle
+///@returns nothing
 void readTemp(LSM9DS1Handle* imu)
 {
   float temp;
@@ -415,20 +458,21 @@ void readTemp(LSM9DS1Handle* imu)
   int16_t reg_values = (buffer[1] << 8) | buffer[0] >> 8;
 
   temp = ((float)reg_values/offset) + offset;
-
   //temp = offset + ((((int16_t)buffer[1] << 8) | buffer[0]) >> 8) ;
-
   imu->temperature = temp;
-
 }
+
+/*
+ * @brief Sets Gyroscope scale
+ * @param imu imu struct handle
+ * @param gyro_scale gyroscope scale
+ */
 
 void setGyroScale(LSM9DS1Handle* imu,uint16_t gyro_scale)
 {
-
   uint8_t temp = I2CReadByte(LSM9DS1_AG_ADDR, CTRL_REG1_G);
    // Mask out the scale bits
    temp &= 0xE7;
-
    switch(gyro_scale)
    {
      case 500:
@@ -449,11 +493,16 @@ void setGyroScale(LSM9DS1Handle* imu,uint16_t gyro_scale)
    calcGyroResolution(imu);
 
 }
+
+/*
+ * @brief Sets Magnetometer scale
+ * @param imu imu struct handle
+ * @param mag_scale magnetometer scale
+ */
 void setMagScale(LSM9DS1Handle* imu, uint8_t mag_scale)
 {
   // read contents of the REG2_M register
   uint8_t temp = I2CReadByte(LSM9DS1_M_ADDR, CTRL_REG2_M);
-  //uint8_t temp = 0x00;
   // Mask the Mag scale bit.
   temp &= 0xFF^(0x3 << 5);
 
@@ -477,24 +526,27 @@ void setMagScale(LSM9DS1Handle* imu, uint8_t mag_scale)
         imu->mag_settings.scale = 4;
         break;
     }
-
   // Write new value back into register.
   WriteByte(LSM9DS1_M_ADDR, CTRL_REG2_M, temp);
   // calculate new mag resolution
-    calcMagResolution(imu);
+   calcMagResolution(imu);
 }
+
+/*
+ * @brief Sets Accelerometer scale
+ * @param imu imu struct handle
+ * @param accel_scale accelerometer scale
+ */
 void setAccelScale(LSM9DS1Handle* imu, uint8_t accel_scale)
 {
   // TODO Need to read the values of the initial register contents first so update
-  // regsiter values to be local bits and not global hex hex values
+  // Register values to be local bits and not global hex values
   uint8_t temp = I2CReadByte(LSM9DS1_AG_ADDR, CTRL_REG6_XL);
-
   // Mask out the scale bits
   temp &= 0xE7;
 
   switch(accel_scale)
   {
-
     case 4:
       temp |= (0x2 << 3);
       imu->accel_settings.scale = 4;
@@ -518,30 +570,38 @@ void setAccelScale(LSM9DS1Handle* imu, uint8_t accel_scale)
   calcAccResoltuion(imu);
 }
 
-
-
-
-void setGyroODR(LSM9DS1Handle* imu, uint8_t gyro_Rate)
+/*
+ * @brief set Gyro data rate
+ * @param imu imu struct handle
+ * @param gyro_rate gyro data rate
+ * @returns nothing
+ */
+void setGyroODR(LSM9DS1Handle* imu, uint8_t gyro_rate)
 {
-  // only do this if accel_rate is not 0 (which would disable the accel
-  if((gyro_Rate & 0x07) != 0)
+  // only do this if gyro_rate is not 0 (which would disable the gyro
+  if((gyro_rate & 0x07) != 0)
   {
     // preserve the other bytes in CTRL_REG1_G so read first
     uint8_t temp = I2CReadByte(LSM9DS1_AG_ADDR, CTRL_REG1_G);
     // mask MAG ODR bits
     temp &= 0xFF^(0x7 << 5);
     // shift in the new ODR bits
-    temp |= ((gyro_Rate & 0x07) << 5);
-    imu->accel_settings.sampleRate = gyro_Rate & 0x07;
+    temp |= ((gyro_rate & 0x07) << 5);
+    imu->accel_settings.sampleRate = gyro_rate & 0x07;
 
     // write new register valye back into CTRL_REG1_G
     WriteByte(LSM9DS1_AG_ADDR, CTRL_REG1_G, temp);
   }
-
 }
+
+/*
+ * @brief set accel data rate
+ * @param imu imu struct handle
+ * @param gyro_rate accel data rate
+ * @returns nothing
+ */
 void setAccelODR(LSM9DS1Handle* imu, uint8_t accel_Rate)
 {
-
   // only do this if accel_rate is not 0 (which would disable the accel
   if((accel_Rate & 0x07) != 0)
   {
@@ -558,41 +618,52 @@ void setAccelODR(LSM9DS1Handle* imu, uint8_t accel_Rate)
     WriteByte(LSM9DS1_AG_ADDR, CTRL_REG6_XL, temp);
   }
 
+/*
+ * @brief set Mag data rate
+ * @param imu imu struct handle
+ * @param mag_rate mag data rate
+ * @returns nothing
+ */
 }
-void setMagODR(LSM9DS1Handle* imu, uint8_t mag_Rate)
+void setMagODR(LSM9DS1Handle* imu, uint8_t mag_rate)
 {
   // preserve the other bytes in CTRL_REG5_XM so read first
   uint8_t temp = I2CReadByte(LSM9DS1_M_ADDR, CTRL_REG1_M);
   // mask MAG ODR bits
   temp &= 0xFF^(0x7 << 2);
   // shift in the new ODR bits
-  temp |= ((mag_Rate & 0x07) << 2);
-  imu->mag_settings.sampleRate = mag_Rate & 0x07;
+  temp |= ((mag_rate & 0x07) << 2);
+  imu->mag_settings.sampleRate = mag_rate & 0x07;
 
   // write new register valye back into CTRL_REG5_XM
   WriteByte(LSM9DS1_M_ADDR, CTRL_REG1_M, temp);
 }
 
 
-
+/*
+ * @brief puts gyroscope into sleep mode
+ * @param enable enable flag
+ * @returns nothing
+ */
 void sleepGyro(uint8_t enable)
 {
   uint8_t temp = I2CReadByte(LSM9DS1_AG_ADDR, CTRL_REG9);
-
   if(enable == 1)
   {
     temp |= 1 << 6;
   }
-
   else
   {
     temp &= ~(1 << 6);
   }
-
   WriteByte(LSM9DS1_AG_ADDR, CTRL_REG9, temp);
 }
 
-
+/*
+ * @brief Sets Gyroscope resolution
+ * @param imu struct handle
+ * @return nothing
+ */
 void calcGyroResolution(LSM9DS1Handle* imu)
 {
 
@@ -615,9 +686,13 @@ void calcGyroResolution(LSM9DS1Handle* imu)
   }
 }
 
+/*
+ * @brief Sets Accelerometer resolution
+ * @param imu struct handle
+ * @return nothing
+ */
 void calcAccResoltuion(LSM9DS1Handle* imu)
 {
-
   switch(imu->accel_settings.scale)
   {
     case 2:
@@ -638,10 +713,14 @@ void calcAccResoltuion(LSM9DS1Handle* imu)
 
     default:
       break;
-
   }
-
 }
+
+/*
+ * @brief Sets Magnetometer resolution
+ * @param imu struct handle
+ * @return nothing
+ */
 void calcMagResolution(LSM9DS1Handle* imu)
 {
 
@@ -665,11 +744,16 @@ void calcMagResolution(LSM9DS1Handle* imu)
 
     default:
       break;
-
   }
-
 }
 
+
+/*
+ * @brief Reads a byte of data from a register
+ * @param address address to read data from
+ * @param reg register to read data from
+ * @returns value read from register
+ */
 uint8_t I2CReadByte(uint8_t address, uint8_t reg)
 {
    uint8_t value = 0x00;
@@ -682,37 +766,42 @@ uint8_t I2CReadByte(uint8_t address, uint8_t reg)
    return value;
 }
 
+
+/*
+ * @brief Reads bytes of data from a register
+ * @param address address to read data from
+ * @param reg register to read data from
+ * @param buffer stores data
+ * @param number of bytes to read
+ * @returns number of bytes read
+ */
 uint8_t I2CReadBytes(uint8_t address, uint8_t reg, uint8_t* buffer, uint8_t numBytes)
 {
   HAL_StatusTypeDef status;
-
-  //status = HAL_I2C_Mem_Read_DMA(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, buffer, numBytes);
   status = HAL_I2C_Mem_Read(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, buffer, numBytes,100);
-
   if(status !=HAL_OK)
   {
     return HAL_ERROR;
   }
-
   return numBytes;
-
 }
 
+/*
+ * @brief Writes a byte of data to a register
+ * @param address address to write data to
+ * @param reg register to write data to
+ * @param data data to write
+ * @returns HAL_OK on success
+ */
 HAL_StatusTypeDef WriteByte(uint8_t address, uint8_t reg, uint8_t data)
 {
-
   HAL_StatusTypeDef status;
-
-//  status = HAL_I2C_Mem_Write_DMA(&hi2c1, address<<1, (uint16_t) reg, I2C_MEMADD_SIZE_8BIT, &data, 1);
   status = HAL_I2C_Mem_Write(&hi2c1, address<<1, (uint16_t) reg, I2C_MEMADD_SIZE_8BIT, &data, 1,100);
-
   if(status !=HAL_OK)
   {
     return HAL_ERROR;
   }
-
   return HAL_OK;
-
 }
 
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)

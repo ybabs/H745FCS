@@ -261,8 +261,6 @@ void  HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
     }
 }
 
-
-
 /*
  * @brief Resets the BMP280 chip
  * @returns Result of the operation
