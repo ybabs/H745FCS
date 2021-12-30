@@ -5,8 +5,6 @@
 #include <stm32h7xx_hal.h>
 #include <spi.h>
 
-
-
 #define BMP280_CHIP_ID         0x58
 #define BMP280_REG_ID          0xD0
 #define BMP280_REG_RESET       0xE0
@@ -20,9 +18,8 @@
 #define BMP280_REG_TEMP_LSB    0xFB
 #define BMP280_REG_TEMP_XLSB   0xFC
 #define BMP280_RESET_VALUE     0xB6   // readout value is always 0x00
-#define SPI_READ               0x80
-#define SPI_WRITE              0X7F
-
+#define BMP280_SPI_READ        0x80
+#define BMP280_SPI_WRITE       0X7F
 
 #define SEA_LEVEL_PRESSURE (101325.0f) // in Pa from 1013.25hPa
 #define PRESSURE_COEFFICENT (44330.0f)
@@ -128,44 +125,23 @@ typedef struct {
 
 }BMP280Handle;
 
+
+int32_t t_fine;
+
 uint16_t Read16Bit(uint8_t reg);
 uint32_t Read24Bit(uint8_t reg);
 
 uint8_t setConfig(BMP280Handle* baro);
 uint8_t ResetBMP280(void);
 uint8_t CheckBMP280ChipID();
-uint8_t Read8Bit(BMP280Handle* baro);
 
+void ResetBMP280NSS();
 void ReadCalibCoefficients(BMP280Handle* baro);
 void ReadTemp(BMP280Handle* baro);
 void ReadPressure(BMP280Handle* baro);
 void ReadAltitude(BMP280Handle* baro);
 void ReadComplete();
 
-int32_t t_fine;
 
 
-//typedef struct {
-//  float baro_pressure;
-//  float baro_altitude;
-//  float gps_latitude;
-//  float gps_longitude;
-//  float gps_altitude;
-//  float gps_velocity_x;
-//  float gps_velocity_y;
-//  float gps_velocity_z;
-//  int   gps_satellites;
-//  float imu_mag_x;
-//  float imu_mag_y;
-//  float imu_mag_z;
-//  float imu_acc_x;
-//  float imu_acc_y;
-//  float imu_acc_z;
-//  float imu_gyro_x;
-//  float imu_gyro_y;
-//  float imu_gyro_z;
-//}dataPacket;
-
-
-
-#endif
+#endif //BMP280_H

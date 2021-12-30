@@ -4,14 +4,8 @@
 
 uint8_t CheckIMUSensorID(uint8_t address, uint8_t reg)
 {
-
-//  HAL_Delay(100);
-//   uint8_t result = I2CReadByte(address, reg);
-//
-
     uint8_t value = 0x00;
     HAL_StatusTypeDef status;
-//    status = HAL_I2C_Mem_Read_DMA(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, &value, 1);
     status = HAL_I2C_Mem_Read(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, &value, 1,100);
 
     if(status != HAL_OK)
@@ -19,9 +13,6 @@ uint8_t CheckIMUSensorID(uint8_t address, uint8_t reg)
        return HAL_ERROR;
     }
     return value;
-   //return result;
-
-
 }
 
 void init(LSM9DS1Handle* imu)
@@ -105,7 +96,7 @@ uint16_t setup(LSM9DS1Handle* imu)
   // initialise accel
   initAccel(imu);
   // init Mag
- initMag(imu);
+  initMag(imu);
   return imu_response;
 }
 

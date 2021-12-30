@@ -1,80 +1,101 @@
 #include "bmp280.h"
 #include <string.h>
 
-int flag = 0;
+//DMA interrupt control
+uint8_t dma_blocking_dma_blocking_flag = 0;
 
+/*
+ * @brief Pulls the NCS pin of the BMP280 High
+ * @returns nothing
+ */
+void ReadComplete()
+{
+  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
+}
+/*
+ * @brief Pulls the NCS pin of the BMP280 Low
+ * @returns nothing
+ */
+void ResetBMP280NSS(void)
+{
+  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
+}
 
+/*
+ * @brief Checks the WHOAMI register
+ * to confirm the chip
+ * @returns OK on success, Error on failure
+ */
 uint8_t CheckBMP280ChipID()
 {
   uint8_t SerialData[3] = {(BMP280_REG_ID | 0x80), 0, 0};
   volatile uint8_t aRxBuffer[3]= {0};
-
-  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
+  ResetBMP280NSS();
   HAL_Delay(1000);
   if(HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData,  (uint8_t*)aRxBuffer, 2) == HAL_OK)
   {
-   while(flag == 1)
+   while(dma_blocking_dma_blocking_flag == 1)
     {
       if(aRxBuffer[1] != BMP280_CHIP_ID)
       {
         return HAL_ERROR;
       }
     }
-
   }
 
-  flag = 0;
-  return HAL_OK;
-
-}
-
-
-uint8_t Read8Bit(BMP280Handle* baro)
-{
+  dma_blocking_flag = 0;
   return HAL_OK;
 }
 
+/*
+ * @brief Reads a 16 bit value from two registers
+ * @param reg  register to read from
+ * @returns result of 16bit read
+ */
 uint16_t Read16Bit(uint8_t reg)
 {
    uint16_t result;
-   HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
-   uint8_t SerialData[3] = {(reg|0x80), 0, 0};
+   ResetBMP280NSS();
+   uint8_t SerialData[3] = {(reg|BMP280_SPI_READ), 0, 0};
    static uint8_t aRxBuffer[3]= {0};
-  HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData,  (uint8_t*)aRxBuffer, 3);
-
-   while(flag == 1)
+   HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData,  (uint8_t*)aRxBuffer, 3);
+   while(dma_blocking_flag == 1)
    {
      result = aRxBuffer[2] << 8 | aRxBuffer [1];
-     flag = 0;
-
+     dma_blocking_flag = 0;
    }
-
-
    return result;
 }
 
-
+/*
+ * @brief Reads a 24 bit value from two registers
+ * @param reg  register to read from
+ * @returns result of 24 bit read
+ */
 uint32_t Read24Bit(uint8_t reg)
 {
   uint32_t result;
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-  uint8_t SerialData[4] = {(reg|0x80), 0, 0,0};
+  ResetBMP280NSS();
+  uint8_t SerialData[4] = {(reg|BMP280_SPI_READ), 0, 0,0};
   static uint8_t aRxBuffer[4] = {0};
   HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData,  (uint8_t*)aRxBuffer, 4);
-  while(flag == 1)
+  while(dma_blocking_flag == 1)
      {
         result = aRxBuffer[1] << 16 | aRxBuffer[2] << 8 | aRxBuffer[3] >> 4;
-        flag = 0;
+        dma_blocking_flag = 0;
      }
-
-
   return result;
 }
 
+/*
+ * @brief calculates the temperature reported by
+ * the BMP280
+ * @param baro a pointer to the BMP280 struct
+ * @returns nothing
+ */
 void ReadTemp(BMP280Handle* baro)
 {
   int32_t var1, var2;
-
   int32_t adc_T = Read24Bit(BMP280_REG_TEMP_MSB);
   adc_T >>= 4;
 
@@ -88,12 +109,17 @@ void ReadTemp(BMP280Handle* baro)
           14;
 
   t_fine = var1 + var2;
-
   float T = (t_fine * 5 + 128) >> 8;
   baro->temperature = T/100;
 
 }
 
+/*
+ * @brief calculates the pressure reported by
+ * the BMP280
+ * @param baro a pointer to the BMP280 struct
+ * @returns nothing
+ */
 void ReadPressure(BMP280Handle* baro)
 {
 
@@ -128,23 +154,31 @@ void ReadPressure(BMP280Handle* baro)
 
 }
 
+/*
+ * @brief Calculates the altitude in metres above
+ * sea level.
+ * @param baro a pointer to the BMP280 struct
+ * @returns nothing.
+ */
 void ReadAltitude(BMP280Handle* baro)
 {
   float altitude = 0;
   float pressure = baro->pressure;
   altitude = PRESSURE_COEFFICENT * (1.0f - pow((pressure/ SEA_LEVEL_PRESSURE), (1/5.255)));
-
   if((altitude <= MIN_ALTITUDE) || altitude >= MAX_ALTITUDE)
   {
     return;
   }
-
   baro->altitude = altitude;
-
 }
 
 
-
+/*
+ * @brief Reads the calibration coefficients
+ * from the registers in the BMP280
+ * @param baro a pointer to the BMP280 struct
+ * @returns nothing.
+ */
 void ReadCalibCoefficients(BMP280Handle* baro)
 {
   baro->comp_vals.dig_T1 = Read16Bit(dig_T1);
@@ -161,107 +195,89 @@ void ReadCalibCoefficients(BMP280Handle* baro)
   baro->comp_vals.dig_P9 = Read16Bit(dig_P9);
 
 }
-void WriteRegister(uint8_t reg, uint8_t data)
-{
 
-}
+/*
+ * @brief Sets the measurement configuration
+ * for the BMP280.
+ * @param baro a pointer to the BMP280 struct
+ * @returns HAL_OK if successful or HAL_ERROR
+ * if configuration write fails.
+ */
 uint8_t setConfig(BMP280Handle* baro)
 {
-
-
     // Ultra High resolution 26.3 Hz
    baro->config.mode = NORMAL;
-   baro->config.pressure_oversampling =  X16; // X16;
-   baro->config.temp_oversampling =  X2; //X2;
+   baro->config.pressure_oversampling =  X16;
+   baro->config.temp_oversampling =  X2;
 
    uint8_t SerialData[2] = {0};
    uint8_t aRxBuffer[3]= {0};
-   SerialData[0] = BMP280_REG_CTRL_MEAS & ~0x80;
+   SerialData[0] = BMP280_REG_CTRL_MEAS & ~BMP280_SPI_READ;
    SerialData[1] = baro->config.temp_oversampling << 5 | baro->config.pressure_oversampling << 2 | baro->config.mode ;
-   //SerialData[1] = 0x27;
 
-   HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
-   HAL_Delay(1000);
-
+   ResetBMP280NSS();
+   HAL_Delay(50);
    HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData, (uint8_t*)aRxBuffer, 3);
-
-   while(flag == 1)
+   while(dma_blocking_flag == 1)
    {
         memset(SerialData, 0, sizeof(SerialData));
         memset(aRxBuffer, 0, sizeof(aRxBuffer));
-        flag  = 0;
+        dma_blocking_flag  = 0;
    }
 
+   baro->config.IIR_Filter = FILTER_OFF;
+   baro->config.standby = STANDBY_0_5;
 
-       baro->config.IIR_Filter = FILTER_OFF;
-       baro->config.standby = STANDBY_0_5;
+   SerialData[0] = BMP280_REG_CONFIG & ~BMP280_SPI_READ;
+   SerialData[1] = baro->config.standby << 5 | baro->config.IIR_Filter ;
+   ResetBMP280NSS();
+   uint8_t res = HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData, (uint8_t*)aRxBuffer, 3);
 
-       SerialData[0] = BMP280_REG_CONFIG & ~0x80;
-       SerialData[1] = baro->config.standby << 5 | baro->config.IIR_Filter ;
-       HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
-
-       uint8_t res = HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData, (uint8_t*)aRxBuffer, 3);
-
-       while(flag == 1)
-       {
-          if(res == HAL_OK)
-          {
-            flag = 0;
-            return HAL_OK;
-          }
-
-          else
-          {
-            flag = 0;
-              return HAL_ERROR;
-          }
-
-       }
-
-
+   while(dma_blocking_flag == 1)
+   {
+    if(res == HAL_OK)
+      {
+        dma_blocking_flag = 0;
+        return HAL_OK;
+      }
+    else
+      {
+        dma_blocking_flag = 0;
+        return HAL_ERROR;
+      }
+   }
        return HAL_OK;
-
-
 }
 
+/*
+ * @brief Callback Handler
+ */
 void  HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 {
     if(hspi->Instance == SPI1)
     {
-      flag = 1;
-      HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
+      dma_blocking_flag = 1;
+      ReadComplete();
     }
 }
 
 
-void ReadComplete()
-{
 
-  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
-
-}
-
+/*
+ * @brief Resets the BMP280 chip
+ * @returns Result of the operation
+ */
 uint8_t ResetBMP280(void)
 {
-   uint8_t SerialData[2] = {(BMP280_REG_RESET & ~0x80), BMP280_RESET_VALUE}; // Register address, Data,
+   uint8_t SerialData[2] = {(BMP280_REG_RESET & ~BMP280_SPI_READ), BMP280_RESET_VALUE}; // Register address, Data,
    static uint8_t aRxBuffer[3]= {0};
-   HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
-
+   ResetBMP280NSS();
    if(HAL_SPI_TransmitReceive_DMA(&hspi1, SerialData, (uint8_t*)aRxBuffer, 2) == HAL_OK)
    {
      return HAL_OK;
    }
-
-//   if(HAL_SPI_TransmitReceive(&hspi1, SerialData, (uint8_t*)aRxBuffer, 2, HAL_MAX_DELAY) == HAL_OK)
-//   {
-//     return HAL_OK;
-//   }
-
    else
    {
      return HAL_ERROR;
    }
-
-
-
 }
