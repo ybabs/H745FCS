@@ -11,10 +11,10 @@
 #define BARO_DATA_TYPE 0x05
 
 // Update Rates of sensors in milliseconds
-const uint32_t GPS_SAMPLE_TIME =  100; // GPS has 10HZ update rate
-const uint32_t MAG_SAMPLE_TIME =  13; // 80 Hz
-const uint32_t IMU_SAMPLE_TIME =  1; // 952HZ
-const uint32_t BARO_SAMPLE_TIME = 38; // 26.3 Hz
+#define GPS_SAMPLE_TIME =  100; // GPS has 10HZ update rate
+#define MAG_SAMPLE_TIME =  13; // 80 Hz
+#define IMU_SAMPLE_TIME =  1; // 952HZ
+#define BARO_SAMPLE_TIME = 38; // 26.3 Hz
 
 #define MEM_ALIGN(x)   (((x) + 0x00000003) & ~0x00000003)
 

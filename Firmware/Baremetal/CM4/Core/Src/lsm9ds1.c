@@ -83,7 +83,7 @@ void init(LSM9DS1Handle* imu)
  * @returns response from MAG and ACC/GYRO WHOAMI
  * register
  */
-uint16_t setup(LSM9DS1Handle* imu)
+uint8_t setup(LSM9DS1Handle* imu)
 {
   // initialise the sensors
   init(imu);
@@ -111,7 +111,22 @@ uint16_t setup(LSM9DS1Handle* imu)
   initAccel(imu);
   // init Mag
   initMag(imu);
-  return imu_response;
+  return HAL_OK;;
+}
+
+/*
+ * @brief Calls the setup IMU function
+ * @param imu Pointer IMU struct
+ * @retval none
+ */
+uint8_t ConfigIMU(LSM9DS1Handle* imu)
+{
+  if(setup(imu) != HAL_OK)
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
 }
 
 /*

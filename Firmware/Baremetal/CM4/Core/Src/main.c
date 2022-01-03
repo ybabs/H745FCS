@@ -33,14 +33,17 @@
 #include "string.h"
 #include "common.h"
 
+/* Shared Address spaces for M4 and M7 in D3 Region */
 volatile struct acc_data *acc_values_m4 = (struct acc_data*) 0x38001000;
 volatile struct gyro_data *gyro_values_m4 = (struct gyro_data*) 0x3800100D;
 volatile struct mag_data *mag_values_m4 = (struct mag_data*) 0x3800101A;
 volatile struct baro_data *baro_values_m4 = (struct baro_data*) 0x38001028;
 volatile struct gps_data *gps_values_m4 = (struct gps_data*) 0x38001032;
 
-
-
+/* Sensor Handles */
+LSM9DS1Handle imu;
+GPSHandle gps;
+BMP280Handle baro;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,16 +55,11 @@ uint32_t gyro_timer = 0;
 uint32_t mag_timer = 0;
 uint32_t baro_timer = 0;
 
-uint32_t duration_us = 0x00;
-uint32_t nb_cycles  = 0x00;
-
 // Variable to send Notification
 volatile uint32_t notif_rx;
 /* USER CODE END PTD */
-
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 #ifndef HSEM_ID_0
 #define HSEM_ID_0 (0U) /* HW semaphore 0*/
 #endif
@@ -76,9 +74,7 @@ volatile uint32_t notif_rx;
 
 /* USER CODE BEGIN PV */
 
- LSM9DS1Handle imu;
- GPSHandle gps;
- BMP280Handle baro;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,7 +86,7 @@ void GyroTask(void);
 void MagTask(void);
 void BaroTask(void);
 void ReadSensors(void);
-void ConfigSensors(void);
+uint8_t ConfigSensors(void);
 void M4DataToM7(uint8_t data_type);
 /* USER CODE END PFP */
 
@@ -154,14 +150,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
-    TimerCount_Start();
     ReadSensors();
-    TimerCount_Stop(nb_cycles);
-    duration_us = (uint32_t)(((uint64_t)US_IN_SECOND * (nb_cycles)) / SystemCoreClock);
-
-
   }
   /* USER CODE END 3 */
 }
@@ -180,7 +170,6 @@ void AccelTask(void)
 void GyroTask(void)
 {
     readGyro(&imu);
-    //readTemp(&imu);
     M4DataToM7(GYRO_DATA_TYPE);
 }
 void MagTask(void)
@@ -313,28 +302,29 @@ void M4DataToM7(uint8_t data_type)
 
 
 
-
-void ConfigSensors(void)
+/*
+ * @brief Initialises the sensors
+ * @retval HAL_OK if successful
+ */
+uint8_t ConfigSensors(void)
 {
 
   // COnfigure GPS Sensor
   ConfigGPS();
 
   // Configure BMP280
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-  uint8_t baro_res = CheckBMP280ChipID();
-  if(baro_res == HAL_OK)
+  if(ConfigBMP280(&baro) != HAL_OK)
   {
-    uint8_t reset_chip_ok = ResetBMP280();
-    HAL_Delay(1000);
-    uint8_t set_config_ok = setConfig(&baro);
-    ReadCalibCoefficients(&baro);
+      return HAL_ERROR;
   }
 
-  HAL_Delay(1000);
-
   // Configure IMU;
-  uint16_t imu_res = setup(&imu);
+ if(ConfigIMU(&imu)!= HAL_OK)
+ {
+    return HAL_ERROR;
+ }
+
+ return HAL_OK;
 
 
 }

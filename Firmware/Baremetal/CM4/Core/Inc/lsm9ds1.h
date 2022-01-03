@@ -316,7 +316,7 @@ typedef struct{
 
 // Initialises the IMU using the address of the accelerometer
 // gyro and magnetometer
-uint16_t setup(LSM9DS1Handle* imu);
+uint8_t setup(LSM9DS1Handle* imu);
 
 // sets up the sensor and default settings
 void init(LSM9DS1Handle* imu);
@@ -351,6 +351,7 @@ void setMagODR(LSM9DS1Handle* imu, uint8_t mag_Rate);
 void sleepGyro(uint8_t enable);
 
 
+uint8_t ConfigIMU();
 uint8_t I2CReadByte(uint8_t address, uint8_t reg);
 uint8_t I2CReadBytes(uint8_t address, uint8_t reg, uint8_t* buffer, uint8_t numBytes);
 HAL_StatusTypeDef WriteByte(uint8_t address, uint8_t reg, uint8_t data);
