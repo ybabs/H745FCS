@@ -197,7 +197,7 @@ void GyroTask(void)
  */
 void MagTask(void)
 {
-    readMag(&imu);
+  readMag(&imu);
   M4DataToM7(MAG_DATA_TYPE);
 }
 
@@ -347,28 +347,24 @@ void M4DataToM7(uint8_t data_type)
 uint8_t ConfigSensors(void)
 {
 
-//  HAL_Delay(100);
-//  // COnfigure GPS Sensor
-//  ConfigGPS();
-//
-//  HAL_Delay(100);
-//  // Configure IMU;
-//  if (ConfigIMU(&imu) != HAL_OK)
-//  {
-//    return HAL_ERROR;
-//  }
-//
-//  HAL_Delay(100);
+
+  // COnfigure GPS Sensor
+  ConfigGPS();
+
+  HAL_Delay(100);
+  // Configure IMU;
+  if (ConfigIMU(&imu) != HAL_OK)
+  {
+    return HAL_ERROR;
+  }
+
+  HAL_Delay(100);
 
   // Configure BMP280
   if (ConfigBMP280(&baro) != HAL_OK)
   {
     return HAL_ERROR;
   }
-
-
-
-
 
  return HAL_OK;
 
