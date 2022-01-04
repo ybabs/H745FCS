@@ -1,5 +1,5 @@
 ublox.c:13:7:calcChecksum	24	static
 ublox.c:28:7:processGPS	16	static
 ublox.c:47:7:ConfigGPS	272	static
-ublox.c:75:7:HAL_UART_RxCpltCallback	24	static
-ublox.c:127:7:HAL_UART_TxCpltCallback	16	static
+ublox.c:74:7:HAL_UART_RxCpltCallback	24	static
+ublox.c:126:7:HAL_UART_TxCpltCallback	16	static

@@ -47,22 +47,21 @@ const int data_size = sizeof(NAV_PVT);
  void ConfigGPS(void)
  {
    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UBLOX_10HZ_RATE, sizeof(UBLOX_10HZ_RATE));
-   HAL_Delay(20);
+  HAL_Delay(50);
    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UBLOX_GXGGA_OFF, sizeof(UBLOX_GXGGA_OFF));
-   HAL_Delay(20);
+  HAL_Delay(50);
    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UBLOX_GXGLL_OFF, sizeof(UBLOX_GXGLL_OFF));
-   HAL_Delay(20);
+  HAL_Delay(50);
    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UBLOX_GXGSA_OFF, sizeof(UBLOX_GXGSA_OFF));
-   HAL_Delay(20);
+  HAL_Delay(50);
    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UBLOX_GXGSV_OFF, sizeof(UBLOX_GXGSV_OFF));
-   HAL_Delay(20);
+  HAL_Delay(50);
    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UBLOX_GXRMC_OFF, sizeof(UBLOX_GXRMC_OFF));
-   HAL_Delay(20);
+  HAL_Delay(50);
    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UBLOX_GXVTG_OFF, sizeof(UBLOX_GXVTG_OFF));
-   HAL_Delay(20);
+  HAL_Delay(50);
    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UBLOX_NAVPVT_ON, sizeof(UBLOX_NAVPVT_ON));
-   // This is not needed
-   //HAL_UART_Receive_DMA(&huart3, (uint8_t *)data_byte, 1);
+  HAL_UART_Receive_DMA(&huart3, (uint8_t*) data_byte, 1);
  }
 
 

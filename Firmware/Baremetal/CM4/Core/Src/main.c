@@ -78,7 +78,7 @@ volatile uint32_t notif_rx;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
-static void MPU_Config(void);
+//static void MPU_Config(void);
 /* USER CODE BEGIN PFP */
 void GpsTask(void);
 void AccelTask(void);
@@ -90,6 +90,8 @@ uint8_t ConfigSensors(void);
 void M4DataToM7(uint8_t data_type);
 /* USER CODE END PFP */
 
+float temp;
+float pressure;
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 /* USER CODE END 0 */
@@ -142,7 +144,7 @@ int main(void)
   MX_I2C1_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-   ConfigSensors();
+  ConfigSensors();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -157,34 +159,60 @@ int main(void)
 }
 
 /* USER CODE BEGIN 4 */
+/*
+ * @brief Processes the GPS data
+ * @retval none
+ */
 void GpsTask(void)
 {
      processGPS(&gps);
-     M4DataToM7(GPS_DATA_TYPE);
+  M4DataToM7(GPS_DATA_TYPE);
 }
+
+/*
+ * @brief Processes the Accelerometer
+ * data from the IMU
+ * @retval none
+ */
 void AccelTask(void)
 {
     readAccel(&imu);
-    M4DataToM7(ACC_DATA_TYPE);
+  M4DataToM7(ACC_DATA_TYPE);
 }
+
+/*
+ * @brief Processes Gyro data
+ * from the IMU
+ * @retval none
+ */
 void GyroTask(void)
 {
     readGyro(&imu);
-    M4DataToM7(GYRO_DATA_TYPE);
+  M4DataToM7(GYRO_DATA_TYPE);
 }
+
+/*
+ * @brief Processes Mag Data from IMU
+ * @retval None
+ */
 void MagTask(void)
 {
     readMag(&imu);
-    M4DataToM7(MAG_DATA_TYPE);
+  M4DataToM7(MAG_DATA_TYPE);
 }
 
+/*
+ * @brief Processes barometer data from the
+ * BMP280
+ * @retval None
+ */
 void BaroTask(void)
 {
-    ReadTemp(&baro);
-    ReadPressure(&baro);
-    ReadAltitude(&baro);
+  ReadTemp(&baro);
+  ReadPressure(&baro);
+  ReadAltitude(&baro);
 
-    M4DataToM7(BARO_DATA_TYPE);
+   M4DataToM7(BARO_DATA_TYPE);
 
 }
 
@@ -198,7 +226,13 @@ void HAL_HSEM_FreeCallback(uint32_t SemMask)
   notif_rx = 1;
 }
 
-
+/*
+ * Runs all sensors and
+ * processes sensor data.
+ * @note, You can comment out a task if you don't want
+ * data from it.
+ * @retval None.
+ */
 void ReadSensors(void)
 {
   GpsTask();
@@ -212,91 +246,95 @@ void ReadSensors(void)
   BaroTask();
 
 }
+
+/*
+ * @brief Uses the Hardware Semaphore to send sensor data
+ * from the M4 core to the M7.
+ * @param data_type Sensor data type to send
+ * @retval None
+ */
 void M4DataToM7(uint8_t data_type)
 {
 
   switch (data_type)
   {
-    case GPS_DATA_TYPE:
-    {
-      if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
-      {
-
-        gps_values_m4->gps_latitude = gps.latitude;
-        gps_values_m4->gps_longitude = gps.longitude;
-        gps_values_m4->gps_altitude = gps.altitude;
-        gps_values_m4->gps_velocity_x = gps.vel_x;
-        gps_values_m4->gps_velocity_y = gps.vel_y;
-        gps_values_m4->gps_velocity_z = gps.vel_z;
-        gps_values_m4->gnd_speed = gps.gndSpeed;
-        gps_values_m4->gps_satellites = gps.num_satellites;
-      }
-      // Release semaphore
-      HAL_HSEM_Release(HSEM_ID_0, 0);
-      break;
-    }
-
-    case ACC_DATA_TYPE:
-    {
-      if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
-      {
-        acc_values_m4->imu_acc_x = imu.accel_values.x;
-        acc_values_m4->imu_acc_y = imu.accel_values.y;
-        acc_values_m4->imu_acc_z = imu.accel_values.z;
-      }
-       // Release semaphore
-       HAL_HSEM_Release(HSEM_ID_0, 0);
-
-      break;
-    }
-
-    case GYRO_DATA_TYPE:
-    {
-      if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
-      {
-        gyro_values_m4->imu_gyro_x = imu.gyro_values.x;
-        gyro_values_m4->imu_gyro_y = imu.gyro_values.y;
-        gyro_values_m4->imu_gyro_z = imu.gyro_values.z;
-      }
-       // Release semaphore
-       HAL_HSEM_Release(HSEM_ID_0, 0);
-
-      break;
-    }
-
-    case MAG_DATA_TYPE:
+  case GPS_DATA_TYPE:
+  {
+    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
     {
 
-      if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
-        {
-          mag_values_m4->imu_mag_x = imu.mag_values.x;
-          mag_values_m4->imu_mag_y = imu.mag_values.y;
-          mag_values_m4->imu_mag_z = imu.mag_values.z;
-        }
-       // Release semaphore
-       HAL_HSEM_Release(HSEM_ID_0, 0);
-      break;
+      gps_values_m4->gps_latitude = gps.latitude;
+      gps_values_m4->gps_longitude = gps.longitude;
+      gps_values_m4->gps_altitude = gps.altitude;
+      gps_values_m4->gps_velocity_x = gps.vel_x;
+      gps_values_m4->gps_velocity_y = gps.vel_y;
+      gps_values_m4->gps_velocity_z = gps.vel_z;
+      gps_values_m4->gnd_speed = gps.gndSpeed;
+      gps_values_m4->gps_satellites = gps.num_satellites;
     }
-
-    case BARO_DATA_TYPE:
-    {
-      if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
-      {
-          baro_values_m4->baro_altitude = baro.altitude;
-          baro_values_m4->baro_pressure = baro.pressure;
-      }
-             // Release semaphore
-       HAL_HSEM_Release(HSEM_ID_0, 0);
-      break;
-    }
-
-    default:
-      break;
-
+    // Release semaphore
+    HAL_HSEM_Release(HSEM_ID_0, 0);
+    break;
   }
 
+  case ACC_DATA_TYPE:
+  {
+    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+    {
+      acc_values_m4->imu_acc_x = imu.accel_values.x;
+      acc_values_m4->imu_acc_y = imu.accel_values.y;
+      acc_values_m4->imu_acc_z = imu.accel_values.z;
+    }
+    // Release semaphore
+    HAL_HSEM_Release(HSEM_ID_0, 0);
 
+    break;
+  }
 
+  case GYRO_DATA_TYPE:
+  {
+    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+    {
+      gyro_values_m4->imu_gyro_x = imu.gyro_values.x;
+      gyro_values_m4->imu_gyro_y = imu.gyro_values.y;
+      gyro_values_m4->imu_gyro_z = imu.gyro_values.z;
+    }
+    // Release semaphore
+    HAL_HSEM_Release(HSEM_ID_0, 0);
+
+    break;
+  }
+
+  case MAG_DATA_TYPE:
+  {
+
+    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+    {
+      mag_values_m4->imu_mag_x = imu.mag_values.x;
+      mag_values_m4->imu_mag_y = imu.mag_values.y;
+      mag_values_m4->imu_mag_z = imu.mag_values.z;
+    }
+    // Release semaphore
+    HAL_HSEM_Release(HSEM_ID_0, 0);
+    break;
+  }
+
+  case BARO_DATA_TYPE:
+  {
+    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+    {
+      baro_values_m4->baro_altitude = baro.altitude;
+      baro_values_m4->baro_pressure = baro.pressure;
+    }
+    // Release semaphore
+    HAL_HSEM_Release(HSEM_ID_0, 0);
+    break;
+  }
+
+  default:
+    break;
+
+  }
 }
 
 
@@ -309,20 +347,28 @@ void M4DataToM7(uint8_t data_type)
 uint8_t ConfigSensors(void)
 {
 
-  // COnfigure GPS Sensor
-  ConfigGPS();
+//  HAL_Delay(100);
+//  // COnfigure GPS Sensor
+//  ConfigGPS();
+//
+//  HAL_Delay(100);
+//  // Configure IMU;
+//  if (ConfigIMU(&imu) != HAL_OK)
+//  {
+//    return HAL_ERROR;
+//  }
+//
+//  HAL_Delay(100);
 
   // Configure BMP280
-  if(ConfigBMP280(&baro) != HAL_OK)
+  if (ConfigBMP280(&baro) != HAL_OK)
   {
-      return HAL_ERROR;
+    return HAL_ERROR;
   }
 
-  // Configure IMU;
- if(ConfigIMU(&imu)!= HAL_OK)
- {
-    return HAL_ERROR;
- }
+
+
+
 
  return HAL_OK;
 
@@ -331,32 +377,32 @@ uint8_t ConfigSensors(void)
 /* USER CODE END 4 */
 
 /* MPU Configuration */
-
-void MPU_Config(void)
-{
-  MPU_Region_InitTypeDef MPU_InitStruct = {0};
-
-  /* Disables the MPU */
-  HAL_MPU_Disable();
-  /** Initializes and configures the Region and the memory to be protected
-  */
-  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
-  MPU_InitStruct.Number = MPU_REGION_NUMBER0;
-  MPU_InitStruct.BaseAddress = 0x10000000;
-  MPU_InitStruct.Size = MPU_REGION_SIZE_256KB;
-  MPU_InitStruct.SubRegionDisable = 0x0;
-  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
-  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
-  MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
-  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
-  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
-
-  HAL_MPU_ConfigRegion(&MPU_InitStruct);
-  /* Enables the MPU */
-  HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
-
-}
+//MPU not needed in CM4 Core
+//void MPU_Config(void)
+//{
+//  MPU_Region_InitTypeDef MPU_InitStruct = {0};
+//
+//  /* Disables the MPU */
+//  HAL_MPU_Disable();
+//  /** Initializes and configures the Region and the memory to be protected
+//  */
+//  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+//  MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+//  MPU_InitStruct.BaseAddress = 0x10000000;
+//  MPU_InitStruct.Size = MPU_REGION_SIZE_256KB;
+//  MPU_InitStruct.SubRegionDisable = 0x0;
+//  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+//  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+//  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+//  MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+//  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+//  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+//
+//  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+//  /* Enables the MPU */
+//  HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+//
+//}
 
 /**
   * @brief  This function is executed in case of error occurrence.
