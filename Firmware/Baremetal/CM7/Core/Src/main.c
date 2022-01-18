@@ -34,13 +34,6 @@
 #include "fir.h"
 #include "rc.h"
 
-//FIRFilter lpf_Acc;
-RCFilter lpf_Acc_RC;
-
-
-
-
-
 
 
 void ReadGPS(void);
@@ -91,6 +84,7 @@ struct mag_data mag_values;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
+static void UART4_Start(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -184,7 +178,7 @@ Error_Handler();
 
     ReadGPS();
     ReadMag();
-     ReadAcc();
+    ReadAcc();
     ReadBaro();
     ReadGyro();
 
