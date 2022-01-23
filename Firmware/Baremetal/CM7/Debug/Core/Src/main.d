@@ -59,7 +59,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
  C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/CM7/Filters/Inc/fir.h \
  C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/CM7/Buffer_Lib/Inc/ring_buffer.h \
- C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/CM7/Filters/Inc/rc.h
+ C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/CM7/Filters/Inc/rc.h \
+ ../Core/Inc/sbus.h
 
 ../Core/Inc/main.h:
 
@@ -200,3 +201,5 @@ C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/CM7/Filters/Inc/fir.h:
 C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/CM7/Buffer_Lib/Inc/ring_buffer.h:
 
 C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/CM7/Filters/Inc/rc.h:
+
+../Core/Inc/sbus.h:

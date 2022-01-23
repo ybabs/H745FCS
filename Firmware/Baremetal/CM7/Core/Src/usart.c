@@ -28,7 +28,7 @@ UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart7;
 DMA_HandleTypeDef hdma_uart7_rx;
 DMA_HandleTypeDef hdma_uart7_tx;
-
+DMA_HandleTypeDef hdma_uart4_rx;
 /* UART4 init function */
 void MX_UART4_Init(void)
 {
@@ -45,17 +45,13 @@ void MX_UART4_Init(void)
   huart4.Init.WordLength = UART_WORDLENGTH_9B;
   huart4.Init.StopBits = UART_STOPBITS_2;
   huart4.Init.Parity = UART_PARITY_EVEN;
-  huart4.Init.Mode = UART_MODE_TX_RX;
+  huart4.Init.Mode = UART_MODE_RX;
   huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart4.Init.OverSampling = UART_OVERSAMPLING_16;
   huart4.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
   huart4.Init.ClockPrescaler = UART_PRESCALER_DIV1;
   huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
   if (HAL_UART_Init(&huart4) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetTxFifoThreshold(&huart4, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
   {
     Error_Handler();
   }
@@ -146,10 +142,31 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+    /*UART4 RX Init
+     *
+     */
+
+    hdma_uart4_rx.Instance = DMA2_Stream1;
+    hdma_uart4_rx.Init.Request = DMA_REQUEST_UART4_RX;
+    hdma_uart4_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    hdma_uart4_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_uart4_rx.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_uart4_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    hdma_uart4_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    hdma_uart4_rx.Init.Mode = DMA_CIRCULAR;
+    hdma_uart4_rx.Init.Priority = DMA_PRIORITY_HIGH;
+    hdma_uart4_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+
+    if (HAL_DMA_Init(&hdma_uart4_rx) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    __HAL_LINKDMA(uartHandle, hdmarx, hdma_uart4_rx);
     /* UART4 interrupt Init */
     HAL_NVIC_SetPriority(UART4_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(UART4_IRQn);
@@ -277,7 +294,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     /* UART7 interrupt Deinit */
     HAL_NVIC_DisableIRQ(UART7_IRQn);
   /* USER CODE BEGIN UART7_MspDeInit 1 */
-
+    /* UART4 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(UART4_IRQn);
   /* USER CODE END UART7_MspDeInit 1 */
   }
 }

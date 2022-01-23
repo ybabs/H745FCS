@@ -39,7 +39,7 @@ Core/Src/stm32h7xx_it.o: ../Core/Src/stm32h7xx_it.c ../Core/Inc/main.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
  C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/Common/Inc/common.h \
- ../Core/Inc/stm32h7xx_it.h
+ ../Core/Inc/stm32h7xx_it.h ../Core/Inc/sbus.h
 
 ../Core/Inc/main.h:
 
@@ -124,3 +124,5 @@ Core/Src/stm32h7xx_it.o: ../Core/Src/stm32h7xx_it.c ../Core/Inc/main.h \
 C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/Common/Inc/common.h:
 
 ../Core/Inc/stm32h7xx_it.h:
+
+../Core/Inc/sbus.h:

@@ -34,6 +34,8 @@
 #include "fir.h"
 #include "rc.h"
 
+#include "sbus.h"
+
 
 
 void ReadGPS(void);
@@ -49,6 +51,15 @@ volatile struct gyro_data *gyro_values_m7 = (struct gyro_data*) 0x3800100D;
 volatile struct mag_data *mag_values_m7 = (struct mag_data*) 0x3800101A;
 volatile struct baro_data *baro_values_m7 = (struct baro_data*) 0x38001028;
 volatile struct gps_data *gps_values_m7 = (struct gps_data*) 0x38001032;
+
+/* SBUS Buffer */
+//uint8_t uart4_rx_buffer[SBUS_RX_LEN];
+//uint16_t uart4_rx_sta = 0;
+//uint8_t a_rx_buffer[SBUS_RX_LEN];
+//uint8_t sbus_flag = 0;
+//
+//SBUS_CH sbus_channel;
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -84,8 +95,16 @@ struct mag_data mag_values;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
-static void UART4_Start(void);
+//static void UART4_Start(void);
 /* USER CODE BEGIN PFP */
+#define SBUS_SIGNAL_OK          0x00
+#define SBUS_SIGNAL_LOST        0x01
+#define SBUS_SIGNAL_FAILSAFE    0x03
+uint16_t failsafe_status;
+uint8_t buf[25];
+uint16_t CH[18];
+int lenght = 0;
+uint16_t USB_Send_Data[] = { 0 };
 
 /* USER CODE END PFP */
 
@@ -120,7 +139,7 @@ int main(void)
   /* Wait until CPU2 boots and enters in stop mode or timeout*/
   timeout = 0xFFFF;
 
-  while(__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) { asm("NOP"); }
+  //while(__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) { asm("NOP"); }
 /* USER CODE END Boot_Mode_Sequence_1 */
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -167,6 +186,9 @@ Error_Handler();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
+  //__HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
+  //HAL_UART_Receive_DMA(&huart4, buf, 25);
+  HAL_UART_Receive_IT(&huart4, buf, 25);
   /* USER CODE END 2 */
 // char txBuf[8];
 // uint8_t count = 1;
@@ -176,11 +198,11 @@ Error_Handler();
   {
     /* USER CODE END WHILE */
 
-    ReadGPS();
-    ReadMag();
-    ReadAcc();
-    ReadBaro();
-    ReadGyro();
+//    ReadGPS();
+//    ReadMag();
+//    ReadAcc();
+//    ReadBaro();
+//    ReadGyro();
 
 //    sprintf(txBuf, "%u\r\n", count);
 //    count++;
@@ -350,7 +372,7 @@ void MPU_Config(void)
     MPU_InitStruct.BaseAddress = 0x24000000;
     MPU_InitStruct.Size = MPU_REGION_SIZE_512KB;
     MPU_InitStruct.SubRegionDisable = 0x0;
-    MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL1;
     MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
     MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
     MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
@@ -388,6 +410,63 @@ void Error_Handler(void)
   {
   }
   /* USER CODE END Error_Handler_Debug */
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+
+  if (buf[0] == 0x0F)
+  {
+    CH[0] = (buf[1] >> 0 | (buf[2] << 8)) & 0x07FF;
+    CH[1] = (buf[2] >> 3 | (buf[3] << 5)) & 0x07FF;
+    CH[2] = (buf[3] >> 6 | (buf[4] << 2) | buf[5] << 10) & 0x07FF;
+    CH[3] = (buf[5] >> 1 | (buf[6] << 7)) & 0x07FF;
+    CH[4] = (buf[6] >> 4 | (buf[7] << 4)) & 0x07FF;
+    CH[5] = (buf[7] >> 7 | (buf[8] << 1) | buf[9] << 9) & 0x07FF;
+    CH[6] = (buf[9] >> 2 | (buf[10] << 6)) & 0x07FF;
+    CH[7] = (buf[10] >> 5 | (buf[11] << 3)) & 0x07FF;
+    CH[8] = (buf[12] << 0 | (buf[13] << 8)) & 0x07FF;
+    CH[9] = (buf[13] >> 3 | (buf[14] << 5)) & 0x07FF;
+    CH[10] = (buf[14] >> 6 | (buf[15] << 2) | buf[16] << 10) & 0x07FF;
+    CH[11] = (buf[16] >> 1 | (buf[17] << 7)) & 0x07FF;
+    CH[12] = (buf[17] >> 4 | (buf[18] << 4)) & 0x07FF;
+    CH[13] = (buf[18] >> 7 | (buf[19] << 1) | buf[20] << 9) & 0x07FF;
+    CH[14] = (buf[20] >> 2 | (buf[21] << 6)) & 0x07FF;
+    CH[15] = (buf[21] >> 5 | (buf[22] << 3)) & 0x07FF;
+
+    if (buf[23] & (1 << 0))
+    {
+      CH[16] = 1;
+    }
+    else
+    {
+      CH[16] = 0;
+    }
+
+    if (buf[23] & (1 << 1))
+    {
+      CH[17] = 1;
+    }
+    else
+    {
+      CH[17] = 0;
+    }
+
+    // Failsafe
+    failsafe_status = SBUS_SIGNAL_OK;
+    if (buf[23] & (1 << 2))
+    {
+      failsafe_status = SBUS_SIGNAL_LOST;
+    }
+
+    if (buf[23] & (1 << 3))
+    {
+      failsafe_status = SBUS_SIGNAL_FAILSAFE;
+    }
+
+    //  SBUS_footer=buf[24];
+
+  }
 }
 
 #ifdef  USE_FULL_ASSERT

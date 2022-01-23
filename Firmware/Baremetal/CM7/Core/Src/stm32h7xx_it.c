@@ -21,6 +21,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32h7xx_it.h"
+#include "sbus.h"
+#include "string.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -62,6 +64,7 @@ extern SD_HandleTypeDef hsd1;
 extern TIM_HandleTypeDef htim1;
 extern DMA_HandleTypeDef hdma_uart7_rx;
 extern DMA_HandleTypeDef hdma_uart7_tx;
+extern DMA_HandleTypeDef hdma_uart4_rx;
 extern UART_HandleTypeDef huart4;
 extern UART_HandleTypeDef huart7;
 /* USER CODE BEGIN EV */
@@ -100,6 +103,7 @@ void HardFault_Handler(void)
     /* USER CODE END W1_HardFault_IRQn 0 */
   }
 }
+
 
 /**
   * @brief This function handles Memory management fault.
@@ -205,6 +209,11 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32h7xx.s).                    */
 /******************************************************************************/
+
+void DMA2_Stream1_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(&hdma_uart4_rx);
+}
 
 /**
   * @brief This function handles DMA1 stream5 global interrupt.
@@ -341,8 +350,45 @@ void UART4_IRQHandler(void)
 
   /* USER CODE END UART4_IRQn 0 */
   HAL_UART_IRQHandler(&huart4);
-  /* USER CODE BEGIN UART4_IRQn 1 */
 
+  /* IDLE Line Detection */
+//
+//  /* USER CODE BEGIN UART4_IRQn 1 */
+//  if (__HAL_UART_GET_FLAG(&huart4, UART_FLAG_IDLE) != RESET)
+//  {
+//    while (1)
+//    {
+//      uart4_rx_buffer[uart4_rx_sta] = a_rx_buffer[0];
+//      if (uart4_rx_sta == 0 && uart4_rx_buffer[uart4_rx_sta] != 0x0F)
+//      {
+//        // Frame Header Check
+//        //HAL_UART_Receive_DMA(&huart4, a_rx_buffer, 100);
+//        HAL_UART_Receive_IT(&huart4, uart4_rx_buffer, SBUS_RX_LEN);
+//
+//        break;
+//      }
+//
+//      uart4_rx_sta++;
+//      /* Handle Overrun */
+//      if (uart4_rx_sta > SBUS_RX_LEN)
+//      {
+//        uart4_rx_sta = 0;
+//      }
+//
+//      /* Receive Frame */
+//      if (uart4_rx_buffer[0] == 0x0F && uart4_rx_buffer[24] == 0x00 && uart4_rx_sta == 25)
+//      {
+//        updateSbus(uart4_rx_buffer);
+//        memset(&uart4_rx_buffer, 0, SBUS_RX_LEN);
+//        uart4_rx_sta = 0;
+//        sbus_flag = 1;
+//      }
+//      //HAL_UART_Receive_DMA(&huart4, a_rx_buffer, SBUS_RX_LEN);
+//      HAL_UART_Receive_IT(&huart4, uart4_rx_buffer, SBUS_RX_LEN);
+//
+//      break;
+//    }
+//  }
   /* USER CODE END UART4_IRQn 1 */
 }
 
