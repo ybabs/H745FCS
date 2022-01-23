@@ -49,3 +49,6 @@
 
 #Vscode files
 .vscode/
+
+#Kicad Backup Files
+.CM4-Backups/
