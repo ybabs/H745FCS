@@ -1,4 +1,0 @@
-pwm.c:11:6:SetMotorPWM	24	static
-pwm.c:81:6:SetMotorMinPWM	24	static
-pwm.c:93:6:SetMotorMaxPWM	24	static
-pwm.c:103:10:MicrosToTicks	24	static

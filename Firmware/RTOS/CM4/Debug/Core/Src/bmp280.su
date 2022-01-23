@@ -1,9 +1,0 @@
-bmp280.c:5:9:BMP280ReadSensorID	16	static
-bmp280.c:22:9:BMP280_ReadReg8	24	static
-bmp280.c:40:19:BMP280_WriteReg8	16	static
-bmp280.c:46:19:BMP280InitParams	16	static
-bmp280.c:50:19:BMP280InitDevice	16	static
-bmp280.c:54:19:BMP280ReadCompensationData	16	static
-bmp280.c:58:9:BMP280ReadUP	16	static
-bmp280.c:62:9:BMP280ReadUT	16	static
-bmp280.c:67:6:HAL_SPI_TxRxCpltCallback	16	static
