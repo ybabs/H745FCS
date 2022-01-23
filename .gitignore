@@ -51,4 +51,4 @@
 .vscode/
 
 #Kicad Backup Files
-.CM4-Backups/
+*.CM4-Backups/
