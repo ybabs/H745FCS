@@ -31,6 +31,7 @@
 *.d
 *.su
 *.list
+*.zip
 
 # Eclipse CDT project files
 .cproject
