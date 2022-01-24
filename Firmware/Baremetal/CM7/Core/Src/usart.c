@@ -49,7 +49,7 @@ void MX_UART4_Init(void)
   huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart4.Init.OverSampling = UART_OVERSAMPLING_16;
   huart4.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart4.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart4.Init.ClockPrescaler = UART_PRESCALER_DIV4;
   huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
   if (HAL_UART_Init(&huart4) != HAL_OK)
   {
@@ -142,7 +142,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -150,7 +150,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
      *
      */
 
-    hdma_uart4_rx.Instance = DMA2_Stream1;
+    hdma_uart4_rx.Instance = DMA2_Stream7;
     hdma_uart4_rx.Init.Request = DMA_REQUEST_UART4_RX;
     hdma_uart4_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
     hdma_uart4_rx.Init.PeriphInc = DMA_PINC_DISABLE;
@@ -265,7 +265,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     PA0     ------> UART4_TX
     PA1     ------> UART4_RX
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0|GPIO_PIN_1);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0 | GPIO_PIN_1);
+    HAL_DMA_DeInit(uartHandle->hdmarx);
 
     /* UART4 interrupt Deinit */
     HAL_NVIC_DisableIRQ(UART4_IRQn);
