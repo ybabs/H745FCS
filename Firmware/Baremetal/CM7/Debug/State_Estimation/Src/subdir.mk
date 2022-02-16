@@ -5,26 +5,32 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../FATFS/Target/bsp_driver_sd.c \
-../FATFS/Target/sd_diskio.c 
+../State_Estimation/Src/complementary_filter.c \
+../State_Estimation/Src/ekf_attitude.c \
+../State_Estimation/Src/ekf_pose.c \
+../State_Estimation/Src/madgwick.c 
 
 OBJS += \
-./FATFS/Target/bsp_driver_sd.o \
-./FATFS/Target/sd_diskio.o 
+./State_Estimation/Src/complementary_filter.o \
+./State_Estimation/Src/ekf_attitude.o \
+./State_Estimation/Src/ekf_pose.o \
+./State_Estimation/Src/madgwick.o 
 
 C_DEPS += \
-./FATFS/Target/bsp_driver_sd.d \
-./FATFS/Target/sd_diskio.d 
+./State_Estimation/Src/complementary_filter.d \
+./State_Estimation/Src/ekf_attitude.d \
+./State_Estimation/Src/ekf_pose.d \
+./State_Estimation/Src/madgwick.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
-FATFS/Target/%.o: ../FATFS/Target/%.c FATFS/Target/subdir.mk
+State_Estimation/Src/%.o: ../State_Estimation/Src/%.c State_Estimation/Src/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H745xx -c -I"C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/Common/Inc" -I"C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/CM7/State_Estimation/Inc" -I../Core/Inc -I../../Drivers/STM32H7xx_HAL_Driver/Inc -I../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../../Drivers/CMSIS/Include -I../FATFS/Target -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../FATFS/App -I../../Middlewares/Third_Party/FatFs/src -I../../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I"C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/CM7/Control/Inc" -I"C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/CM7/Filters/Inc" -I"C:/Users/Home/OneDrive/WaffleFlyer/Firmware/Baremetal/CM7/Buffer_Lib/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "$@"
 
-clean: clean-FATFS-2f-Target
+clean: clean-State_Estimation-2f-Src
 
-clean-FATFS-2f-Target:
-	-$(RM) ./FATFS/Target/bsp_driver_sd.d ./FATFS/Target/bsp_driver_sd.o ./FATFS/Target/sd_diskio.d ./FATFS/Target/sd_diskio.o
+clean-State_Estimation-2f-Src:
+	-$(RM) ./State_Estimation/Src/complementary_filter.d ./State_Estimation/Src/complementary_filter.o ./State_Estimation/Src/ekf_attitude.d ./State_Estimation/Src/ekf_attitude.o ./State_Estimation/Src/ekf_pose.d ./State_Estimation/Src/ekf_pose.o ./State_Estimation/Src/madgwick.d ./State_Estimation/Src/madgwick.o
 
-.PHONY: clean-FATFS-2f-Target
+.PHONY: clean-State_Estimation-2f-Src
 

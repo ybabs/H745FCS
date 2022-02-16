@@ -124,5 +124,9 @@
      float baro_altitude;
  };
 
+#define RAD_TO_DEG   57.2957795131f
+#define DEG_TO_RAD   0.01745329252f
+
+#define PI           3.141592653589793f
 
 #endif // COMMON_H

@@ -31,6 +31,7 @@ Filters/Src \
 Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src \
 Middlewares/Third_Party/FatFs \
+State_Estimation/Src \
 USB_DEVICE/App \
 USB_DEVICE/Target \
 
