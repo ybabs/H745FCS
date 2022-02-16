@@ -27,6 +27,7 @@
 # Misc
 *.map
 *.m
+*.mk
 *.png
 *.d
 *.su
