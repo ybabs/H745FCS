@@ -19,4 +19,5 @@ typedef struct {
 void RCInit(RCFilter *filt, float fc, float dt);
 float RCUpdate(RCFilter *filt, float input);
 
+
 #endif /* INC_RC_H_ */

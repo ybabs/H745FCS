@@ -29,6 +29,12 @@
 #include "gpio.h"
 
 
+#define USE_MADGWICK  1
+#define USE_COMPLEMENTARY 0
+#define USE_KALMAN        0
+
+#define USB_UPDATE_RATE_MS  10 // 100 Hz Update Rate
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
@@ -44,16 +50,20 @@ void ReadAcc(void);
 void ReadBaro(void);
 void ReadGyro(void);
 
+void ComputeEulerAngles(void);
+
 volatile struct acc_data *acc_values_m7 = (struct acc_data*) 0x38001000;
 volatile struct gyro_data *gyro_values_m7 = (struct gyro_data*) 0x3800100D;
 volatile struct mag_data *mag_values_m7 = (struct mag_data*) 0x3800101A;
 volatile struct baro_data *baro_values_m7 = (struct baro_data*) 0x38001028;
 volatile struct gps_data *gps_values_m7 = (struct gps_data*) 0x38001032;
-uint8_t sbus_buffer[26];
+uint32_t usb_timer = 0;
+
+
+uint8_t sbus_buffer[SBUS_PACKET_LEN];
 
 /* to calculate elapsed time for integration */
 float dt = 0.0f;
-float sum = 0.0f;
 float roll = 0.0f;
 float pitch = 0.0f;
 float yaw  = 0.0f;
@@ -186,6 +196,7 @@ Error_Handler();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
+  __HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
   HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
 
   /* USER CODE END 2 */
@@ -196,62 +207,26 @@ Error_Handler();
   while (1)
   {
     /* USER CODE END WHILE */
-    //tick_now = HAL_GetTick();
 //    ReadGPS();
     ReadMag();
     ReadAcc();
-//    ReadBaro();
+    ReadBaro();
     ReadGyro();
 
-    //tick_prev = HAL_GetTick();
     TimerCount_Start();
-
     dt = (duration_us)/1000000.0f;
-    //UpdateDt();
-
     MadgwickQuaternionUpdate(&acc_values, &gyro_values, &mag_values, dt);
+    ComputeEulerAngles();
+    TimerCount_Stop(nb_cycles);
+    duration_us  = (uint32_t)(((uint64_t)US_IN_SECOND * (nb_cycles)) / SystemCoreClock);
 
-
-    // Define output variables from updated quaternion---these are Tait-Bryan
-    // angles, commonly used in aircraft orientation. In this coordinate system,
-    // the positive z-axis is down toward Earth. Yaw is the angle between Sensor
-    // x-axis and Earth magnetic North (or true North if corrected for local
-    // declination, looking down on the sensor positive yaw is counterclockwise.
-    // Pitch is angle between sensor x-axis and Earth ground plane, toward the
-    // Earth is positive, up toward the sky is negative. Roll is angle between
-    // sensor y-axis and Earth ground plane, y-axis up is positive roll. These
-    // arise from the definition of the homogeneous rotation matrix constructed
-    // from quaternions. Tait-Bryan angles as well as Euler angles are
-    // non-commutative; that is, the get the correct orientation the rotations
-    // must be applied in the correct order which for this configuration is yaw,
-    // pitch, and then roll.
-    // For more see
-    // http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
-    // which has additional links.
-      yaw   = atan2(2.0f * (*(getQ()+1) * *(getQ()+2) + *getQ()
-                        * *(getQ()+3)), *getQ() * *getQ() + *(getQ()+1)
-                        * *(getQ()+1) - *(getQ()+2) * *(getQ()+2) - *(getQ()+3)
-                        * *(getQ()+3));
-      pitch = -asin(2.0f * (*(getQ()+1) * *(getQ()+3) - *getQ()
-                        * *(getQ()+2)));
-      roll  = atan2(2.0f * (*getQ() * *(getQ()+1) + *(getQ()+2)
-                        * *(getQ()+3)), *getQ() * *getQ() - *(getQ()+1)
-                        * *(getQ()+1) - *(getQ()+2) * *(getQ()+2) + *(getQ()+3)
-                        * *(getQ()+3));
-
-      pitch *= RAD_TO_DEG;
-      yaw *= RAD_TO_DEG;
-
-      yaw +=2.43;
-      roll *= RAD_TO_DEG;
-
-      TimerCount_Stop(nb_cycles);
-      duration_us  = (uint32_t)(((uint64_t)US_IN_SECOND * (nb_cycles)) / SystemCoreClock);
-//
+    if((HAL_GetTick() - usb_timer) >= USB_UPDATE_RATE_MS)
+    {
       char logBuf[128];
-
       sprintf(logBuf, "%.4f, %.4f, %.4f\r\n", roll, pitch, yaw);
       CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
+      usb_timer = HAL_GetTick();
+    }
   }
   /* USER CODE END 3 */
 }
@@ -422,6 +397,42 @@ void MPU_Config(void)
     HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 }
 
+void ComputeEulerAngles(void)
+{
+
+  // Define output variables from updated quaternion---these are Tait-Bryan
+      // angles, commonly used in aircraft orientation. In this coordinate system,
+      // the positive z-axis is down toward Earth. Yaw is the angle between Sensor
+      // x-axis and Earth magnetic North (or true North if corrected for local
+      // declination, looking down on the sensor positive yaw is counterclockwise.
+      // Pitch is angle between sensor x-axis and Earth ground plane, toward the
+      // Earth is positive, up toward the sky is negative. Roll is angle between
+      // sensor y-axis and Earth ground plane, y-axis up is positive roll. These
+      // arise from the definition of the homogeneous rotation matrix constructed
+      // from quaternions. Tait-Bryan angles as well as Euler angles are
+      // non-commutative; that is, the get the correct orientation the rotations
+      // must be applied in the correct order which for this configuration is yaw,
+      // pitch, and then roll.
+      // For more see
+      // http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+      // which has additional links.
+        yaw   = atan2(2.0f * (*(getQ()+1) * *(getQ()+2) + *getQ()
+                          * *(getQ()+3)), *getQ() * *getQ() + *(getQ()+1)
+                          * *(getQ()+1) - *(getQ()+2) * *(getQ()+2) - *(getQ()+3)
+                          * *(getQ()+3));
+        pitch = -asin(2.0f * (*(getQ()+1) * *(getQ()+3) - *getQ()
+                          * *(getQ()+2)));
+        roll  = atan2(2.0f * (*getQ() * *(getQ()+1) + *(getQ()+2)
+                          * *(getQ()+3)), *getQ() * *getQ() - *(getQ()+1)
+                          * *(getQ()+1) - *(getQ()+2) * *(getQ()+2) + *(getQ()+3)
+                          * *(getQ()+3));
+
+        pitch *= RAD_TO_DEG;
+        yaw *= RAD_TO_DEG;
+        yaw +=2.43;
+        roll *= RAD_TO_DEG;
+}
+
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
@@ -441,7 +452,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (huart->Instance == UART4)
   {
-    updateSbus(sbus_buffer);
+    if(sbus_buffer[0] != SBUS_HEADER)
+    {
+      HAL_UART_DMAStop(&huart4);
+      __HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
+    }
+
+    else
+    {
+      updateSbus(sbus_buffer);
+    }
   }
 
 }
