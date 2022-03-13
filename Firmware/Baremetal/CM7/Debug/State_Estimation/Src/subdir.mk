@@ -5,19 +5,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../State_Estimation/Src/complementary_filter.c \
 ../State_Estimation/Src/ekf_attitude.c \
 ../State_Estimation/Src/ekf_pose.c \
 ../State_Estimation/Src/madgwick.c 
 
 OBJS += \
-./State_Estimation/Src/complementary_filter.o \
 ./State_Estimation/Src/ekf_attitude.o \
 ./State_Estimation/Src/ekf_pose.o \
 ./State_Estimation/Src/madgwick.o 
 
 C_DEPS += \
-./State_Estimation/Src/complementary_filter.d \
 ./State_Estimation/Src/ekf_attitude.d \
 ./State_Estimation/Src/ekf_pose.d \
 ./State_Estimation/Src/madgwick.d 
@@ -30,7 +27,7 @@ State_Estimation/Src/%.o: ../State_Estimation/Src/%.c State_Estimation/Src/subdi
 clean: clean-State_Estimation-2f-Src
 
 clean-State_Estimation-2f-Src:
-	-$(RM) ./State_Estimation/Src/complementary_filter.d ./State_Estimation/Src/complementary_filter.o ./State_Estimation/Src/ekf_attitude.d ./State_Estimation/Src/ekf_attitude.o ./State_Estimation/Src/ekf_pose.d ./State_Estimation/Src/ekf_pose.o ./State_Estimation/Src/madgwick.d ./State_Estimation/Src/madgwick.o
+	-$(RM) ./State_Estimation/Src/ekf_attitude.d ./State_Estimation/Src/ekf_attitude.o ./State_Estimation/Src/ekf_pose.d ./State_Estimation/Src/ekf_pose.o ./State_Estimation/Src/madgwick.d ./State_Estimation/Src/madgwick.o
 
 .PHONY: clean-State_Estimation-2f-Src
 

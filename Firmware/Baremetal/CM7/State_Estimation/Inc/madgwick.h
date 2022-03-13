@@ -8,19 +8,21 @@
 #include "common.h"
 #include "math.h"
 
-struct madgwick_filter_t
+typedef struct madgwick_filter_t
 {
+  float roll;
+  float pitch;
+  float yaw;
+  float dt;
 
-};
+}madgwick_filter_t;
 
-struct mahony_filter_t
-{
 
-};
 
-int MadgwickQuaternionUpdate(struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag, float dt);
-int MahonyQuaternionUpdate(struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag, float dt);
+int MadgwickQuaternionUpdate(madgwick_filter_t* filter,struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag);
+int MadgwickQuaternionUpdate6DOF(madgwick_filter_t* filter,struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag);
 
 const float* getQ();
+const struct quaternion* getQ();
 
-#endif
+#endif //MADGWICK_H

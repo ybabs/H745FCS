@@ -124,8 +124,17 @@
      float baro_altitude;
  };
 
+ struct quaternion
+ {
+   float q0;
+   float q1;
+   float q2;
+   float q3;
+ };
+
 #define RAD_TO_DEG   57.2957795131f
 #define DEG_TO_RAD   0.01745329252f
+#define GAUSS_TO_MICROTESLA  100
 
 #define PI           3.141592653589793f
 

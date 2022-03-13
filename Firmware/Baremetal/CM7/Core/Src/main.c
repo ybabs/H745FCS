@@ -27,6 +27,7 @@
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
+#include "micros.h"
 
 
 #define USE_MADGWICK  1
@@ -49,8 +50,7 @@ void ReadMag(void);
 void ReadAcc(void);
 void ReadBaro(void);
 void ReadGyro(void);
-
-void ComputeEulerAngles(void);
+void Tick(void);
 
 volatile struct acc_data *acc_values_m7 = (struct acc_data*) 0x38001000;
 volatile struct gyro_data *gyro_values_m7 = (struct gyro_data*) 0x3800100D;
@@ -62,19 +62,10 @@ uint32_t usb_timer = 0;
 
 uint8_t sbus_buffer[SBUS_PACKET_LEN];
 
-/* to calculate elapsed time for integration */
-float dt = 0.0f;
-float roll = 0.0f;
-float pitch = 0.0f;
-float yaw  = 0.0f;
-//uint32_t tick_now = 0;
-//uint32_t tick_prev = 0;
-uint32_t count = 0;
-uint32_t sum_count = 0;
+madgwick_filter_t filter;
+
 
 /* USER CODE END Includes */
-uint32_t duration_us = 0x00;
-uint32_t nb_cycles  = 0x00;
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
@@ -194,10 +185,13 @@ Error_Handler();
   MX_FATFS_Init();
   MX_UART7_Init();
   MX_USB_DEVICE_Init();
+  DWT_Init();
+
   /* USER CODE BEGIN 2 */
 
   __HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
   HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
+  //MadgwickInit();
 
   /* USER CODE END 2 */
 // char txBuf[8];
@@ -206,6 +200,7 @@ Error_Handler();
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    //Tick();
     /* USER CODE END WHILE */
 //    ReadGPS();
     ReadMag();
@@ -213,21 +208,17 @@ Error_Handler();
     ReadBaro();
     ReadGyro();
 
-    TimerCount_Start();
-    dt = (duration_us)/1000000.0f;
-    MadgwickQuaternionUpdate(&acc_values, &gyro_values, &mag_values, dt);
-    ComputeEulerAngles();
-    TimerCount_Stop(nb_cycles);
-    duration_us  = (uint32_t)(((uint64_t)US_IN_SECOND * (nb_cycles)) / SystemCoreClock);
-
+    filter.dt = 1.0f/5000.0f;
+    MadgwickQuaternionUpdate(&filter, &acc_values, &gyro_values, &mag_values);
     if((HAL_GetTick() - usb_timer) >= USB_UPDATE_RATE_MS)
     {
       char logBuf[128];
-      sprintf(logBuf, "%.4f, %.4f, %.4f\r\n", roll, pitch, yaw);
+      sprintf(logBuf, "%.4f, %.4f, %.4f\r\n", filter.roll, filter.pitch, filter.yaw);
       CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
       usb_timer = HAL_GetTick();
     }
   }
+  //delay_us(500);
   /* USER CODE END 3 */
 }
 
@@ -397,40 +388,11 @@ void MPU_Config(void)
     HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 }
 
-void ComputeEulerAngles(void)
+void Tick(void)
 {
-
-  // Define output variables from updated quaternion---these are Tait-Bryan
-      // angles, commonly used in aircraft orientation. In this coordinate system,
-      // the positive z-axis is down toward Earth. Yaw is the angle between Sensor
-      // x-axis and Earth magnetic North (or true North if corrected for local
-      // declination, looking down on the sensor positive yaw is counterclockwise.
-      // Pitch is angle between sensor x-axis and Earth ground plane, toward the
-      // Earth is positive, up toward the sky is negative. Roll is angle between
-      // sensor y-axis and Earth ground plane, y-axis up is positive roll. These
-      // arise from the definition of the homogeneous rotation matrix constructed
-      // from quaternions. Tait-Bryan angles as well as Euler angles are
-      // non-commutative; that is, the get the correct orientation the rotations
-      // must be applied in the correct order which for this configuration is yaw,
-      // pitch, and then roll.
-      // For more see
-      // http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
-      // which has additional links.
-        yaw   = atan2(2.0f * (*(getQ()+1) * *(getQ()+2) + *getQ()
-                          * *(getQ()+3)), *getQ() * *getQ() + *(getQ()+1)
-                          * *(getQ()+1) - *(getQ()+2) * *(getQ()+2) - *(getQ()+3)
-                          * *(getQ()+3));
-        pitch = -asin(2.0f * (*(getQ()+1) * *(getQ()+3) - *getQ()
-                          * *(getQ()+2)));
-        roll  = atan2(2.0f * (*getQ() * *(getQ()+1) + *(getQ()+2)
-                          * *(getQ()+3)), *getQ() * *getQ() - *(getQ()+1)
-                          * *(getQ()+1) - *(getQ()+2) * *(getQ()+2) + *(getQ()+3)
-                          * *(getQ()+3));
-
-        pitch *= RAD_TO_DEG;
-        yaw *= RAD_TO_DEG;
-        yaw +=2.43;
-        roll *= RAD_TO_DEG;
+  uint32_t now = micros();
+  filter.dt = (now - prev) / 1000000.0f;
+  prev = now;
 }
 
 /**
