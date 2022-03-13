@@ -35,6 +35,8 @@
 #define USE_KALMAN        0
 
 #define USB_UPDATE_RATE_MS  10 // 100 Hz Update Rate
+#define HEART_BEAT_RATE_MS 1000 // 1 Hz
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -50,6 +52,7 @@ void ReadMag(void);
 void ReadAcc(void);
 void ReadBaro(void);
 void ReadGyro(void);
+void HeartBeat(void);
 void Tick(void);
 
 volatile struct acc_data *acc_values_m7 = (struct acc_data*) 0x38001000;
@@ -58,13 +61,15 @@ volatile struct mag_data *mag_values_m7 = (struct mag_data*) 0x3800101A;
 volatile struct baro_data *baro_values_m7 = (struct baro_data*) 0x38001028;
 volatile struct gps_data *gps_values_m7 = (struct gps_data*) 0x38001032;
 uint32_t usb_timer = 0;
+uint32_t heartbeat_timer = 0;
+uint8_t led_state = 0x0;
 
 
 uint8_t sbus_buffer[SBUS_PACKET_LEN];
 
 madgwick_filter_t filter;
 
-
+uint32_t prev;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -191,7 +196,7 @@ Error_Handler();
 
   __HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
   HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
-  //MadgwickInit();
+  MadgwickInit();
 
   /* USER CODE END 2 */
 // char txBuf[8];
@@ -217,9 +222,36 @@ Error_Handler();
       CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
       usb_timer = HAL_GetTick();
     }
+
+   HeartBeat();
+
   }
   //delay_us(500);
   /* USER CODE END 3 */
+}
+
+void HeartBeat(void)
+{
+  if((HAL_GetTick() - heartbeat_timer) >= HEART_BEAT_RATE_MS)
+     {
+        if(led_state == 0)
+        {
+          LEDA_OFF();
+          led_state = 1;
+        }
+
+        else if(led_state == 1)
+        {
+          LEDA_ON();
+          led_state = 0;
+        }
+
+        heartbeat_timer = HAL_GetTick();
+     }
+
+
+
+
 }
 
 

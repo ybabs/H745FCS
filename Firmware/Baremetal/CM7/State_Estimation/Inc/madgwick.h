@@ -20,9 +20,10 @@ typedef struct madgwick_filter_t
 
 
 int MadgwickQuaternionUpdate(madgwick_filter_t* filter,struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag);
-int MadgwickQuaternionUpdate6DOF(madgwick_filter_t* filter,struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag);
+int  MahonyQuaternionUpdate(madgwick_filter_t* filter,struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag);
+void MadgwickInit();
 
-const float* getQ();
+//const float* getQ();
 const struct quaternion* getQ();
 
 #endif //MADGWICK_H

@@ -43,6 +43,15 @@ static float eInt[3] = { 0.0f, 0.0f, 0.0f };
 // Vector to hold quaternion
 static float q[4] = { 1.0f, 0.0f, 0.0f, 0.0f };
 
+void MadgwickInit()
+{
+  Q->q0 = 1.0f;
+  Q->q1 = 1.0f;
+  Q->q2 = 1.0f;
+  Q->q3 = 0.0f;
+
+}
+
 static void  ComputeEulerAngles(madgwick_filter_t* filter)
 {
   // Define output variables from updated quaternion---these are Tait-Bryan
@@ -61,16 +70,31 @@ static void  ComputeEulerAngles(madgwick_filter_t* filter)
       // For more see
       // http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
       // which has additional links.
-        filter->yaw   = atan2(2.0f * (*(getQ()+1) * *(getQ()+2) + *getQ()
-                          * *(getQ()+3)), *getQ() * *getQ() + *(getQ()+1)
-                          * *(getQ()+1) - *(getQ()+2) * *(getQ()+2) - *(getQ()+3)
-                          * *(getQ()+3));
-        filter->pitch = -asin(2.0f * (*(getQ()+1) * *(getQ()+3) - *getQ()
-                          * *(getQ()+2)));
-        filter->roll  = atan2(2.0f * (*getQ() * *(getQ()+1) + *(getQ()+2)
-                          * *(getQ()+3)), *getQ() * *getQ() - *(getQ()+1)
-                          * *(getQ()+1) - *(getQ()+2) * *(getQ()+2) + *(getQ()+3)
-                          * *(getQ()+3));
+//        filter->yaw   = atan2(2.0f * (*(getQ()+1) * *(getQ()+2) + *getQ()
+//                          * *(getQ()+3)), *getQ() * *getQ() + *(getQ()+1)
+//                          * *(getQ()+1) - *(getQ()+2) * *(getQ()+2) - *(getQ()+3)
+//                          * *(getQ()+3));
+//        filter->pitch = -asin(2.0f * (*(getQ()+1) * *(getQ()+3) - *getQ()
+//                          * *(getQ()+2)));
+//        filter->roll  = atan2(2.0f * (*getQ() * *(getQ()+1) + *(getQ()+2)
+//                          * *(getQ()+3)), *getQ() * *getQ() - *(getQ()+1)
+//                          * *(getQ()+1) - *(getQ()+2) * *(getQ()+2) + *(getQ()+3)
+//                          * *(getQ()+3));
+//
+//        filter->pitch *= RAD_TO_DEG;
+//        filter->yaw *= RAD_TO_DEG;
+//        filter->yaw +=2.43;
+//        filter->roll *= RAD_TO_DEG;
+
+
+        //YAW PITCH ROLL
+//        filter->yaw = atan2(2.0f * (Q->q1*Q->q2 + Q->q0*Q->q3), (Q->q0 * Q->q0 + Q->q1 *Q->q1 - Q->q2*Q->q2 - Q->q3 * Q->q3));
+//        filter->pitch = -asin(2.0f * (Q->q1 * Q->q3 - Q->q0*Q->q2));
+//        filter->roll = atan2(2.0f * (Q->q0*Q->q1 + Q->q2 * Q->q3), (Q->q0 * Q->q0 - Q->q1 * Q->q1 - Q->q2 * Q->q2 + Q->q3 * Q->q3));
+  filter->roll = atan2((Q->q0*Q->q1 + Q->q2*Q->q3), (0.5f - Q->q1*Q->q1 - Q->q2*Q->q2));
+  filter->pitch = -asin(-2.0f * (Q->q1*Q->q3 - Q->q0*Q->q2));
+  filter->yaw = -atan2((Q->q1*Q->q2 + Q->q0*Q->q3), (0.5f- Q->q2*Q->q2 - Q->q3 * Q->q3));
+
 
         filter->pitch *= RAD_TO_DEG;
         filter->yaw *= RAD_TO_DEG;
@@ -80,8 +104,9 @@ static void  ComputeEulerAngles(madgwick_filter_t* filter)
 
 int MadgwickQuaternionUpdate(madgwick_filter_t* filter,struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag)
 {
- float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];   // short name local variable for readability
-// float norm;
+// float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];   // short name local variable for readability
+  float q1 = Q->q0, q2 = Q->q1, q3 = Q->q2, q4 = Q->q3;   // short name local variable for readability
+
  float recipNorm;
  float hx, hy, _2bx, _2bz;
  float s1, s2, s3, s4;
@@ -111,33 +136,22 @@ int MadgwickQuaternionUpdate(madgwick_filter_t* filter,struct acc_data *acc, str
  float q3q4 = q3 * q4;
  float q4q4 = q4 * q4;
 
- float ax = acc->imu_acc_x;
+ float ax = -acc->imu_acc_x;
  float ay = acc->imu_acc_y;
  float az = acc->imu_acc_z;
 
  float gx = gyro->imu_gyro_x;
- float gy = gyro->imu_gyro_y;
- float gz = gyro->imu_gyro_z;
+ float gy = -gyro->imu_gyro_y;
+ float gz = -gyro->imu_gyro_z;
 
  // COnvert gyro rate to rad/s
  gx = gx * DEG_TO_RAD;
  gy = gy * DEG_TO_RAD;
  gz = gz * DEG_TO_RAD;
 
- float mx = mag->imu_mag_x;
+ float mx = -mag->imu_mag_x;
  float my = mag->imu_mag_y;
  float mz = mag->imu_mag_z;
-
- // Normalise accelerometer measurement
-// norm = sqrt(ax * ax + ay * ay + az * az);
-// if (norm == 0.0f)
-// {
-//   return -1;
-// }
-// norm = 1.0f / norm;
-// ax *= norm;
-// ay *= norm;
-// az *= norm;
 
  recipNorm = InvSqrt(ax * ax + ay * ay + az * az);
   if (recipNorm == 0.0f)
@@ -150,18 +164,7 @@ int MadgwickQuaternionUpdate(madgwick_filter_t* filter,struct acc_data *acc, str
   az *= recipNorm;
 
 
- // Normalise magnetometer measurement
-// norm = sqrt(mx * mx + my * my + mz * mz);
-// if (norm == 0.0f)
-// {
-//   return -1;
-// }
-// norm = 1.0f / norm;
-// mx *= norm;
-// my *= norm;
-// mz *= norm;
-
-  recipNorm = InvSqrt(mx * mx + my * my + mz * mz);
+ recipNorm = InvSqrt(mx * mx + my * my + mz * mz);
  if (recipNorm == 0.0f)
  {
    return -1;
@@ -233,10 +236,15 @@ int MadgwickQuaternionUpdate(madgwick_filter_t* filter,struct acc_data *acc, str
 // q[3] = q4 * norm;
 
  recipNorm = InvSqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);    // normalise quaternion
- q[0] = q1 * recipNorm;
- q[1] = q2 * recipNorm;
- q[2] = q3 * recipNorm;
- q[3] = q4 * recipNorm;
+// q[0] = q1 * recipNorm;
+// q[1] = q2 * recipNorm;
+// q[2] = q3 * recipNorm;
+// q[3] = q4 * recipNorm;
+
+ Q->q0 = q1 * recipNorm;
+ Q->q1 = q2 * recipNorm;
+ Q->q2 = q3 * recipNorm;
+ Q->q3 = q4 * recipNorm;
 
  ComputeEulerAngles(filter);
  return 0;
@@ -245,12 +253,14 @@ int MadgwickQuaternionUpdate(madgwick_filter_t* filter,struct acc_data *acc, str
 
 // Similar to Madgwick scheme but uses proportional and integral filtering on
 // the error between estimated reference vectors and measured ones.
-int MadgwickQuaternionUpdate6DOF(madgwick_filter_t* filter,struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag)
+int MahonyQuaternionUpdate(madgwick_filter_t* filter,struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag)
 {
 
   // short name local variable for readability
-  float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];
-  float norm;
+//  float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];
+  float q1 = Q->q0, q2 = Q->q1, q3 = Q->q2, q4 = Q->q3;   // short name local variable for readability
+
+  float recipNorm;
   float hx, hy, bx, bz;
   float vx, vy, vz, wx, wy, wz;
   float ex, ey, ez;
@@ -286,26 +296,24 @@ int MadgwickQuaternionUpdate6DOF(madgwick_filter_t* filter,struct acc_data *acc,
   float mz = mag->imu_mag_z;
 
   // Normalise accelerometer measurement
-  norm = sqrt(ax * ax + ay * ay + az * az);
-  if (norm == 0.0f)
-  {
-    return -1;
-  }
-  norm = 1.0f / norm;
-  ax *= norm;
-  ay *= norm;
-  az *= norm;
+  recipNorm = InvSqrt(ax * ax + ay * ay + az * az);
+   if (recipNorm == 0.0f)
+   {
+     return -1;
+   }
 
-  // Normalise magnetometer measurement
-  norm = sqrt(mx * mx + my * my + mz * mz);
-  if (norm == 0.0f)
-  {
-    return -1;
-  }
-  norm = 1.0f / norm;
-  mx *= norm;
-  my *= norm;
-  mz *= norm;
+   ax *= recipNorm;
+   ay *= recipNorm;
+   az *= recipNorm;
+
+   recipNorm = InvSqrt(mx * mx + my * my + mz * mz);
+   if (recipNorm == 0.0f)
+   {
+     return -1;
+   }
+   mx *= recipNorm;
+   my *= recipNorm;
+   mz *= recipNorm;
 
   // Reference direction of Earth's magnetic field
   hx = 2.0f * mx * (0.5f - q3q3 - q4q4) + 2.0f * my * (q2q3 - q1q4) + 2.0f * mz * (q2q4 + q1q3);
@@ -353,12 +361,16 @@ int MadgwickQuaternionUpdate6DOF(madgwick_filter_t* filter,struct acc_data *acc,
   q4 = pc + (q1 * gz + pa * gy - pb * gx) * (0.5f * filter->dt);
 
   // Normalise quaternion
-  norm = sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);
-  norm = 1.0f / norm;
-  q[0] = q1 * norm;
-  q[1] = q2 * norm;
-  q[2] = q3 * norm;
-  q[3] = q4 * norm;
+  recipNorm = InvSqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);    // normalise quaternion
+//  q[0] = q1 * norm;
+//  q[1] = q2 * norm;
+//  q[2] = q3 * norm;
+//  q[3] = q4 * norm;
+
+  Q->q0 = q1 * recipNorm;
+  Q->q1 = q2 * recipNorm;
+  Q->q2 = q3 * recipNorm;
+  Q->q3 = q4 * recipNorm;
 
   ComputeEulerAngles(filter);
 
