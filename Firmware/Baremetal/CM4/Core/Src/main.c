@@ -89,11 +89,8 @@ void GyroTask(void);
 void MagTask(void);
 void BaroTask(void);
 void ReadSensors(void);
-//void ReadFilteredData(void);
 uint8_t ConfigSensors(void);
 void M4DataToM7(uint8_t data_type);
-
-//void GetIMUBias(void);
 /* USER CODE END PFP */
 
 float temp;
@@ -152,8 +149,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   ConfigSensors();
   /* USER CODE END 2 */
-
-//  GetIMUBias();
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -234,21 +229,6 @@ void HAL_HSEM_FreeCallback(uint32_t SemMask)
   notif_rx = 1;
 }
 
-/*
- * @brief Returns a low passed Filtered IMU data
- */
-//void ReadFilteredData(void)
-//{
-//
-//  // Get Raw IMU Data
-//  AccelTask();
-//
-//  // Correct Output with bias
-//  filtered_imu.accel_values.x = imu.accel_values.x - acc_error->imu_acc_x;
-//  filtered_imu.accel_values.y = imu.accel_values.y - acc_error->imu_acc_y;
-//  filtered_imu.accel_values.z = imu.accel_values.z - acc_error->imu_acc_z;
-//
-//}
 
 
 /*
@@ -271,50 +251,6 @@ void ReadSensors(void)
   BaroTask();
 
 }
-
-/*
- * Gets a bias term of IMU when FC is at rest.
- * Crappy way of removing bias term
- */
-//void GetIMUBias(void)
-//{
-//  int loop_term;
-//
-//  while(loop_term < 10000)
-//  {
-//
-//    AccelTask();
-//    GyroTask();
-//    MagTask();
-//
-//    acc_error->imu_acc_x += imu.accel_values.x;
-//    acc_error->imu_acc_y += imu.accel_values.y;
-//    acc_error->imu_acc_z += imu.accel_values.z;
-//
-//    mag_error->imu_mag_x += imu.mag_values.x;
-//    mag_error->imu_mag_y += imu.mag_values.y;
-//    mag_error->imu_mag_z += imu.mag_values.z;
-//
-//    gyro_error->imu_gyro_x += imu.gyro_values.x;
-//    gyro_error->imu_gyro_y += imu.gyro_values.y;
-//    gyro_error->imu_gyro_z += imu.gyro_values.z;
-//
-//    loop_term++;
-//  }
-//
-//  // Get error value
-//  acc_error->imu_acc_x /= loop_term;
-//  acc_error->imu_acc_y /= loop_term;
-//  acc_error->imu_acc_z /= loop_term;
-//
-//  mag_error->imu_mag_x /= loop_term;
-//  mag_error->imu_mag_y /= loop_term;
-//  mag_error->imu_mag_z /= loop_term;
-//
-//  gyro_error->imu_gyro_x /= loop_term;
-//  gyro_error->imu_gyro_y /= loop_term;
-//  gyro_error->imu_gyro_z /= loop_term;
-//}
 
 /*
  * @brief Uses the Hardware Semaphore to send sensor data

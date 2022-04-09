@@ -29,9 +29,15 @@
 #include "gpio.h"
 #include "micros.h"
 
+#define USE_FILTER 1
+
+
+#define ACC_LPF_WEIGHT  0.01
+#define GYRO_LPF_WEIGHT 0.01
+#define MAG_LPF_WEIGHT  0.01
+
 
 #define USE_MADGWICK  1
-#define USE_COMPLEMENTARY 0
 #define USE_KALMAN        0
 
 #define USB_UPDATE_RATE_MS  10 // 100 Hz Update Rate
@@ -55,6 +61,11 @@ void ReadGyro(void);
 void HeartBeat(void);
 void Tick(void);
 
+void ReadRawData(void);
+void ReadFilteredData(void);
+void GetIMUBias(void);
+
+
 volatile struct acc_data *acc_values_m7 = (struct acc_data*) 0x38001000;
 volatile struct gyro_data *gyro_values_m7 = (struct gyro_data*) 0x3800100D;
 volatile struct mag_data *mag_values_m7 = (struct mag_data*) 0x3800101A;
@@ -64,22 +75,11 @@ uint32_t usb_timer = 0;
 uint32_t heartbeat_timer = 0;
 uint8_t led_state = 0x0;
 
-
 uint8_t sbus_buffer[SBUS_PACKET_LEN];
 
 madgwick_filter_t filter;
 
 uint32_t prev;
-/* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
 struct gps_data gps_values;
 struct acc_data acc_values;
 struct gyro_data gyro_values;
@@ -87,39 +87,32 @@ struct baro_data baro_values;
 struct mag_data mag_values;
 
 
-//struct mag_data *mag_error;
-//struct acc_data *acc_error;
-//struct gyro_data *gyro_error;
+struct acc_data filtered_acc_values;
+struct gyro_data filtered_gyro_values;
+struct mag_data filtered_mag_values;
+
+
+struct acc_data  prev_acc;
+struct gyro_data prev_gyro;
+struct mag_data  prev_mag;
+
+struct acc_data lpf_acc_values;
+struct gyro_data lpf_gyro_values;
+struct mag_data lpf_mag_values;
+
+
+struct mag_data mag_error;
+struct acc_data acc_error;
+struct gyro_data gyro_error;
 
 #ifndef HSEM_ID_0
 #define HSEM_ID_0 (0U) /* HW semaphore 0*/
 #endif
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
 //static void UART4_Start(void);
-/* USER CODE BEGIN PFP */
-
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
@@ -127,9 +120,6 @@ static void MPU_Config(void);
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
 /* USER CODE BEGIN Boot_Mode_Sequence_0 */
   int32_t timeout;
 /* USER CODE END Boot_Mode_Sequence_0 */
@@ -156,11 +146,6 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
   /* Configure the system clock */
   SystemClock_Config();
 /* USER CODE BEGIN Boot_Mode_Sequence_2 */
@@ -180,11 +165,6 @@ if ( timeout < 0 )
 Error_Handler();
 }
 /* USER CODE END Boot_Mode_Sequence_2 */
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
@@ -197,42 +177,35 @@ Error_Handler();
   MX_USB_DEVICE_Init();
   DWT_Init();
 
-  /* USER CODE BEGIN 2 */
-
   __HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
   HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
   MadgwickInit();
-
-  /* USER CODE END 2 */
-// char txBuf[8];
-// uint8_t count = 1;
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
   while (1)
   {
     //Tick();
-    /* USER CODE END WHILE */
-//    ReadGPS();
-    ReadMag();
-    ReadAcc();
-    ReadBaro();
-    ReadGyro();
 
+    #ifdef USE_FILTER
+      ReadFilteredData();
+    #else
+      ReadRawData();
+    #endif
     filter.dt = 1.0f/5000.0f;
-    MadgwickQuaternionUpdate(&filter, &acc_values, &gyro_values, &mag_values);
+    //MadgwickQuaternionUpdate(&filter, &acc_values, &gyro_values, &mag_values);
     if((HAL_GetTick() - usb_timer) >= USB_UPDATE_RATE_MS)
     {
-      char logBuf[128];
-      sprintf(logBuf, "%.4f, %.4f, %.4f\r\n", filter.roll, filter.pitch, filter.yaw);
+      char logBuf[256];
+      //sprintf(logBuf, "%.4f, %.4f, %.4f\r\n", filter.roll, filter.pitch, filter.yaw);
+
+      #ifdef USE_FILTER
+        sprintf(logBuf, "raw x: %.4f, %.4f, %.4f\r\n", filter.roll, filter.pitch, filter.yaw);
+      #else
+        sprintf(logBuf, "raw x: %.4f, %.4f, %.4f\r\n", filter.roll, filter.pitch, filter.yaw);
+      #endif
       CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
       usb_timer = HAL_GetTick();
     }
-
    HeartBeat();
-
   }
-  //delay_us(500);
-  /* USER CODE END 3 */
 }
 
 void HeartBeat(void)
@@ -253,11 +226,107 @@ void HeartBeat(void)
 
         heartbeat_timer = HAL_GetTick();
      }
+}
 
+void ReadRawData(void)
+{
+    ReadGPS();
+    ReadMag();
+    ReadAcc();
+    ReadBaro();
+    ReadGyro();
+}
 
+/*
+ * @brief Returns a low passed Filtered IMU data
+ */
+void ReadFilteredData(void)
+{
 
+  // Get Raw IMU Data
+
+  ReadAcc();
+  // Correct Output with bias
+  filtered_acc_values.imu_acc_x = acc_values.imu_acc_x - acc_error.imu_acc_x;
+  filtered_acc_values.imu_acc_y = acc_values.imu_acc_y - acc_error.imu_acc_y;
+  filtered_acc_values.imu_acc_z = acc_values.imu_acc_z - acc_error.imu_acc_z;
+
+  lpf_acc_values.imu_acc_x = (1.0f - ACC_LPF_WEIGHT)* prev_acc.imu_acc_x + ACC_LPF_WEIGHT * lpf_acc_values.imu_acc_x;
+  lpf_acc_values.imu_acc_y = (1.0f - ACC_LPF_WEIGHT)* prev_acc.imu_acc_y + ACC_LPF_WEIGHT * lpf_acc_values.imu_acc_x;
+  lpf_acc_values.imu_acc_z = (1.0f - ACC_LPF_WEIGHT)* prev_acc.imu_acc_z + ACC_LPF_WEIGHT * lpf_acc_values.imu_acc_x;
+
+  prev_acc = lpf_acc_values;
+
+  // GYro
+  ReadGyro();
+  // Correct Output with bias
+  filtered_gyro_values.imu_gyro_x = gyro_values.imu_gyro_x - gyro_error.imu_gyro_x;
+  filtered_gyro_values.imu_gyro_y = gyro_values.imu_gyro_y - gyro_error.imu_gyro_y;
+  filtered_gyro_values.imu_gyro_z = gyro_values.imu_gyro_z - gyro_error.imu_gyro_z;
+
+  lpf_gyro_values.imu_gyro_x = (1.0f - GYRO_LPF_WEIGHT ) * prev_gyro.imu_gyro_x + GYRO_LPF_WEIGHT * lpf_gyro_values.imu_gyro_x;
+  lpf_gyro_values.imu_gyro_y = (1.0f - GYRO_LPF_WEIGHT ) * prev_gyro.imu_gyro_y + GYRO_LPF_WEIGHT * lpf_gyro_values.imu_gyro_y;
+  lpf_gyro_values.imu_gyro_z = (1.0f - GYRO_LPF_WEIGHT ) * prev_gyro.imu_gyro_z + GYRO_LPF_WEIGHT * lpf_gyro_values.imu_gyro_z;
+
+  prev_gyro = lpf_gyro_values;
+
+ // MAG
+  ReadMag();
+  filtered_mag_values.imu_mag_x = mag_values.imu_mag_x - mag_error.imu_mag_x;
+  filtered_mag_values.imu_mag_y = mag_values.imu_mag_y - mag_error.imu_mag_y;
+  filtered_mag_values.imu_mag_z = mag_values.imu_mag_z - mag_error.imu_mag_z;
+
+  lpf_mag_values.imu_mag_x = (1.0f - MAG_LPF_WEIGHT) * prev_mag.imu_mag_x + MAG_LPF_WEIGHT * lpf_mag_values.imu_mag_x;
+  lpf_mag_values.imu_mag_y = (1.0f - MAG_LPF_WEIGHT) * prev_mag.imu_mag_y + MAG_LPF_WEIGHT * lpf_mag_values.imu_mag_y;
+  lpf_mag_values.imu_mag_z = (1.0f - MAG_LPF_WEIGHT) * prev_mag.imu_mag_z + MAG_LPF_WEIGHT * lpf_mag_values.imu_mag_z;
+
+  prev_mag = lpf_mag_values;
 
 }
+
+/*
+ * Gets a bias term of IMU when FC is at rest.
+ * Crappy way of removing bias term
+ */
+void GetIMUBias(void)
+{
+  int loop_term;
+
+  while(loop_term < 10000)
+  {
+    ReadGyro();
+    ReadAcc();
+    ReadMag();
+
+    acc_error.imu_acc_x += acc_values.imu_acc_x;
+    acc_error.imu_acc_y += acc_values.imu_acc_y;
+    acc_error.imu_acc_z += acc_values.imu_acc_z;
+
+    mag_error.imu_mag_x += mag_values.imu_mag_x;
+    mag_error.imu_mag_y += mag_values.imu_mag_y;
+    mag_error.imu_mag_z += mag_values.imu_mag_z;
+
+    gyro_error.imu_gyro_x += gyro_values.imu_gyro_x;
+    gyro_error.imu_gyro_y += gyro_values.imu_gyro_y;
+    gyro_error.imu_gyro_z += gyro_values.imu_gyro_z;
+
+    loop_term++;
+  }
+
+  // Get error value
+  acc_error.imu_acc_x /= loop_term;
+  acc_error.imu_acc_y /= loop_term;
+  acc_error.imu_acc_z /= loop_term;
+
+  mag_error.imu_mag_x /= loop_term;
+  mag_error.imu_mag_y /= loop_term;
+  mag_error.imu_mag_z /= loop_term;
+
+  gyro_error.imu_gyro_x /= loop_term;
+  gyro_error.imu_gyro_y /= loop_term;
+  gyro_error.imu_gyro_z /= loop_term;
+}
+
 
 
 void ReadGPS(void)
