@@ -1,7 +1,8 @@
 #include "bmp280.h"
 #include <string.h>
 
-
+int32_t t_fine;
+uint8_t SerialData[3];
 /*
  * @brief Pulls the NCS pin of the BMP280 High
  * @returns nothing

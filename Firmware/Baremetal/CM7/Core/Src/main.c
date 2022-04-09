@@ -86,6 +86,11 @@ struct gyro_data gyro_values;
 struct baro_data baro_values;
 struct mag_data mag_values;
 
+
+//struct mag_data *mag_error;
+//struct acc_data *acc_error;
+//struct gyro_data *gyro_error;
+
 #ifndef HSEM_ID_0
 #define HSEM_ID_0 (0U) /* HW semaphore 0*/
 #endif

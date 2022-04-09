@@ -2,6 +2,10 @@
 #include <stm32h7xx_hal.h>
 
 
+float gyro_res;
+float mag_res;
+float acc_res;
+
 /*
  * @brief Used to read WHOAMI registers for the
  * sensors on the IC

@@ -39,8 +39,8 @@ typedef struct
   uint16_t channel16;
 } SBUS_CH;
 
-uint16_t failsafe_status;
-uint16_t channel_17;
+extern uint16_t failsafe_status;
+extern uint16_t channel_17;
 
 extern SBUS_CH sbus_channel;
 void updateSbus(uint8_t *buf);

@@ -5,6 +5,9 @@
 uint8_t data_byte[1] = {0};
 const int data_size = sizeof(NAV_PVT);
 
+
+NAV_PVT pvt;
+
 /*
  * @brief Calculates checksum of incoming data packet
  * @param ck pointer to unsigned char array containing checksum packets

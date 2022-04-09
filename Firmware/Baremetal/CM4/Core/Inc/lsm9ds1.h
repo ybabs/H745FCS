@@ -372,9 +372,9 @@ void calcGyroResolution(LSM9DS1Handle* imu);
 void calcAccResoltuion(LSM9DS1Handle* imu);
 void calcMagResolution(LSM9DS1Handle* imu);
 
-float gyro_res;
-float mag_res;
-float acc_res;
+extern float gyro_res;
+extern float mag_res;
+extern float acc_res;
 
 
 

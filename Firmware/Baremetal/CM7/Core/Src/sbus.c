@@ -8,13 +8,9 @@
 #include "sbus.h"
 
 SBUS_CH sbus_channel;
+uint16_t failsafe_status;
+uint16_t channel_17;
 
-/*
- * @Note Annoying quirk with this build is sbus_header is always in the first byte captured
- * This is not seen in standalone builds testing SBUS only. NOt sure why this is happening.
- * As a result, whe're checking for the header in the first byte and shifting everything
- * by one byte.
- */
 void updateSbus(uint8_t *buf)
 {
     sbus_channel.channel1 = (buf[1] >> 0 | (buf[2] << 8)) & 0x07FF;

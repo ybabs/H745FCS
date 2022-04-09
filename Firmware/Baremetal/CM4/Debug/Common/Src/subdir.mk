@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (9-2020-q2-update)
+# Toolchain: GNU Tools for STM32 (10.3-2021.10)
 ################################################################################
 
 # Add inputs and outputs from these tool invocations to the build variables 
@@ -21,7 +21,7 @@ Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.o: C:/Users/Home/OneDrive/Waff
 clean: clean-Common-2f-Src
 
 clean-Common-2f-Src:
-	-$(RM) ./Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.d ./Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.o
+	-$(RM) ./Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.d ./Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.o ./Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.su
 
 .PHONY: clean-Common-2f-Src
 

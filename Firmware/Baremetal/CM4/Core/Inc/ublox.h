@@ -72,8 +72,8 @@ typedef struct NAV_PVT
  void calcChecksum(unsigned char* ck);
  void processGPS(GPSHandle* gps);
  void ConfigGPS(void);
- GPSHandle gps;
- NAV_PVT pvt;
+ extern GPSHandle gps;
+ extern NAV_PVT pvt;
 
 
 #endif /* INC_UBLOX_H_ */

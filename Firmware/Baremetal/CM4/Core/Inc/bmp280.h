@@ -127,8 +127,8 @@ typedef struct
 
 } BMP280Handle;
 
-int32_t t_fine;
-uint8_t SerialData[3];
+extern int32_t t_fine;
+extern uint8_t SerialData[3];
 
 uint8_t ConfigBMP280(BMP280Handle *baro);
 void ResetBMP280(void);
