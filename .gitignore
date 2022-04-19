@@ -33,6 +33,11 @@
 *.su
 *.list
 *.zip
+*.Debug
+*.Release
+*.pdb
+*.stash
+*.ilk
 
 # Eclipse CDT project files
 .cproject
@@ -51,6 +56,9 @@
 
 #Vscode files
 .vscode/
+
+#QT Build files
+build-WaffleFlyerGUI-Desktop_Qt_6_2_3_MSVC2019_64bit-Debug/ 
 
 #Kicad Backup Files
 CM4-backups/
