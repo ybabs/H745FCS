@@ -22,7 +22,6 @@
 
 /* USER CODE BEGIN 0 */
 #include <string.h>
-extern uint8_t rx_buffer[255];
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart3;

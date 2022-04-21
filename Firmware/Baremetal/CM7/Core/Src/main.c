@@ -29,19 +29,27 @@
 #include "gpio.h"
 #include "micros.h"
 
-#define USE_FILTER 1
+#include "usb_command_set.h"
+#include "crclib.h"
+
+#define USE_FILTER                    1
 
 
-#define ACC_LPF_WEIGHT  0.09f
-#define GYRO_LPF_WEIGHT 0.05f
-#define MAG_LPF_WEIGHT  1.0f
+#define ACC_LPF_WEIGHT                0.09f
+#define GYRO_LPF_WEIGHT               0.05f
+#define MAG_LPF_WEIGHT                1.0f
 
 
-#define USE_MADGWICK  1
-#define USE_KALMAN        0
+#define USE_MADGWICK                  1
+#define USE_KALMAN                    0
 
-#define USB_UPDATE_RATE_MS  10 // 100 Hz Update Rate
-#define HEART_BEAT_RATE_MS 1000 // 1 Hz
+#define USB_UPDATE_RATE_MS            10      // 100 Hz Update Rate
+#define HEART_BEAT_RATE_MS            1000    // 1 Hz
+#define GPS_UPDATE_RATE_MS            100     // 10 Hz
+#define BARO_UPDATE_RATE_MS           38      //~26 Hz
+#define MAG_UPDATE_RATE_MS            12      // ~80Hz
+#define GYRO_UPDATE_RATE_MS           1       // ~952 Hz
+#define ACC_UPDATE_RATE_MS            1       // ~952 Hz
 
 #define G_ACCEL  0.981f   // Acceleration due to gravity value for error bias correction
 
@@ -67,13 +75,29 @@ void ReadRawData(void);
 void ReadFilteredData(void);
 void GetIMUBias(void);
 
+static int SendDataPacket(enum sensor_cmd_code_t code, const uint8_t *data, size_t len );
+static int SendResponse(enum sensor_cmd_code_t code) __attribute__((unused));
+
+
+void UartSendGyroData(void);
+void UartSendBaroData(void);
+void UartSendAccData(void);
+void UartSendMagData(void);
+void UartSendGPSData(void);
 
 volatile struct acc_data *acc_values_m7 = (struct acc_data*) 0x38001000;
 volatile struct gyro_data *gyro_values_m7 = (struct gyro_data*) 0x3800100D;
 volatile struct mag_data *mag_values_m7 = (struct mag_data*) 0x3800101A;
 volatile struct baro_data *baro_values_m7 = (struct baro_data*) 0x38001028;
 volatile struct gps_data *gps_values_m7 = (struct gps_data*) 0x38001032;
+
+
 uint32_t usb_timer = 0;
+uint32_t acc_timer = 0;
+uint32_t gyro_timer = 0;
+uint32_t gps_timer = 0;
+uint32_t mag_timer = 0;
+uint32_t baro_timer = 0;
 uint32_t heartbeat_timer = 0;
 uint8_t led_state = 0x0;
 
@@ -218,7 +242,7 @@ Error_Handler();
 
 //      CDC_Transmit_FS((uint8_t *) errBuf, strlen(errBuf));
      CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
-      usb_timer = HAL_GetTick();
+     usb_timer = HAL_GetTick();
     }
    HeartBeat();
   }
@@ -419,6 +443,75 @@ void ReadGyro(void)
      gyro_values.imu_gyro_z = gyro_values_m7->imu_gyro_z;
   }
   HAL_HSEM_Release(HSEM_ID_0,0);
+}
+
+static int SendDataPacket(enum sensor_cmd_code_t code, const uint8_t *data, size_t len )
+{
+  return 0;
+}
+static int SendResponse(enum sensor_cmd_code_t code)
+{
+  return 0;
+}
+
+void UartSendGyroData(void)
+{
+  if((HAL_GetTick() - gyro_timer) >= GYRO_UPDATE_RATE_MS)
+    {
+     uint8_t frame[sizeof(filtered_gyro_values)];
+     memcpy(frame, (uint8_t*)&filtered_gyro_values, sizeof(filtered_gyro_values));
+     SendDataPacket(SENSOR_COMMAND_GYRO, frame, sizeof(frame)/sizeof(frame[0]));
+     gyro_timer = HAL_GetTick();
+    }
+
+}
+void UartSendBaroData(void)
+{
+  if((HAL_GetTick() - baro_timer) >= BARO_UPDATE_RATE_MS)
+    {
+      uint8_t frame[sizeof(baro_values)];
+      memcpy(frame, (uint8_t*)&baro_values, sizeof(baro_values));
+      SendDataPacket(SENSOR_COMMAND_BARO, frame, sizeof(frame)/sizeof(frame[0]));
+      baro_timer = HAL_GetTick();
+
+    }
+
+}
+void UartSendAccData(void)
+{
+  if((HAL_GetTick() - acc_timer) >= ACC_UPDATE_RATE_MS)
+    {
+       uint8_t frame[sizeof(filtered_acc_values)];
+       memcpy(frame, (uint8_t*)&filtered_acc_values, sizeof(filtered_acc_values));
+       SendDataPacket(SENSOR_COMMAND_ACC, frame, sizeof(frame)/sizeof(frame[0]));
+       acc_timer = HAL_GetTick();
+
+    }
+
+}
+void UartSendMagData(void)
+{
+  if((HAL_GetTick() - mag_timer) >= MAG_UPDATE_RATE_MS)
+    {
+      uint8_t frame[sizeof(filtered_mag_values)];
+      memcpy(frame, (uint8_t*)&filtered_mag_values, sizeof(filtered_mag_values));
+      SendDataPacket(SENSOR_COMMAND_MAG, frame, sizeof(frame)/sizeof(frame[0]));
+      mag_timer = HAL_GetTick();
+
+    }
+
+}
+void UartSendGPSData(void)
+{
+  if((HAL_GetTick() - gps_timer) >= GPS_UPDATE_RATE_MS)
+    {
+     uint8_t frame[sizeof(gps_values)];
+     memcpy(frame, (uint8_t*)&gps_values, sizeof(gps_values));
+     SendDataPacket(SENSOR_COMMAND_GPS, frame, sizeof(frame)/sizeof(frame[0]));
+      gps_timer = HAL_GetTick();
+
+    }
+
 }
 
 /**
