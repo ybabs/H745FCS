@@ -28,7 +28,7 @@ enum response_code_t {
 };
 
 struct usb_packet_t {
-  const uint8_t preamble[2];
+  uint8_t preamble[2];
   uint8_t command_code;
   uint8_t data_length;
   uint8_t data[32];

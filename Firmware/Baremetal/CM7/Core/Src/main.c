@@ -32,7 +32,7 @@
 #include "usb_command_set.h"
 #include "crclib.h"
 
-#define USE_FILTER                    1
+#define USE_FILTER                    0
 
 
 #define ACC_LPF_WEIGHT                0.09f
@@ -130,6 +130,8 @@ volatile struct mag_data mag_error;
 volatile struct acc_data acc_error;
 volatile struct gyro_data gyro_error;
 
+struct usb_packet_t data_packet;
+
 #ifndef HSEM_ID_0
 #define HSEM_ID_0 (0U) /* HW semaphore 0*/
 #endif
@@ -223,27 +225,15 @@ Error_Handler();
     #else
       ReadRawData();
     #endif
-    //filter.dt = 1.0f/5000.0f;
-    //MadgwickQuaternionUpdate(&filter, &acc_values, &gyro_values, &mag_values);
-    if((HAL_GetTick() - usb_timer) >= USB_UPDATE_RATE_MS)
-    {
-      char logBuf[256];
-      //sprintf(logBuf, "%.4f, %.4f, %.4f\r\n", filter.roll, filter.pitch, filter.yaw);
+    //if((HAL_GetTick() - gyro_timer) >= GYRO_UPDATE_RATE_MS)
+    //{
+      UartSendGyroData();
+      UartSendAccData();
+      UartSendMagData();
+      UartSendBaroData();
+      //gyro_timer = HAL_GetTick();
+    //}
 
-      #ifdef USE_FILTER
-        sprintf(logBuf, "ax:%.4f, ay:%.4f, az:%.4f, gx:%.4f, gy:%.4f, gz:%.4f, mx:%.4f, my:%.4f, mz:%.4f\r\n",
-              filtered_acc_values.imu_acc_x, filtered_acc_values.imu_acc_y, filtered_acc_values.imu_acc_z, filtered_gyro_values.imu_gyro_x,
-              filtered_gyro_values.imu_gyro_y, filtered_gyro_values.imu_gyro_z, filtered_mag_values.imu_mag_x, filtered_mag_values.imu_mag_y, filtered_mag_values.imu_mag_z);
-      #else
-        sprintf(logBuf, "ax:%.4f, ay:%.4f, az:%.4f, gx:%.4f, gy:%.4f, gz:%.4f, mx:%.4f, my:%.4f, mz:%.4f\r\n",
-                      acc_values.imu_acc_x, acc_values.imu_acc_y, acc_values.imu_acc_z, gyro_values.imu_gyro_x, gyro_values.imu_gyro_y, gyro_values.imu_gyro_z,
-                      mag_values.imu_mag_x, mag_values.imu_mag_y, mag_values.imu_mag_z);
-      #endif
-
-//      CDC_Transmit_FS((uint8_t *) errBuf, strlen(errBuf));
-     CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
-     usb_timer = HAL_GetTick();
-    }
    HeartBeat();
   }
 }
@@ -447,6 +437,16 @@ void ReadGyro(void)
 
 static int SendDataPacket(enum sensor_cmd_code_t code, const uint8_t *data, size_t len )
 {
+    data_packet.preamble[0] = UART_PREAMBLE_1;
+    data_packet.preamble[1] = UART_PREAMBLE_2;
+    data_packet.command_code = code;
+    data_packet.data_length = len;
+    memcpy(data_packet.data, &data[0], len);
+    uint8_t crc_val = ComputeCRC8((uint8_t *) &data_packet, 4U + len);
+    data_packet.crc = crc_val;
+
+    CDC_Transmit_FS((uint8_t*)&data_packet, sizeof(data_packet));
+
   return 0;
 }
 static int SendResponse(enum sensor_cmd_code_t code)
@@ -456,12 +456,13 @@ static int SendResponse(enum sensor_cmd_code_t code)
 
 void UartSendGyroData(void)
 {
-  if((HAL_GetTick() - gyro_timer) >= GYRO_UPDATE_RATE_MS)
+  if((HAL_GetTick() - gyro_timer) >= USB_UPDATE_RATE_MS)
     {
      uint8_t frame[sizeof(filtered_gyro_values)];
      memcpy(frame, (uint8_t*)&filtered_gyro_values, sizeof(filtered_gyro_values));
      SendDataPacket(SENSOR_COMMAND_GYRO, frame, sizeof(frame)/sizeof(frame[0]));
      gyro_timer = HAL_GetTick();
+
     }
 
 }
