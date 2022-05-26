@@ -3,6 +3,7 @@ QT += quick serialport positioning
 CONFIG += c++11
 
 SOURCES += \
+        src/frame.cpp \
         src/serialmanager.cpp \
         src/main.cpp
 
@@ -23,4 +24,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    inc/frame.h \
     inc/serialmanager.h
