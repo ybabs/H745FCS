@@ -74,8 +74,8 @@ public:
     quint8  GetDataLength();
     quint8  GetIndexedByte(int index);
     quint8  GetUByte();
+    qint8  GetSByte();
     quint8  GetUByte(int index);
-    qint8   GetSByte();
     quint16 GetUInt16();
     quint16 GetUInt16(int index);
     qint16  GetInt16();
@@ -83,6 +83,7 @@ public:
     quint32 GetUInt32(int index);
     qint32  GetInt32();
     quint8  CalculateChecksum(size_t len);
+    quint8  CalculateChecksum(QByteArray buffer);
     void    Clear();
     void    AddByte(quint8 data);
     QByteArray GetBuffer();

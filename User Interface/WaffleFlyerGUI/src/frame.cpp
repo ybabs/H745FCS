@@ -212,6 +212,22 @@ QByteArray Frame::GetBuffer()
     return m_packet;
 }
 
+quint32 Frame::MakeDWord(quint16 lsb, quint16 msb)
+{
+    quint32 ret_val = msb;
+    ret_val <<= 16;
+    ret_val|= lsb;
+    return ret_val;
+}
+
+quint16 Frame::MakeWord(quint8 lsb, quint8 msb)
+{
+    quint16 ret_val = msb;
+    ret_val <<= 8;
+    ret_val|= lsb;
+    return ret_val;
+}
+
 quint8 Frame::CalculateChecksum(size_t len)
 {
     quint32 i = 0;
@@ -220,5 +236,16 @@ quint8 Frame::CalculateChecksum(size_t len)
     {
         crc8 = crc_table[crc8 ^ m_packet[i]];
     }
+    return crc8;
+}
+
+quint8  Frame::CalculateChecksum(QByteArray buffer)
+{
+    quint8 crc8 = 0;
+    for(int i = 0; i < buffer.count(); i++)
+    {
+        crc8 = crc_table[crc8 ^ buffer.at(i)];
+    }
+
     return crc8;
 }

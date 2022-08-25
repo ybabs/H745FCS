@@ -25,4 +25,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     inc/frame.h \
-    inc/serialmanager.h
+    inc/serialmanager.h \
+    inc/uartconfig.h
