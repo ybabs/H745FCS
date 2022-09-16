@@ -1,0 +1,5 @@
+../Buffer_Lib/Src/ring_buffer.c:5:6:RingBuf_ctor	24	static
+../Buffer_Lib/Src/ring_buffer.c:13:6:RingBuf_put	24	static
+../Buffer_Lib/Src/ring_buffer.c:28:6:RingBuf_get	24	static
+../Buffer_Lib/Src/ring_buffer.c:44:6:RingBuf_process_all	24	static
+../Buffer_Lib/Src/ring_buffer.c:56:12:RingBuf_num_free	24	static

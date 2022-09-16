@@ -1,0 +1,9 @@
+../App/Src/mainproj.cpp:7:1:EntryApp::EntryApp()	8	static
+../App/Src/mainproj.cpp:96:6:void EntryApp::M4DataToM7(uint8_t)	152	static
+../App/Src/mainproj.cpp:17:6:void EntryApp::BaroTask()	8	static
+../App/Src/mainproj.cpp:27:6:void EntryApp::GPSTask()	8	static
+../App/Src/mainproj.cpp:59:6:void EntryApp::AccelTask()	24	static
+../App/Src/mainproj.cpp:69:6:void EntryApp::MagTask()	24	static
+../App/Src/mainproj.cpp:82:6:void EntryApp::GyroTask()	24	static
+../App/Src/mainproj.cpp:40:6:void EntryApp::RunSensors()	56	static
+../App/Src/mainproj.cpp:180:6:void HAL_HSEM_FreeCallback(uint32_t)	0	static

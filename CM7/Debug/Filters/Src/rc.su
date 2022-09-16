@@ -1,0 +1,2 @@
+../Filters/Src/rc.c:11:6:RCInit	32	static
+../Filters/Src/rc.c:23:7:RCUpdate	16	static
