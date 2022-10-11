@@ -43,11 +43,11 @@ void EntryApp::RunSensors()
 
    GPSTask();
 
-  AccelTask();
+   AccelTask();
 
-  MagTask();
+   MagTask();
 
-  GyroTask();
+   GyroTask();
 }
 
 

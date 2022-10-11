@@ -31,6 +31,8 @@ private:
 	// Acceleration Data
 	acc_data acc_error;
 
+	gyro_data gyro_error;
+
 	// Acceleration flag
 	bool upside_up_calibrated;
 	bool upside_down_calibrated;
@@ -56,6 +58,11 @@ private:
 	double filtered_output;
 	double sum_filter_output; //accumulated data before average
 
+
+	double accumulate_gyro_x;
+	double accumulate_gyro_y;
+	double accumulate_gyro_z;
+
 public:
 
 	explicit Calibration();
@@ -65,14 +72,16 @@ public:
 	void UpdateMeasuredGValue(CalibrationPosition drone_side, int num_samples);
 	void ComputeOffsets();
 	bool CalibrationComplete();
+	void CalibrateGyro();
 
-	struct accel_offset
+	struct sensor_offset
 	{
 		float x_offset = 0;
 		float y_offset = 0;
 		float z_offset = 0;
 	};
 
-	accel_offset offset;
+	sensor_offset accel_offset;
+	sensor_offset gyro_offset;
 
 };

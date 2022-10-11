@@ -254,9 +254,9 @@ void Calibration::UpdateMeasuredGValue(CalibrationPosition drone_side, int num_s
 }
 void Calibration::ComputeOffsets()
 {
-	offset.x_offset =  (nose_up_g + nose_down_g) / 2;
-	offset.y_offset =  (left_side_g + right_side_g)/2;
-	offset.z_offset =  (upside_up_g + upside_down_g)/2;
+	accel_offset.x_offset =  (nose_up_g + nose_down_g) / 2;
+	accel_offset.y_offset =  (left_side_g + right_side_g)/2;
+	accel_offset.z_offset =  (upside_up_g + upside_down_g)/2;
 
 	// TODO Compute scaling factor
 
@@ -266,4 +266,34 @@ bool Calibration::CalibrationComplete()
 	return upside_down_calibrated && upside_up_calibrated &&
 		   left_side_calibrated && right_side_calibrated &&
 		   nose_up_calibrated && nose_down_calibrated;
+}
+
+void Calibration::CalibrateGyro()
+{
+	// Wait for a bit and collect data for some time
+	auto ms_now = HAL_GetTick();
+	auto start_ms = HAL_GetTick();
+	uint32_t ms_elapsed = 0;
+	uint32_t ms_record = 5000; // 5 seconds
+
+
+	uint32_t num_samples = 0;
+
+	while (ms_elapsed < ms_record)
+	{
+		gyro_error = sensor.GetGyroData();
+		accumulate_gyro_x += gyro_error.imu_gyro_x;
+		accumulate_gyro_y += gyro_error.imu_gyro_y;
+		accumulate_gyro_z += gyro_error.imu_gyro_z;
+
+		num_samples++;
+
+		HAL_Delay(100);
+		ms_elapsed = HAL_GetTick() - start_ms;
+	}
+
+	gyro_offset.x_offset = accumulate_gyro_x / num_samples;
+	gyro_offset.y_offset = accumulate_gyro_y / num_samples;
+	gyro_offset.z_offset = accumulate_gyro_z / num_samples;
+
 }

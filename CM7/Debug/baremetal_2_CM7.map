@@ -281,7 +281,7 @@ Discarded input sections
  .data          0x0000000000000000        0x0 ./Calibration/Src/calibration.o
  .bss           0x0000000000000000        0x0 ./Calibration/Src/calibration.o
  .text._ZN11CalibrationC2Ev
-                0x0000000000000000       0x54 ./Calibration/Src/calibration.o
+                0x0000000000000000       0x64 ./Calibration/Src/calibration.o
  .text._ZN11Calibration21CalibrateNextPositionEv
                 0x0000000000000000      0x220 ./Calibration/Src/calibration.o
  .text._ZN11Calibration9CalibrateE19CalibrationPosition
@@ -294,12 +294,14 @@ Discarded input sections
                 0x0000000000000000       0x44 ./Calibration/Src/calibration.o
  .text._ZN11Calibration19CalibrationCompleteEv
                 0x0000000000000000       0x28 ./Calibration/Src/calibration.o
- .debug_info    0x0000000000000000     0x285c ./Calibration/Src/calibration.o
- .debug_abbrev  0x0000000000000000      0x588 ./Calibration/Src/calibration.o
- .debug_loc     0x0000000000000000      0x570 ./Calibration/Src/calibration.o
+ .text._ZN11Calibration13CalibrateGyroEv
+                0x0000000000000000       0xa4 ./Calibration/Src/calibration.o
+ .debug_info    0x0000000000000000     0x29a7 ./Calibration/Src/calibration.o
+ .debug_abbrev  0x0000000000000000      0x5bc ./Calibration/Src/calibration.o
+ .debug_loc     0x0000000000000000      0x640 ./Calibration/Src/calibration.o
  .debug_aranges
-                0x0000000000000000       0x50 ./Calibration/Src/calibration.o
- .debug_ranges  0x0000000000000000      0x160 ./Calibration/Src/calibration.o
+                0x0000000000000000       0x58 ./Calibration/Src/calibration.o
+ .debug_ranges  0x0000000000000000      0x180 ./Calibration/Src/calibration.o
  .debug_macro   0x0000000000000000      0x3a5 ./Calibration/Src/calibration.o
  .debug_macro   0x0000000000000000      0xb74 ./Calibration/Src/calibration.o
  .debug_macro   0x0000000000000000       0x2e ./Calibration/Src/calibration.o
@@ -380,10 +382,10 @@ Discarded input sections
  .debug_macro   0x0000000000000000      0x21e ./Calibration/Src/calibration.o
  .debug_macro   0x0000000000000000       0x90 ./Calibration/Src/calibration.o
  .debug_macro   0x0000000000000000      0x798 ./Calibration/Src/calibration.o
- .debug_line    0x0000000000000000     0x14ee ./Calibration/Src/calibration.o
- .debug_str     0x0000000000000000   0x1841a0 ./Calibration/Src/calibration.o
+ .debug_line    0x0000000000000000     0x15a7 ./Calibration/Src/calibration.o
+ .debug_str     0x0000000000000000   0x184226 ./Calibration/Src/calibration.o
  .comment       0x0000000000000000       0x51 ./Calibration/Src/calibration.o
- .debug_frame   0x0000000000000000      0x134 ./Calibration/Src/calibration.o
+ .debug_frame   0x0000000000000000      0x154 ./Calibration/Src/calibration.o
  .ARM.attributes
                 0x0000000000000000       0x32 ./Calibration/Src/calibration.o
  .group         0x0000000000000000        0xc ./Common/Src/crclib.o
