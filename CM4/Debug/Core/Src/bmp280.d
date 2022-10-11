@@ -35,7 +35,7 @@ Core/Src/bmp280.o: ../Core/Src/bmp280.cpp \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  ../Core/Inc/spi.h ../Core/Inc/main.h \
- C:/Users/Home/STM32CubeIDE/workspace_1.1.1/baremetal_2/Common/Inc/helpers.hpp \
+ C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp \
  ../Core/Inc/bmp280.hpp ../Core/Inc/bmp_280_registers.hpp
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
@@ -74,6 +74,6 @@ Core/Src/bmp280.o: ../Core/Src/bmp280.cpp \
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 ../Core/Inc/spi.h:
 ../Core/Inc/main.h:
-C:/Users/Home/STM32CubeIDE/workspace_1.1.1/baremetal_2/Common/Inc/helpers.hpp:
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp:
 ../Core/Inc/bmp280.hpp:
 ../Core/Inc/bmp_280_registers.hpp:

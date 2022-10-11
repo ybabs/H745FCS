@@ -1,1 +1,2 @@
 ../Filters/Src/rcfilter.cpp:6:7:float RCFilter::update(float)	16	static
+../Filters/Src/rcfilter.cpp:26:6:void RCFilter::reset()	0	static

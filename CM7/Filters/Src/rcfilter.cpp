@@ -23,3 +23,7 @@ float RCFilter::update(float input)
 	return output;
 }
 
+void RCFilter::reset()
+{
+	prev_output = 0;
+}

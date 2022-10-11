@@ -1,5 +1,5 @@
 Core/Src/ublox.o: ../Core/Src/ublox.cpp ../Core/Inc/ublox.hpp \
- C:/Users/Home/STM32CubeIDE/workspace_1.1.1/baremetal_2/Common/Inc/helpers.hpp \
+ C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp \
  ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h \
  ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h745xx.h \
  ../../Drivers/CMSIS/Include/core_cm4.h \
@@ -37,7 +37,7 @@ Core/Src/ublox.o: ../Core/Src/ublox.cpp ../Core/Inc/ublox.hpp \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  ../Core/Inc/usart.h ../Core/Inc/main.h
 ../Core/Inc/ublox.hpp:
-C:/Users/Home/STM32CubeIDE/workspace_1.1.1/baremetal_2/Common/Inc/helpers.hpp:
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp:
 ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
 ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h745xx.h:
 ../../Drivers/CMSIS/Include/core_cm4.h:

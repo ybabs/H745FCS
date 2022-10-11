@@ -1,7 +1,7 @@
 ../Calibration/Src/calibration.cpp:11:1:Calibration::Calibration()	8	static
-../Calibration/Src/calibration.cpp:30:21:CalibrationPosition Calibration::CalibrateNextPosition()	0	static
-../Calibration/Src/calibration.cpp:34:6:void Calibration::Calibrate(CalibrationPosition)	0	static
-../Calibration/Src/calibration.cpp:38:6:void Calibration::GetPositionDatapoints(CalibrationPosition)	0	static
-../Calibration/Src/calibration.cpp:42:6:void Calibration::UpdateMeasuredGValue(CalibrationPosition, int)	0	static
-../Calibration/Src/calibration.cpp:46:6:void Calibration::ComputeOffsets()	0	static
-../Calibration/Src/calibration.cpp:50:6:bool Calibration::CalibrationComplete()	0	static
+../Calibration/Src/calibration.cpp:31:21:CalibrationPosition Calibration::CalibrateNextPosition()	24	static
+../Calibration/Src/calibration.cpp:153:6:void Calibration::Calibrate(CalibrationPosition)	32	static
+../Calibration/Src/calibration.cpp:179:6:void Calibration::GetPositionDatapoints(CalibrationPosition)	8	static
+../Calibration/Src/calibration.cpp:215:6:void Calibration::UpdateMeasuredGValue(CalibrationPosition, int)	0	static
+../Calibration/Src/calibration.cpp:255:6:void Calibration::ComputeOffsets()	0	static
+../Calibration/Src/calibration.cpp:264:6:bool Calibration::CalibrationComplete()	0	static

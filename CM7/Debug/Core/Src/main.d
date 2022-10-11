@@ -57,9 +57,9 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
  ../../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
  ../Core/Inc/micros.hpp \
- C:/Users/Home/STM32CubeIDE/workspace_1.1.1/baremetal_2/Common/Inc/usb_command_set.h \
- C:/Users/Home/STM32CubeIDE/workspace_1.1.1/baremetal_2/Common/Inc/crclib.h \
- C:/Users/Home/STM32CubeIDE/workspace_1.1.1/baremetal_2/Common/Inc/helpers.hpp \
+ C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/usb_command_set.h \
+ C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/crclib.h \
+ C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp \
  ../Core/Inc/sensors.hpp
 ../Core/Inc/main.h:
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
@@ -128,7 +128,7 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h:
 ../../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h:
 ../Core/Inc/micros.hpp:
-C:/Users/Home/STM32CubeIDE/workspace_1.1.1/baremetal_2/Common/Inc/usb_command_set.h:
-C:/Users/Home/STM32CubeIDE/workspace_1.1.1/baremetal_2/Common/Inc/crclib.h:
-C:/Users/Home/STM32CubeIDE/workspace_1.1.1/baremetal_2/Common/Inc/helpers.hpp:
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/usb_command_set.h:
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/crclib.h:
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp:
 ../Core/Inc/sensors.hpp:

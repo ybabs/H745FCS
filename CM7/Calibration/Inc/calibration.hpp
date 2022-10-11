@@ -4,9 +4,10 @@
 #include <sensors.hpp>
 #include <rcfilter.hpp>
 
-static constexpr float ACCEL_THRESHOLD = 9.0f;
+static constexpr float ACCEL_THRESHOLD = 0.9f; // in gs
 
 static constexpr int16_t ACCEL_BANDWIDTH = 408;
+static constexpr int16_t SAMPLE_THRESHOLD = 200;
 
 
 enum class CalibrationPosition
@@ -48,9 +49,12 @@ private:
 	float nose_up_g;
 	float nose_down_g;
 
+
+
 	RCFilter filter{ACCEL_BANDWIDTH};
 
 	double filtered_output;
+	double sum_filter_output; //accumulated data before average
 
 public:
 
@@ -61,5 +65,14 @@ public:
 	void UpdateMeasuredGValue(CalibrationPosition drone_side, int num_samples);
 	void ComputeOffsets();
 	bool CalibrationComplete();
+
+	struct accel_offset
+	{
+		float x_offset = 0;
+		float y_offset = 0;
+		float z_offset = 0;
+	};
+
+	accel_offset offset;
 
 };

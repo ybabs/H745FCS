@@ -10,6 +10,7 @@ public:
 	}
 
 	float update(float input);
+	void reset();
 
 private:
 	   void Tick();
