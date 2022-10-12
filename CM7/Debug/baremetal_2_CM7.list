@@ -1951,12 +1951,13 @@ void SystemClock_Config(void)
 {
  8001068:	b510      	push	{r4, lr}
  800106a:	b09e      	sub	sp, #120	; 0x78
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  // Defective warning for missing initialiser member
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
  800106c:	224c      	movs	r2, #76	; 0x4c
  800106e:	2100      	movs	r1, #0
  8001070:	a80a      	add	r0, sp, #40	; 0x28
  8001072:	f010 f857 	bl	8011124 <memset>
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0,0,0,0,0,0,0,0};
  8001076:	2220      	movs	r2, #32
  8001078:	2100      	movs	r1, #0
  800107a:	a802      	add	r0, sp, #8

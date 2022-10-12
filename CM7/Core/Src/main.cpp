@@ -148,8 +148,9 @@ Error_Handler();
 //  */
 void SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  // Defective warning for missing initialiser member
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0,0,0,0,0,0,0,0};
 
   /** Supply configuration update enable
   */
