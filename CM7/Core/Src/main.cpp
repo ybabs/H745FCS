@@ -34,6 +34,7 @@
 
 #include "helpers.hpp"
 #include <sensors.hpp>
+#include <calibration.hpp>
 
 
 
@@ -113,10 +114,27 @@ Error_Handler();
 //  HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
 //
 
-  SensorData sensors;
+  //SensorData sensors;
+
+  // Calibrate Accelerometer
+  Calibration imu_calib;
+  while(!imu_calib.CalibrationComplete())
+  {
+	  auto side = imu_calib.CalibrateNextPosition();
+	  imu_calib.Calibrate(side);
+  }
+
+  imu_calib.ComputeOffsets();
+  //
+
+  // Calibrate Gyro
+  // TODO Make this a separate function call
+  imu_calib.CalibrateGyro();
+
+
   while (1)
   {
-	  	  sensors.ReadRawData();
+	  	  //sensors.ReadRawData();
   }
 }
 

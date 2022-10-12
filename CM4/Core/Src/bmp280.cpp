@@ -15,7 +15,7 @@ Bmp280::Bmp280()
   bool is_config_ok = Config();
   if(is_config_ok)
   {
-      ledcontrol::LEDAOn();
+      //ledcontrol::LEDAOn();
   }
 
 }

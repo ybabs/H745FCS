@@ -18,6 +18,11 @@ class SensorData
 public:
 	explicit SensorData();
 	void ReadRawData();
+	void ReadGPS();
+	void ReadMag();
+	void ReadAcc();
+	void ReadBaro();
+	void ReadGyro();
 	acc_data GetAccData();
 	gyro_data GetGyroData();
 	mag_data  GetMagData();
@@ -33,11 +38,7 @@ private:
 	  volatile struct baro_data *baro_values_m7 = (struct baro_data*) 0x38001060;
 	  volatile struct gps_data *gps_values_m7 = (struct gps_data*) 0x38001080;
 
-	  void ReadGPS();
-	  void ReadMag();
-	  void ReadAcc();
-	  void ReadBaro();
-	  void ReadGyro();
+
 	  void HeartBeat();   //TODO MOVE SOMEWHERE ELSE
 
 	  gps_data gps_values;

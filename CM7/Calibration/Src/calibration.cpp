@@ -2,7 +2,7 @@
  * calibration.cpp
  *
  *  Created on: 16 Sep 2022
- *      Author: Home
+ *      // Adapted from https://github.com/dakejahl/TeensyFlight36
  */
 
 #include <calibration.hpp>
@@ -32,6 +32,8 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 {
 	while(1)
 	{
+		// TODO SHould read only ACC here instead of all data.
+		sensor.ReadAcc();
 		acc_error = sensor.GetAccData();
 		// Acquire enough data past the threshold for each axis
 		uint32_t num_samples = 0;
@@ -49,6 +51,7 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 				}
 
 				HAL_Delay(10);
+				sensor.ReadAcc();
 				acc_error = sensor.GetAccData();
 			}
 		}
@@ -67,6 +70,7 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 				}
 
 				HAL_Delay(10);
+				sensor.ReadAcc();
 				acc_error = sensor.GetAccData();
 			}
 		}
@@ -83,6 +87,7 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 				}
 
 				HAL_Delay(10);
+				sensor.ReadAcc();
 				acc_error = sensor.GetAccData();
 			}
 
@@ -102,6 +107,7 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 				}
 
 				HAL_Delay(10);
+				sensor.ReadAcc();
 				acc_error = sensor.GetAccData();
 			}
 
@@ -122,6 +128,7 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 				}
 
 				HAL_Delay(10);
+				sensor.ReadAcc();
 				acc_error = sensor.GetAccData();
 			}
 		}
@@ -142,6 +149,7 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 				}
 
 				HAL_Delay(10);
+				sensor.ReadAcc();
 				acc_error = sensor.GetAccData();
 			}
 		}
@@ -165,6 +173,7 @@ void Calibration::Calibrate(CalibrationPosition drone_side)
 
 	while (ms_elapsed < ms_record)
 	{
+		sensor.ReadAcc();
 		acc_error = sensor.GetAccData();
 		GetPositionDatapoints(drone_side);
 		HAL_Delay(100);
@@ -281,6 +290,7 @@ void Calibration::CalibrateGyro()
 
 	while (ms_elapsed < ms_record)
 	{
+		sensor.ReadGyro();
 		gyro_error = sensor.GetGyroData();
 		accumulate_gyro_x += gyro_error.imu_gyro_x;
 		accumulate_gyro_y += gyro_error.imu_gyro_y;
