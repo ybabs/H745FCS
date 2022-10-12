@@ -19,10 +19,11 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+
 #include "main.h"
 #include "stm32h7xx_it.h"
 #include "string.h"
-#include "sbus.h"
+#include "common.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -67,6 +68,9 @@ extern DMA_HandleTypeDef hdma_uart7_tx;
 extern DMA_HandleTypeDef hdma_uart4_rx;
 extern UART_HandleTypeDef huart4;
 extern UART_HandleTypeDef huart7;
+
+//Extern hackery in c as unable to compile sbus.h from this c file with the variable declared there
+uint8_t sbus_buffer[SBUS_PACKET_LEN];
 
 /* USER CODE BEGIN EV */
 
@@ -351,11 +355,11 @@ void SDMMC1_IRQHandler(void)
 void UART4_IRQHandler(void)
 {
   /* USER CODE BEGIN UART4_IRQn 0 */
-//  if(__HAL_UART_GET_IT_SOURCE(&huart4, UART_IT_IDLE))
-//  {
-//    HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
-//    __HAL_UART_DISABLE_IT(&huart4, UART_IT_IDLE);
-//  }
+  if(__HAL_UART_GET_IT_SOURCE(&huart4, UART_IT_IDLE))
+  {
+     HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
+    __HAL_UART_DISABLE_IT(&huart4, UART_IT_IDLE);
+  }
   /* USER CODE END UART4_IRQn 0 */
   HAL_UART_IRQHandler(&huart4);
 

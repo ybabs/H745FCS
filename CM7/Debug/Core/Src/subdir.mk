@@ -9,7 +9,6 @@ C_SRCS += \
 ../Core/Src/gpio.c \
 ../Core/Src/i2c.c \
 ../Core/Src/pwm.c \
-../Core/Src/sbus.c \
 ../Core/Src/sdmmc.c \
 ../Core/Src/stm32h7xx_hal_msp.c \
 ../Core/Src/stm32h7xx_it.c \
@@ -21,6 +20,7 @@ C_SRCS += \
 CPP_SRCS += \
 ../Core/Src/main.cpp \
 ../Core/Src/micros.cpp \
+../Core/Src/sbus.cpp \
 ../Core/Src/sensors.cpp 
 
 C_DEPS += \
@@ -28,7 +28,6 @@ C_DEPS += \
 ./Core/Src/gpio.d \
 ./Core/Src/i2c.d \
 ./Core/Src/pwm.d \
-./Core/Src/sbus.d \
 ./Core/Src/sdmmc.d \
 ./Core/Src/stm32h7xx_hal_msp.d \
 ./Core/Src/stm32h7xx_it.d \
@@ -57,6 +56,7 @@ OBJS += \
 CPP_DEPS += \
 ./Core/Src/main.d \
 ./Core/Src/micros.d \
+./Core/Src/sbus.d \
 ./Core/Src/sensors.d 
 
 

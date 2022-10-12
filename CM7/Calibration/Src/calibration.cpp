@@ -21,8 +21,8 @@ Calibration::Calibration():
 	right_side_g(0),
 	nose_up_g(0),
 	nose_down_g(0),
-	sum_filter_output(0),
-	filtered_output(0)
+	filtered_output(0),
+	sum_filter_output(0)
 {
 
 }
@@ -161,7 +161,7 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 void Calibration::Calibrate(CalibrationPosition drone_side)
 {
 	// Wait for a bit and collect data for some time
-	auto ms_now = HAL_GetTick();
+//	auto ms_now = HAL_GetTick();
 	auto start_ms = HAL_GetTick();
 	uint32_t ms_elapsed = 0;
 	uint32_t ms_record = 5000; // 5 seconds
@@ -280,7 +280,7 @@ bool Calibration::CalibrationComplete()
 void Calibration::CalibrateGyro()
 {
 	// Wait for a bit and collect data for some time
-	auto ms_now = HAL_GetTick();
+//	auto ms_now = HAL_GetTick();
 	auto start_ms = HAL_GetTick();
 	uint32_t ms_elapsed = 0;
 	uint32_t ms_record = 5000; // 5 seconds

@@ -35,6 +35,8 @@
 #include "helpers.hpp"
 #include <sensors.hpp>
 #include <calibration.hpp>
+#include <common.h>
+#include <sbus.h>
 
 
 
@@ -45,7 +47,8 @@
 /////* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
-static void UART4_Start(void);
+
+SbusController frkskyRC;
 //
 ///**
 //  * @brief  The application entry point.
@@ -62,6 +65,7 @@ int main(void)
 //
 //  /* Enable I-Cache---------------------------------------------------------*/
   SCB_EnableICache();
+
 //
 //  /* Enable D-Cache---------------------------------------------------------*/
    SCB_EnableDCache();
@@ -110,8 +114,8 @@ Error_Handler();
   MX_USB_DEVICE_Init();
   DWT_Init();
 //
-//  __HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
-//  HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
+  __HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
+  HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
 //
 
   //SensorData sensors;
@@ -209,7 +213,7 @@ void SystemClock_Config(void)
 //
 void MPU_Config(void)
 {
-  MPU_Region_InitTypeDef MPU_InitStruct = {0};
+  MPU_Region_InitTypeDef MPU_InitStruct = {0,0,0,0,0,0,0,0,0,0,0};
 
   /* Disables the MPU */
   HAL_MPU_Disable();
@@ -262,19 +266,19 @@ void Error_Handler(void)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-//  if (huart->Instance == UART4)
-//  {
-//    if(sbus_buffer[0] != SBUS_HEADER)
-//    {
-//      HAL_UART_DMAStop(&huart4);
-//      __HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
-//    }
-//
-//    else
-//    {
-//      updateSbus(sbus_buffer);
-//    }
-//  }
+  if (huart->Instance == UART4)
+  {
+    if(sbus_buffer[0] != SBUS_HEADER)
+    {
+      HAL_UART_DMAStop(&huart4);
+      __HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
+    }
+
+    else
+    {
+    	frkskyRC.UpdateSbus(sbus_buffer);
+    }
+  }
 
 }
 //

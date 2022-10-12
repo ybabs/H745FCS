@@ -15,9 +15,11 @@ public:
 private:
 	   void Tick();
 
+	    float cutoff_freq = 0;
+	    float prev_time;
 	    float prev_output;
-	   	float prev_time;
-		float cutoff_freq = 0;
+
+
 
 
 };
