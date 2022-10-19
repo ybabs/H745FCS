@@ -11,6 +11,7 @@
 "./Core/Src/sbus.o"
 "./Core/Src/sdmmc.o"
 "./Core/Src/sensors.o"
+"./Core/Src/serializer.o"
 "./Core/Src/stm32h7xx_hal_msp.o"
 "./Core/Src/stm32h7xx_it.o"
 "./Core/Src/syscalls.o"

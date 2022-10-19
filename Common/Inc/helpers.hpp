@@ -11,6 +11,15 @@ static constexpr uint8_t ACC_DATA_TYPE = 0x03;
 static constexpr uint8_t GYRO_DATA_TYPE = 0x04;
 static constexpr uint8_t BARO_DATA_TYPE  = 0x05;
 
+static constexpr uint8_t USB_UPDATE_RATE_MS     =       10;      // 100 Hz Update Rate
+static constexpr uint16_t HEART_BEAT_RATE_MS     =       1000;    // 1 Hz
+static constexpr uint8_t GPS_UPDATE_RATE_MS     =       100;     // 10 Hz
+static constexpr uint8_t BARO_UPDATE_RATE_MS    =       38;      //~26 Hz
+static constexpr uint8_t MAG_UPDATE_RATE_MS     =       12;      // ~80Hz
+static constexpr uint8_t GYRO_UPDATE_RATE_MS    =       1;      // ~952 Hz
+static constexpr uint8_t ACC_UPDATE_RATE_MS     =       1;       // ~952 Hz
+
+
 static constexpr uint32_t HSEM_ID_0 = 0;
 
 static constexpr double MICROS_PER_SEC = 1000000.0f;
@@ -95,7 +104,7 @@ static constexpr void TimerCountStart()
    while(0);
 }
 
-static uint32_t TimerCountStop()
+__attribute__((unused)) static uint32_t TimerCountStop()
 {
 	uint32_t value;
    do
