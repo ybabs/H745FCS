@@ -87,7 +87,7 @@ main-build: baremetal_2_CM7.elf secondary-outputs
 
 # Tool invocations
 baremetal_2_CM7.elf baremetal_2_CM7.map: $(OBJS) $(USER_OBJS) C:\Users\Daniel\STM32CubeIDE\workspace_1.10.1\baremetal_2\CM7\STM32H745ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "baremetal_2_CM7.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\Daniel\STM32CubeIDE\workspace_1.10.1\baremetal_2\CM7\STM32H745ZITX_FLASH.ld" -Wl,-Map="baremetal_2_CM7.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+	arm-none-eabi-g++ -o "baremetal_2_CM7.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\Daniel\STM32CubeIDE\workspace_1.10.1\baremetal_2\CM7\STM32H745ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="baremetal_2_CM7.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

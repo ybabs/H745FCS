@@ -39,6 +39,8 @@
 #include <sbus.h>
 
 
+#include "Eigen"
+
 
 //#ifndef HSEM_ID_0
 //#define HSEM_ID_0 (0U) /* HW semaphore 0*/
@@ -118,6 +120,10 @@ Error_Handler();
   HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
 //
 
+
+  Eigen::Quaternionf q = Eigen::Quaternionf(1, 0, 0, 0); // (w,x,y,z)
+
+  Eigen::Matrix3f rotation_matrix = Eigen::Matrix3f::Identity();
   //SensorData sensors;
 
   // Calibrate Accelerometer
