@@ -30,21 +30,20 @@
 #include "usbd_cdc_if.h"
 #include <micros.hpp>
 #include "usb_command_set.h"
-#include "crclib.h"
 
 #include "helpers.hpp"
 #include <sensors.hpp>
 #include <calibration.hpp>
 #include <common.h>
 #include <sbus.h>
-
+#include <serializer.h>
 
 #include "Eigen"
 
 
-//#ifndef HSEM_ID_0
-//#define HSEM_ID_0 (0U) /* HW semaphore 0*/
-//#endif
+#ifndef HSEM_ID_0
+#define HSEM_ID_0 (0U) /* HW semaphore 0*/
+#endif
 ////
 /////* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -76,10 +75,11 @@ int main(void)
   /* Wait until CPU2 boots and enters in stop mode or timeout*/
   timeout = 0xFFFF;
 
-  while (__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET)
-  {
-    asm("NOP");
-  }
+//  while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) && (timeout-- > 0));
+//  if ( timeout < 0 )
+//  {
+//    Error_Handler();
+//  }
 /* USER CODE END Boot_Mode_Sequence_1 */
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -97,12 +97,12 @@ HAL_HSEM_FastTake(HSEM_ID_0);
 /*Release HSEM in order to notify the CPU2(CM4)*/
 HAL_HSEM_Release(HSEM_ID_0,0);
 /* wait until CPU2 wakes up from stop mode */
-timeout = 0xFFFF;
-while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) == RESET) && (timeout-- > 0));
-if ( timeout < 0 )
-{
-Error_Handler();
-}
+//timeout = 0xFFFF;
+//while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) == RESET) && (timeout-- > 0));
+//if ( timeout < 0 )
+//{
+//Error_Handler();
+//}
 /* USER CODE END Boot_Mode_Sequence_2 */
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
@@ -121,30 +121,33 @@ Error_Handler();
 //
 
 
-  Eigen::Quaternionf q = Eigen::Quaternionf(1, 0, 0, 0); // (w,x,y,z)
-
-  Eigen::Matrix3f rotation_matrix = Eigen::Matrix3f::Identity();
-  //SensorData sensors;
+  SensorData sensors;
+  Serializer serializer;
 
   // Calibrate Accelerometer
-  Calibration imu_calib;
-  while(!imu_calib.CalibrationComplete())
-  {
-	  auto side = imu_calib.CalibrateNextPosition();
-	  imu_calib.Calibrate(side);
-  }
-
-  imu_calib.ComputeOffsets();
-  //
-
-  // Calibrate Gyro
-  // TODO Make this a separate function call
-  imu_calib.CalibrateGyro();
+//  Calibration imu_calib;
+//  while(!imu_calib.CalibrationComplete())
+//  {
+//	  auto side = imu_calib.CalibrateNextPosition();
+//	  imu_calib.Calibrate(side);
+//  }
+//
+//  imu_calib.ComputeOffsets();
+//
+//
+//  // Calibrate Gyro
+//  // TODO Make this a separate function call
+//  imu_calib.CalibrateGyro();
 
 
   while (1)
   {
-	  	  //sensors.ReadRawData();
+	  	  //Read raw data first
+	  	  sensors.ReadRawData();
+	  	  // send data through USB
+	  	  serializer.SendData(sensors.GetAccData());
+	  	  serializer.SendData(sensors.GetMagData());
+	  	  serializer.SendData(sensors.GetGyroData());
   }
 }
 
@@ -220,7 +223,8 @@ void SystemClock_Config(void)
 //
 void MPU_Config(void)
 {
-  MPU_Region_InitTypeDef MPU_InitStruct = {0,0,0,0,0,0,0,0,0,0,0};
+//  MPU_Region_InitTypeDef MPU_InitStruct = {0,0,0,0,0,0,0,0,0,0,0};
+	  MPU_Region_InitTypeDef MPU_InitStruct = {0};
 
   /* Disables the MPU */
   HAL_MPU_Disable();

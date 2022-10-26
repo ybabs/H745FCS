@@ -33,15 +33,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  14 .debug_ranges 00002310  00000000  00000000  0005ddf0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_macro  0003f8fa  00000000  00000000  00060100  2**0
+ 15 .debug_macro  00040752  00000000  00000000  00060100  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_line   00024c83  00000000  00000000  0009f9fa  2**0
+ 16 .debug_line   00024c83  00000000  00000000  000a0852  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_str    00193e9a  00000000  00000000  000c467d  2**0
+ 17 .debug_str    00193ea9  00000000  00000000  000c54d5  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .comment      00000050  00000000  00000000  00258517  2**0
+ 18 .comment      00000050  00000000  00000000  0025937e  2**0
                   CONTENTS, READONLY
- 19 .debug_frame  000066e4  00000000  00000000  00258568  2**2
+ 19 .debug_frame  000066e4  00000000  00000000  002593d0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1469,25 +1469,25 @@ void EntryApp::M4DataToM7(const uint8_t data_type)
 
 		case BARO_DATA_TYPE:
 		{
-		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+		    if (HAL_HSEM_FastTake(HSEM_ID_1) == HAL_OK)
  8101274:	2000      	movs	r0, #0
  8101276:	f005 fa87 	bl	8106788 <HAL_HSEM_FastTake>
  810127a:	2800      	cmp	r0, #0
  810127c:	f000 80ad 	beq.w	81013da <_ZN8EntryApp10M4DataToM7Eh+0x17e>
-			    HAL_HSEM_Release(HSEM_ID_0, 0);
+			    HAL_HSEM_Release(HSEM_ID_1, 0);
  8101280:	2100      	movs	r1, #0
  8101282:	4608      	mov	r0, r1
 		    // Release semaphore
-		    HAL_HSEM_Release(HSEM_ID_0, 0);
+		    HAL_HSEM_Release(HSEM_ID_1, 0);
 			break;
 		}
 	}
 }
  8101284:	b023      	add	sp, #140	; 0x8c
  8101286:	e8bd 4030 	ldmia.w	sp!, {r4, r5, lr}
-			    HAL_HSEM_Release(HSEM_ID_0, 0);
+			    HAL_HSEM_Release(HSEM_ID_1, 0);
  810128a:	f005 ba97 	b.w	81067bc <HAL_HSEM_Release>
-			if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+			if (HAL_HSEM_FastTake(HSEM_ID_1) == HAL_OK)
  810128e:	2000      	movs	r0, #0
  8101290:	f005 fa7a 	bl	8106788 <HAL_HSEM_FastTake>
  8101294:	2800      	cmp	r0, #0
@@ -1550,7 +1550,7 @@ void EntryApp::M4DataToM7(const uint8_t data_type)
  8101318:	9a21      	ldr	r2, [sp, #132]	; 0x84
  810131a:	61da      	str	r2, [r3, #28]
  810131c:	e7b0      	b.n	8101280 <_ZN8EntryApp10M4DataToM7Eh+0x24>
-		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+		    if (HAL_HSEM_FastTake(HSEM_ID_1) == HAL_OK)
  810131e:	2000      	movs	r0, #0
  8101320:	f005 fa32 	bl	8106788 <HAL_HSEM_FastTake>
  8101324:	2800      	cmp	r0, #0
@@ -1576,7 +1576,7 @@ void EntryApp::M4DataToM7(const uint8_t data_type)
  810134e:	f8d4 30c0 	ldr.w	r3, [r4, #192]	; 0xc0
  8101352:	ed83 1a02 	vstr	s2, [r3, #8]
  8101356:	e793      	b.n	8101280 <_ZN8EntryApp10M4DataToM7Eh+0x24>
-		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+		    if (HAL_HSEM_FastTake(HSEM_ID_1) == HAL_OK)
  8101358:	2000      	movs	r0, #0
  810135a:	f005 fa15 	bl	8106788 <HAL_HSEM_FastTake>
  810135e:	2800      	cmp	r0, #0
@@ -1602,7 +1602,7 @@ void EntryApp::M4DataToM7(const uint8_t data_type)
  8101388:	f8d4 30c4 	ldr.w	r3, [r4, #196]	; 0xc4
  810138c:	ed83 1a02 	vstr	s2, [r3, #8]
  8101390:	e776      	b.n	8101280 <_ZN8EntryApp10M4DataToM7Eh+0x24>
-		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
+		    if (HAL_HSEM_FastTake(HSEM_ID_1) == HAL_OK)
  8101392:	2000      	movs	r0, #0
  8101394:	f005 f9f8 	bl	8106788 <HAL_HSEM_FastTake>
  8101398:	2800      	cmp	r0, #0

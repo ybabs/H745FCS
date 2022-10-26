@@ -30,6 +30,9 @@
 #include "string.h"
 #include <mainproj.hpp>
 
+#ifndef HSEM_ID_0
+#define HSEM_ID_0 (0U) /* HW semaphore 0*/
+#endif
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */

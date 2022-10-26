@@ -5,18 +5,12 @@
 #include <stdint.h>
 
 
-//static constexpr uint16_t HEART_BEAT_RATE_MS = 1000;  // 1Hz   //TODO MOVE SOMEWHERE ELSE
-//static constexpr uint8_t  GPS_UPDATE_RATE_MS = 100;     // 10 Hz
-//static constexpr uint8_t  BARO_UPDATE_RATE_MS = 38;      //~26 Hz
-//static constexpr uint8_t  MAG_UPDATE_RATE_MS = 12;      // ~80Hz
-//static constexpr uint8_t  GYRO_UPDATE_RATE_MS = 1;       // ~952 Hz
-//static constexpr uint8_t  ACC_UPDATE_RATE_MS = 1;       // ~952 Hz
-
 class SensorData
 {
 public:
 	explicit SensorData();
 	void ReadRawData();
+	void ReadFilteredData();
 	void ReadGPS();
 	void ReadMag();
 	void ReadAcc();
@@ -46,13 +40,5 @@ private:
 	  baro_data baro_values;
 	  mag_data mag_values;
 
-//	  uint8_t led_state;
-//	  uint32_t usb_timer = 0;
-//	  uint32_t acc_timer = 0;
-//	  uint32_t gyro_timer = 0;
-//	  uint32_t gps_timer = 0;
-//	  uint32_t mag_timer = 0;
-//	  uint32_t baro_timer = 0;
-//	  uint32_t heartbeat_timer = 0;
 
 };

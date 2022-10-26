@@ -1,2 +1,2 @@
-../Core/Src/main.cpp:42:5:int main()	256	static
-../Core/Src/main.cpp:103:6:void Error_Handler()	0	static,ignoring_inline_asm
+../Core/Src/main.cpp:45:5:int main()	256	static
+../Core/Src/main.cpp:106:6:void Error_Handler()	0	static,ignoring_inline_asm

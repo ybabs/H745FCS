@@ -18,6 +18,18 @@ Serializer::Serializer():
 
 }
 
+uint8_t Serializer::ComputeCRC8(uint8_t* data, size_t len)
+{
+    uint32_t i = 0;
+    uint8_t crc8 = 0;
+    for (i = 0; i < len; i++)
+    {
+        crc8 = crc_table[crc8 ^ data[i]];
+    }
+    return crc8;
+}
+
+
 int Serializer::SendDataPacket(const sensor_cmd_code_t& code, const uint8_t* data, size_t len)
 {
 	m_data_packet.preamble[0] = UART_PREAMBLE_1;

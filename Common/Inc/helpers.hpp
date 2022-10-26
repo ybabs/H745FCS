@@ -20,7 +20,7 @@ static constexpr uint8_t GYRO_UPDATE_RATE_MS    =       1;      // ~952 Hz
 static constexpr uint8_t ACC_UPDATE_RATE_MS     =       1;       // ~952 Hz
 
 
-static constexpr uint32_t HSEM_ID_0 = 0;
+static constexpr uint32_t HSEM_ID_1 = 0;
 
 static constexpr double MICROS_PER_SEC = 1000000.0f;
 
