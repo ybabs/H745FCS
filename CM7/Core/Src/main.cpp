@@ -39,7 +39,9 @@
 #include <serializer.h>
 
 #include "Eigen"
+#include <array>
 
+#define USB_UPDATE_RATE_MS      10 // 100Hz
 
 #ifndef HSEM_ID_0
 #define HSEM_ID_0 (0U) /* HW semaphore 0*/
@@ -48,6 +50,15 @@
 /////* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
+
+SensorData sensors;
+
+float gyro_x;
+float gyro_y;
+float gyro_z;
+
+uint32_t usb_timer = 0;
+std::array<float, 1000> gyro_vec;
 
 SbusController frkskyRC;
 //
@@ -75,11 +86,11 @@ int main(void)
   /* Wait until CPU2 boots and enters in stop mode or timeout*/
   timeout = 0xFFFF;
 
-//  while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) && (timeout-- > 0));
-//  if ( timeout < 0 )
-//  {
-//    Error_Handler();
-//  }
+  while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) && (timeout-- > 0));
+  if ( timeout < 0 )
+  {
+    Error_Handler();
+  }
 /* USER CODE END Boot_Mode_Sequence_1 */
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -120,9 +131,13 @@ HAL_HSEM_Release(HSEM_ID_0,0);
   HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
 //
 
+  while (!CDC_Class_Init_Ok());
 
-  SensorData sensors;
+
   Serializer serializer;
+
+  HAL_Delay(10000);
+
 
   // Calibrate Accelerometer
 //  Calibration imu_calib;
@@ -138,16 +153,52 @@ HAL_HSEM_Release(HSEM_ID_0,0);
 //  // Calibrate Gyro
 //  // TODO Make this a separate function call
 //  imu_calib.CalibrateGyro();
-
+int count = 0;
 
   while (1)
   {
 	  	  //Read raw data first
 	  	  sensors.ReadRawData();
-	  	  // send data through USB
-	  	  serializer.SendData(sensors.GetAccData());
-	  	  serializer.SendData(sensors.GetMagData());
-	  	  serializer.SendData(sensors.GetGyroData());
+		  if((HAL_GetTick() - usb_timer) >= USB_UPDATE_RATE_MS)
+		  {
+			  if(count < 1000)
+			  {
+				  gyro_vec[count] =  sensors.GetGyroData().imu_gyro_x;
+			  }
+
+			  count++;
+
+			  usb_timer = HAL_GetTick();
+
+		  }
+
+
+
+
+
+
+
+//	  if((HAL_GetTick() - usb_timer) >= USB_UPDATE_RATE_MS)
+//	  {
+//
+//		  char logBuf[256];
+//		  // send data through USB
+//		  //serializer.SendData(sensors.GetAccData());
+//		//HAL_Delay(1);
+//		  //serializer.SendData(sensors.GetMagData());
+//		//HAL_Delay(13);
+//		  gyro_x = sensors.GetGyroData().imu_gyro_x;
+//		  gyro_y = sensors.GetGyroData().imu_gyro_y;
+//		  gyro_z = sensors.GetGyroData().imu_gyro_z;
+//
+//		  sprintf(logBuf, "gx:%.4f, gy:%.4f, gz:%.4f\r\n",gyro_x, gyro_y, gyro_z);
+//
+//		 // serializer.SendData(sensors.GetGyroData());
+//		  gyro_vec.push_back(gyro_x);
+//		CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
+//		usb_timer = HAL_GetTick();
+//
+//	  }
   }
 }
 

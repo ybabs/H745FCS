@@ -100,7 +100,7 @@ void EntryApp::M4DataToM7(const uint8_t data_type)
 		case GPS_DATA_TYPE:
 		{
 
-			if (HAL_HSEM_FastTake(HSEM_ID_1) == HAL_OK)
+			if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
 			    {
 
 			      gps_values_m4->gps_latitude = gps.GetGPSData().gps_latitude;
@@ -113,59 +113,59 @@ void EntryApp::M4DataToM7(const uint8_t data_type)
 			      gps_values_m4->gps_satellites = gps.GetGPSData().gps_satellites;
 			    }
 			    // Release semaphore
-			    HAL_HSEM_Release(HSEM_ID_1, 0);
+			    HAL_HSEM_Release(HSEM_ID_0, 0);
 			break;
 		}
 
 		case ACC_DATA_TYPE:
 		{
-		    if (HAL_HSEM_FastTake(HSEM_ID_1) == HAL_OK)
+		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
 		    {
 		      acc_values_m4->imu_acc_x = imu.GetAccelData().x;
 		      acc_values_m4->imu_acc_y = imu.GetAccelData().y;
 		      acc_values_m4->imu_acc_z = imu.GetAccelData().z;
 		    }
 		    // Release semaphore
-		    HAL_HSEM_Release(HSEM_ID_1, 0);
+		    HAL_HSEM_Release(HSEM_ID_0, 0);
 			break;
 		}
 
 		case GYRO_DATA_TYPE:
 		{
-		    if (HAL_HSEM_FastTake(HSEM_ID_1) == HAL_OK)
+		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
 		    {
 		      gyro_values_m4->imu_gyro_x = imu.GetGyroData().x;
 		      gyro_values_m4->imu_gyro_y = imu.GetGyroData().y;
 		      gyro_values_m4->imu_gyro_z = imu.GetGyroData().z;
 		    }
 		    // Release semaphore
-		    HAL_HSEM_Release(HSEM_ID_1, 0);
+		    HAL_HSEM_Release(HSEM_ID_0, 0);
 
 			break;
 		}
 
 		case MAG_DATA_TYPE:
 		{
-		    if (HAL_HSEM_FastTake(HSEM_ID_1) == HAL_OK)
+		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
 		    {
 		      mag_values_m4->imu_mag_x = imu.GetMagData().x;
 		      mag_values_m4->imu_mag_y = imu.GetMagData().y;
 		      mag_values_m4->imu_mag_z = imu.GetMagData().z;
 		    }
 		    // Release semaphore
-		    HAL_HSEM_Release(HSEM_ID_1, 0);
+		    HAL_HSEM_Release(HSEM_ID_0, 0);
 			break;
 		}
 
 		case BARO_DATA_TYPE:
 		{
-		    if (HAL_HSEM_FastTake(HSEM_ID_1) == HAL_OK)
+		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
 		    {
 		      baro_values_m4->baro_altitude = baro.GetAltitude();
 		      baro_values_m4->baro_pressure = baro.GetPressure();
 		    }
 		    // Release semaphore
-		    HAL_HSEM_Release(HSEM_ID_1, 0);
+		    HAL_HSEM_Release(HSEM_ID_0, 0);
 			break;
 		}
 	}

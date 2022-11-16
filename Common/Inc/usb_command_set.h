@@ -1,6 +1,6 @@
 #pragma once
 
-static constexpr uint8_t UART_PREAMBLE_1 = 0x7F;
+static constexpr uint8_t UART_PREAMBLE_1 = 0x7E;
 static constexpr uint8_t UART_PREAMBLE_2 = 0x7F;
 
 static constexpr uint8_t GYRO_DATA_LEN = 12;

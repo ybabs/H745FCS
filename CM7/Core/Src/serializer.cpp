@@ -51,35 +51,35 @@ int Serializer::SendDataPacket(const sensor_cmd_code_t& code, const uint8_t* dat
 
 void Serializer::SendData(const gyro_data& data)
 {
-  if((HAL_GetTick() - gyro_timer) >= GYRO_UPDATE_RATE_MS)
-	{
+  //if((HAL_GetTick() - gyro_timer) >= GYRO_UPDATE_RATE_MS)
+	//{
 	 uint8_t frame[sizeof(data)];
 	 std::memcpy(frame, (uint8_t*)&data, sizeof(data));
 	 SendDataPacket(sensor_cmd_code_t::SENSOR_COMMAND_GYRO, frame, sizeof(frame)/sizeof(frame[0]));
-	 gyro_timer = HAL_GetTick();
-	}
+	 //gyro_timer = HAL_GetTick();
+	//}
 }
 
 void Serializer::SendData(const mag_data& data)
 {
-  if((HAL_GetTick() - mag_timer) >= MAG_UPDATE_RATE_MS)
-  {
+  //if((HAL_GetTick() - mag_timer) >= MAG_UPDATE_RATE_MS)
+  //{
       uint8_t frame[sizeof(data)];
       std::memcpy(frame, (uint8_t*)&data, sizeof(data));
       SendDataPacket(sensor_cmd_code_t::SENSOR_COMMAND_MAG, frame, sizeof(frame)/sizeof(frame[0]));
-      mag_timer = HAL_GetTick();
-   }
+     // mag_timer = HAL_GetTick();
+   //}
 }
 
 void Serializer::SendData(const acc_data& data)
 {
-  if((HAL_GetTick() - acc_timer) >= ACC_UPDATE_RATE_MS)
-  {
+  //if((HAL_GetTick() - acc_timer) >= ACC_UPDATE_RATE_MS)
+  //{
 	  uint8_t frame[sizeof(data)];
 	  std::memcpy(frame, (uint8_t*)&data, sizeof(data));
 	  SendDataPacket(sensor_cmd_code_t::SENSOR_COMMAND_ACC, frame, sizeof(frame)/sizeof(frame[0]));
-	  acc_timer = HAL_GetTick();
-  }
+	 // acc_timer = HAL_GetTick();
+  //}
 }
 
 void Serializer::SendData(const baro_data& data)

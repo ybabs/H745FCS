@@ -15,12 +15,12 @@ static constexpr uint8_t USB_UPDATE_RATE_MS     =       10;      // 100 Hz Updat
 static constexpr uint16_t HEART_BEAT_RATE_MS     =       1000;    // 1 Hz
 static constexpr uint8_t GPS_UPDATE_RATE_MS     =       100;     // 10 Hz
 static constexpr uint8_t BARO_UPDATE_RATE_MS    =       38;      //~26 Hz
-static constexpr uint8_t MAG_UPDATE_RATE_MS     =       12;      // ~80Hz
+static constexpr uint8_t MAG_UPDATE_RATE_MS     =       1;      // ~80Hz
 static constexpr uint8_t GYRO_UPDATE_RATE_MS    =       1;      // ~952 Hz
 static constexpr uint8_t ACC_UPDATE_RATE_MS     =       1;       // ~952 Hz
 
 
-static constexpr uint32_t HSEM_ID_1 = 0;
+static constexpr uint32_t HSEM_ID_0 = 0;
 
 static constexpr double MICROS_PER_SEC = 1000000.0f;
 

@@ -162,6 +162,12 @@ static int8_t CDC_Init_FS(void)
   /* USER CODE END 3 */
 }
 
+
+uint8_t CDC_Class_Init_Ok(void)
+{
+	return hUsbDeviceFS.pClassData;
+}
+
 /**
   * @brief  DeInitializes the CDC media low layer
   * @retval USBD_OK if all operations are OK else USBD_FAIL
