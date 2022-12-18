@@ -1,0 +1,4 @@
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/intercore_comms.c:16:10:lock_unlock_hsem	16	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/intercore_comms.c:30:10:lock_hsem	8	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/intercore_comms.c:40:7:unlock_hsem	0	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/intercore_comms.c:45:7:lock_unlock_callback	0	static

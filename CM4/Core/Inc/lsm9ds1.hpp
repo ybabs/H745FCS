@@ -1,4 +1,5 @@
 #include "lsm9ds1_registers.hpp"
+#include "helpers.hpp"
 #include "i2c.h"
 #include <type_traits>
 
@@ -59,26 +60,6 @@ public:
 
   IMU();
 
-  struct gyroData
-  {
-    float x;
-    float y;
-    float z;
-  };
-
-  struct accelData
-  {
-    float x;
-    float y;
-    float z;
-  };
-
-  struct magData
-  {
-    float x;
-    float y;
-    float z;
-  };
 
   gyroData  GetGyroData();
   accelData GetAccelData();
@@ -86,21 +67,18 @@ public:
 
 private:
 
-
-
-
   float gyro_res;
   float mag_res;
   float acc_res;
   float temperature;
 
   GyroSettings gyro_settings;
-   AccelSettings accel_settings;
-   MagSettings mag_settings;
-   TempSettings temp_settings;
-   magData mag_values;
-   accelData accel_values;
-   gyroData gyro_values;
+  AccelSettings accel_settings;
+  MagSettings mag_settings;
+  TempSettings temp_settings;
+  magData mag_values;
+  accelData accel_values;
+  gyroData gyro_values;
 
 
   bool Setup();

@@ -3,11 +3,11 @@
 static constexpr uint8_t UART_PREAMBLE_1 = 0x7E;
 static constexpr uint8_t UART_PREAMBLE_2 = 0x7F;
 
-static constexpr uint8_t GYRO_DATA_LEN = 12;
-static constexpr uint8_t ACC_DATA_LEN  = 12;
+static constexpr uint8_t gyroData_LEN = 12;
+static constexpr uint8_t accelData_LEN  = 12;
 static constexpr uint8_t GPS_DATA_LEN  = 29;
-static constexpr uint8_t BARO_DATA_LEN = 12;
-static constexpr uint8_t  MAG_DATA_LEN = 12;
+static constexpr uint8_t baroData_LEN = 12;
+static constexpr uint8_t  magData_LEN = 12;
 
 
 enum class sensor_cmd_code_t {

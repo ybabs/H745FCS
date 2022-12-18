@@ -59,6 +59,7 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../Core/Inc/micros.hpp \
  C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/usb_command_set.h \
  C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp \
+ C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/intercore_comms.h \
  ../Core/Inc/sensors.hpp \
  C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/CM7/Calibration/Inc/calibration.hpp \
  C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/CM7/Filters/Inc/rcfilter.hpp \
@@ -377,6 +378,7 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../Core/Inc/micros.hpp:
 C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/usb_command_set.h:
 C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp:
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/intercore_comms.h:
 ../Core/Inc/sensors.hpp:
 C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/CM7/Calibration/Inc/calibration.hpp:
 C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/CM7/Filters/Inc/rcfilter.hpp:

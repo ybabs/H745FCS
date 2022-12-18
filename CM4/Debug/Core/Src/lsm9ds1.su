@@ -1,6 +1,6 @@
-../Core/Src/lsm9ds1.cpp:16:15:IMU::gyroData IMU::GetGyroData()	56	static
-../Core/Src/lsm9ds1.cpp:23:16:IMU::accelData IMU::GetAccelData()	56	static
-../Core/Src/lsm9ds1.cpp:29:14:IMU::magData IMU::GetMagData()	56	static
+../Core/Src/lsm9ds1.cpp:16:10:gyroData IMU::GetGyroData()	56	static
+../Core/Src/lsm9ds1.cpp:23:11:accelData IMU::GetAccelData()	56	static
+../Core/Src/lsm9ds1.cpp:29:9:magData IMU::GetMagData()	56	static
 ../Core/Src/lsm9ds1.cpp:36:6:void IMU::Init()	4	static
 ../Core/Src/lsm9ds1.cpp:122:9:uint8_t IMU::CheckSensorID(const uint8_t&, const uint8_t&)	40	static
 ../Core/Src/lsm9ds1.cpp:137:6:void IMU::InitGyro()	32	static

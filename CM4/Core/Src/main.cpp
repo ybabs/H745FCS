@@ -28,7 +28,32 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "string.h"
+#include "intercore_comms.h"
 #include <mainproj.hpp>
+
+uint32_t x, y;
+uint32_t Cycles;
+volatile unsigned int *DWT_CYCCNT   = (volatile unsigned int *)0xE0001004;
+volatile unsigned int *DWT_CONTROL  = (volatile unsigned int *)0xE0001000;
+volatile unsigned int *DWT_LAR      = (volatile unsigned int *)0xE0001FB0;
+volatile unsigned int *SCB_DHCSR    = (volatile unsigned int *)0xE000EDF0;
+volatile unsigned int *SCB_DEMCR    = (volatile unsigned int *)0xE000EDFC;
+volatile unsigned int *ITM_TER      = (volatile unsigned int *)0xE0000E00;
+volatile unsigned int *ITM_TCR      = (volatile unsigned int *)0xE0000E80;
+
+static int Debug_ITMDebug = 0;
+
+inline void EnableTiming(void)
+{
+  if ((*SCB_DHCSR & 1) && (*ITM_TER & 1)) // Enabled?
+    Debug_ITMDebug = 1;
+
+  *SCB_DEMCR |= 0x01000000;
+  *DWT_LAR = 0xC5ACCE55; // enable access
+  *DWT_CYCCNT = 0; // reset the counter
+  *DWT_CONTROL |= 1 ; // enable the counter
+}
+
 
 //#ifndef HSEM_ID_0
 //#define HSEM_ID_0 (0U) /* HW semaphore 0*/
@@ -55,7 +80,7 @@ int main(void)
   /*HW semaphore Clock enable*/
   __HAL_RCC_HSEM_CLK_ENABLE();
   /* Activate HSEM notification for Cortex-M4*/
-  HAL_HSEM_ActivateNotification(__HAL_HSEM_SEMID_TO_MASK(HSEM_ID_0));
+  HAL_HSEM_ActivateNotification(__HAL_HSEM_SEMID_TO_MASK(HSEM_BOOT));
   /*
   Domain D2 goes to STOP mode (Cortex-M4 in deep-sleep) waiting for Cortex-M7 to
   perform system initialization (system clock config, external memory configuration.. )
@@ -63,7 +88,7 @@ int main(void)
   HAL_PWREx_ClearPendingEvent();
   HAL_PWREx_EnterSTOPMode(PWR_MAINREGULATOR_ON, PWR_STOPENTRY_WFE, PWR_D2_DOMAIN);
   /* Clear HSEM flag */
-  __HAL_HSEM_CLEAR_FLAG(__HAL_HSEM_SEMID_TO_MASK(HSEM_ID_0));
+  __HAL_HSEM_CLEAR_FLAG(__HAL_HSEM_SEMID_TO_MASK(HSEM_BOOT));
 
 /* USER CODE END Boot_Mode_Sequence_1 */
   /* MCU Configuration--------------------------------------------------------*/
@@ -72,7 +97,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  //__HAL_HSEM_CLEAR_FLAG(__HAL_HSEM_SEMID_TO_MASK(HSEM_ACC));
   /* USER CODE END Init */
 
   /* USER CODE BEGIN SysInit */
@@ -94,7 +119,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  	EnableTiming();
+	  	x = *DWT_CYCCNT;
 	  app.RunSensors();
+	  y = *DWT_CYCCNT;
+	  Cycles = (y - x);
+
   }
   /* USER CODE END 3 */
 }

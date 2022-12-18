@@ -16,29 +16,38 @@ public:
 	void ReadAcc();
 	void ReadBaro();
 	void ReadGyro();
-	acc_data GetAccData();
-	gyro_data GetGyroData();
-	mag_data  GetMagData();
-	baro_data GetBaroData();
-	gps_data GetGpsData();
+	accelData GetAccData();
+	gyroData GetGyroData();
+	magData  GetMagData();
+	baroData GetBaroData();
+	gpsData GetGpsData();
 
 
 
 private:
-	  volatile struct acc_data *acc_values_m7 = (struct acc_data*) 0x38001000;
-	  volatile struct gyro_data *gyro_values_m7 = (struct gyro_data*) 0x38001020;
-	  volatile struct mag_data *mag_values_m7 = (struct mag_data*) 0x38001040;
-	  volatile struct baro_data *baro_values_m7 = (struct baro_data*) 0x38001060;
-	  volatile struct gps_data *gps_values_m7 = (struct gps_data*) 0x38001080;
+	  volatile struct accelData *acc_values_m7 = (struct accelData*) ACCEL_D3_ADDRESS;
+	  volatile struct gyroData *gyro_values_m7 = (struct gyroData*) GYRO_D3_ADDRESS;
+	  volatile struct magData *mag_values_m7 = (struct magData*) MAG_D3_ADDRESS;
+	  volatile struct baroData *baro_values_m7 = (struct baroData*) BARO_D3_ADDRESS;
+	  volatile struct gpsData *gps_values_m7 = (struct gpsData*) GPS_D3_ADDRESS;
 
 
 	  void HeartBeat();   //TODO MOVE SOMEWHERE ELSE
 
-	  gps_data gps_values;
-	  acc_data acc_values;
-	  gyro_data gyro_values;
-	  baro_data baro_values;
-	  mag_data mag_values;
+	  gpsData gps_values;
+	  accelData acc_values;
+	  gyroData gyro_values;
+	  baroData baro_values;
+	  magData mag_values;
+
+	  uint32_t accel_timer;
+	  uint32_t gyro_timer;
+	  uint32_t mag_timer;
+	  uint32_t gps_timer;
+	  uint32_t baro_timer;
+
+
+
 
 
 };

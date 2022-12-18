@@ -29,9 +29,9 @@ private:
 	SensorData sensor;
 
 	// Acceleration Data
-	acc_data acc_error;
+	accelData acc_error;
 
-	gyro_data gyro_error;
+	gyroData gyro_error;
 
 	// Acceleration flag
 	bool upside_up_calibrated;

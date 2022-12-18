@@ -39,9 +39,9 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 		uint32_t num_samples = 0;
 
 		// When nose up
-		if(acc_error.imu_acc_x > ACCEL_THRESHOLD && !nose_up_calibrated)
+		if(acc_error.x > ACCEL_THRESHOLD && !nose_up_calibrated)
 		{
-			while(acc_error.imu_acc_x > ACCEL_THRESHOLD)
+			while(acc_error.x > ACCEL_THRESHOLD)
 			{
 				num_samples++;
 				if(num_samples > SAMPLE_THRESHOLD)
@@ -57,9 +57,9 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 		}
 
 		// Nose Down Scenario
-		else if(acc_error.imu_acc_x < -ACCEL_THRESHOLD && !nose_down_calibrated)
+		else if(acc_error.x < -ACCEL_THRESHOLD && !nose_down_calibrated)
 		{
-			while(acc_error.imu_acc_x < -ACCEL_THRESHOLD)
+			while(acc_error.x < -ACCEL_THRESHOLD)
 			{
 				num_samples++;
 				if(num_samples > SAMPLE_THRESHOLD)
@@ -75,9 +75,9 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 			}
 		}
 		// Right Side
-		else if(acc_error.imu_acc_y  > ACCEL_THRESHOLD && !right_side_calibrated)
+		else if(acc_error.y  > ACCEL_THRESHOLD && !right_side_calibrated)
 		{
-			while(acc_error.imu_acc_y > ACCEL_THRESHOLD)
+			while(acc_error.y > ACCEL_THRESHOLD)
 			{
 				num_samples++;
 				if(num_samples > SAMPLE_THRESHOLD)
@@ -94,9 +94,9 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 		}
 
 		// Left Side
-		else if(acc_error.imu_acc_y  < -ACCEL_THRESHOLD && !left_side_calibrated)
+		else if(acc_error.y  < -ACCEL_THRESHOLD && !left_side_calibrated)
 		{
-			while(acc_error.imu_acc_y < - ACCEL_THRESHOLD)
+			while(acc_error.y < - ACCEL_THRESHOLD)
 			{
 				num_samples++;
 				if(num_samples > SAMPLE_THRESHOLD)
@@ -114,9 +114,9 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 		}
 
 		// Upside Up
-		else if(acc_error.imu_acc_z > ACCEL_THRESHOLD && !upside_up_calibrated)
+		else if(acc_error.z > ACCEL_THRESHOLD && !upside_up_calibrated)
 		{
-			while(acc_error.imu_acc_z > ACCEL_THRESHOLD)
+			while(acc_error.z > ACCEL_THRESHOLD)
 			{
 				num_samples++;
 				{
@@ -135,9 +135,9 @@ CalibrationPosition Calibration::CalibrateNextPosition()
 
 
 		// Upside Down
-		else if(acc_error.imu_acc_z < - ACCEL_THRESHOLD && !upside_down_calibrated)
+		else if(acc_error.z < - ACCEL_THRESHOLD && !upside_down_calibrated)
 		{
-			while(acc_error.imu_acc_z < - ACCEL_THRESHOLD)
+			while(acc_error.z < - ACCEL_THRESHOLD)
 			{
 				num_samples++;
 				{
@@ -191,22 +191,22 @@ void Calibration::GetPositionDatapoints(CalibrationPosition drone_side)
 	switch(drone_side)
 	{
 		case CalibrationPosition::UPSIDE_UP:
-			value = acc_error.imu_acc_z;
+			value = acc_error.z;
 			break;
 		case CalibrationPosition::UPSIDE_DOWN:
-			value = acc_error.imu_acc_z;
+			value = acc_error.z;
 			break;
 		case CalibrationPosition::LEFT_SIDE_DOWN:
-			value = acc_error.imu_acc_y;
+			value = acc_error.y;
 			break;
 		case CalibrationPosition::RIGHT_SIDE_DOWN:
-			value = acc_error.imu_acc_y;
+			value = acc_error.y;
 			break;
 		case CalibrationPosition::NOSE_UP:
-			value = acc_error.imu_acc_x;
+			value = acc_error.x;
 			break;
 		case CalibrationPosition::NOSE_DOWN:
-			value = acc_error.imu_acc_x;
+			value = acc_error.x;
 			break;
 		case CalibrationPosition::INVALID:
 			//TODO Handle this case
@@ -292,9 +292,9 @@ void Calibration::CalibrateGyro()
 	{
 		sensor.ReadGyro();
 		gyro_error = sensor.GetGyroData();
-		accumulate_gyro_x += gyro_error.imu_gyro_x;
-		accumulate_gyro_y += gyro_error.imu_gyro_y;
-		accumulate_gyro_z += gyro_error.imu_gyro_z;
+		accumulate_gyro_x += gyro_error.x;
+		accumulate_gyro_y += gyro_error.y;
+		accumulate_gyro_z += gyro_error.z;
 
 		num_samples++;
 

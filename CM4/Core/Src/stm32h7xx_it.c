@@ -378,6 +378,14 @@ void DMA2_Stream0_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-
+//void HSEM2_IRQHandler(void)
+//{
+//	//HAL_HSEM_IRQHandler();
+//}
+//
+//void HSEM1_IRQHandler(void)
+//{
+//	//HAL_HSEM_IRQHandler();
+//}
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

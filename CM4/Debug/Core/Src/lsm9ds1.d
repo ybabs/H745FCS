@@ -1,9 +1,6 @@
 Core/Src/lsm9ds1.o: ../Core/Src/lsm9ds1.cpp ../Core/Inc/lsm9ds1.hpp \
- ../Core/Inc/lsm9ds1_registers.hpp ../Core/Inc/i2c.h ../Core/Inc/main.h \
- ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
- ../Core/Inc/stm32h7xx_hal_conf.h \
- ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
- ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
+ ../Core/Inc/lsm9ds1_registers.hpp \
+ C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp \
  ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h \
  ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h745xx.h \
  ../../Drivers/CMSIS/Include/core_cm4.h \
@@ -12,6 +9,10 @@ Core/Src/lsm9ds1.o: ../Core/Src/lsm9ds1.cpp ../Core/Inc/lsm9ds1.hpp \
  ../../Drivers/CMSIS/Include/cmsis_gcc.h \
  ../../Drivers/CMSIS/Include/mpu_armv7.h \
  ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h \
+ ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
+ ../Core/Inc/stm32h7xx_hal_conf.h \
+ ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
+ ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc_ex.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h \
@@ -34,15 +35,11 @@ Core/Src/lsm9ds1.o: ../Core/Src/lsm9ds1.cpp ../Core/Inc/lsm9ds1.hpp \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi_ex.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
- ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
+ ../Core/Inc/i2c.h ../Core/Inc/main.h
 ../Core/Inc/lsm9ds1.hpp:
 ../Core/Inc/lsm9ds1_registers.hpp:
-../Core/Inc/i2c.h:
-../Core/Inc/main.h:
-../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
-../Core/Inc/stm32h7xx_hal_conf.h:
-../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
-../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp:
 ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
 ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h745xx.h:
 ../../Drivers/CMSIS/Include/core_cm4.h:
@@ -51,6 +48,10 @@ Core/Src/lsm9ds1.o: ../Core/Src/lsm9ds1.cpp ../Core/Inc/lsm9ds1.hpp \
 ../../Drivers/CMSIS/Include/cmsis_gcc.h:
 ../../Drivers/CMSIS/Include/mpu_armv7.h:
 ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/system_stm32h7xx.h:
+../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
+../Core/Inc/stm32h7xx_hal_conf.h:
+../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
+../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h:
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h:
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc_ex.h:
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h:
@@ -74,3 +75,5 @@ Core/Src/lsm9ds1.o: ../Core/Src/lsm9ds1.cpp ../Core/Inc/lsm9ds1.hpp \
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi_ex.h:
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
+../Core/Inc/i2c.h:
+../Core/Inc/main.h:

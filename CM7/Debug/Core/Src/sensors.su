@@ -1,13 +1,14 @@
-../Core/Src/sensors.cpp:4:1:SensorData::SensorData()	4	static
-../Core/Src/sensors.cpp:9:6:void SensorData::ReadRawData()	8	static
-../Core/Src/sensors.cpp:18:6:void SensorData::ReadFilteredData()	0	static
-../Core/Src/sensors.cpp:23:6:void SensorData::ReadGPS()	8	static
-../Core/Src/sensors.cpp:39:6:void SensorData::ReadMag()	8	static
-../Core/Src/sensors.cpp:51:6:void SensorData::ReadAcc()	8	static
-../Core/Src/sensors.cpp:62:6:void SensorData::ReadBaro()	8	static
-../Core/Src/sensors.cpp:72:6:void SensorData::ReadGyro()	8	static
-../Core/Src/sensors.cpp:83:10:acc_data SensorData::GetAccData()	32	static
-../Core/Src/sensors.cpp:87:11:gyro_data SensorData::GetGyroData()	32	static
-../Core/Src/sensors.cpp:91:11:mag_data SensorData::GetMagData()	32	static
-../Core/Src/sensors.cpp:95:11:baro_data SensorData::GetBaroData()	16	static
-../Core/Src/sensors.cpp:99:10:gps_data SensorData::GetGpsData()	8	static
+../Core/Src/sensors.cpp:14:1:SensorData::SensorData()	4	static
+../Core/Src/sensors.cpp:25:6:void SensorData::ReadRawData()	16	static
+../Core/Src/sensors.cpp:41:6:void SensorData::ReadFilteredData()	0	static
+../Core/Src/sensors.cpp:46:6:void SensorData::ReadGPS()	0	static
+../Core/Src/sensors.cpp:62:6:void SensorData::ReadMag()	16	static
+../Core/Src/sensors.cpp:76:6:void SensorData::ReadAcc()	16	static
+../Core/Src/sensors.cpp:90:6:void SensorData::ReadGyro()	16	static
+../Core/Src/sensors.cpp:105:6:void SensorData::ReadBaro()	8	static
+../Core/Src/sensors.cpp:120:11:accelData SensorData::GetAccData()	32	static
+../Core/Src/sensors.cpp:124:10:gyroData SensorData::GetGyroData()	32	static
+../Core/Src/sensors.cpp:128:10:magData SensorData::GetMagData()	32	static
+../Core/Src/sensors.cpp:132:10:baroData SensorData::GetBaroData()	16	static
+../Core/Src/sensors.cpp:136:9:gpsData SensorData::GetGpsData()	8	static
+../Core/Src/sensors.cpp:146:6:void HAL_HSEM_FreeCallback(uint32_t)	0	static

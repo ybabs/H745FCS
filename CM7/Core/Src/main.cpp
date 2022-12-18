@@ -32,6 +32,7 @@
 #include "usb_command_set.h"
 
 #include "helpers.hpp"
+#include "intercore_comms.h"
 #include <sensors.hpp>
 #include <calibration.hpp>
 #include <common.h>
@@ -41,24 +42,40 @@
 #include "Eigen"
 #include <array>
 
-#define USB_UPDATE_RATE_MS      10 // 100Hz
-
-#ifndef HSEM_ID_0
-#define HSEM_ID_0 (0U) /* HW semaphore 0*/
-#endif
-////
-/////* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
 
 SensorData sensors;
 
-float gyro_x;
-float gyro_y;
-float gyro_z;
+accelData acc;
 
 uint32_t usb_timer = 0;
-std::array<float, 1000> gyro_vec;
+
+
+uint32_t x, y;
+uint32_t Cycles;
+
+volatile unsigned int *DWT_CYCCNT   = (volatile unsigned int *)0xE0001004;
+volatile unsigned int *DWT_CONTROL  = (volatile unsigned int *)0xE0001000;
+volatile unsigned int *DWT_LAR      = (volatile unsigned int *)0xE0001FB0;
+volatile unsigned int *SCB_DHCSR    = (volatile unsigned int *)0xE000EDF0;
+volatile unsigned int *SCB_DEMCR    = (volatile unsigned int *)0xE000EDFC;
+volatile unsigned int *ITM_TER      = (volatile unsigned int *)0xE0000E00;
+volatile unsigned int *ITM_TCR      = (volatile unsigned int *)0xE0000E80;
+
+static int Debug_ITMDebug = 0;
+
+inline void EnableTiming(void)
+{
+  if ((*SCB_DHCSR & 1) && (*ITM_TER & 1)) // Enabled?
+    Debug_ITMDebug = 1;
+
+  *SCB_DEMCR |= 0x01000000;
+  *DWT_LAR = 0xC5ACCE55; // enable access
+  *DWT_CYCCNT = 0; // reset the counter
+  *DWT_CONTROL |= 1 ; // enable the counter
+}
+
 
 SbusController frkskyRC;
 //
@@ -104,16 +121,16 @@ HSEM notification */
 /*HW semaphore Clock enable*/
   __HAL_RCC_HSEM_CLK_ENABLE();
 /*Take HSEM */
-HAL_HSEM_FastTake(HSEM_ID_0);
+HAL_HSEM_FastTake(HSEM_BOOT);
 /*Release HSEM in order to notify the CPU2(CM4)*/
-HAL_HSEM_Release(HSEM_ID_0,0);
+HAL_HSEM_Release(HSEM_BOOT,0);
 /* wait until CPU2 wakes up from stop mode */
-//timeout = 0xFFFF;
-//while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) == RESET) && (timeout-- > 0));
-//if ( timeout < 0 )
-//{
-//Error_Handler();
-//}
+timeout = 0xFFFF;
+while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) == RESET) && (timeout-- > 0));
+if ( timeout < 0 )
+{
+Error_Handler();
+}
 /* USER CODE END Boot_Mode_Sequence_2 */
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
@@ -126,79 +143,59 @@ HAL_HSEM_Release(HSEM_ID_0,0);
   MX_UART7_Init();
   MX_USB_DEVICE_Init();
   DWT_Init();
-//
+
   __HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE);
   HAL_UART_Receive_DMA(&huart4, sbus_buffer, SBUS_PACKET_LEN);
-//
+
+  //__HAL_HSEM_CLEAR_FLAG(__HAL_HSEM_SEMID_TO_MASK(HSEM_ACC));
+
+  HAL_NVIC_SetPriority(HSEM1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(HSEM1_IRQn);
+  HAL_HSEM_ActivateNotification(__HAL_HSEM_SEMID_TO_MASK(HSEM_ACC));
+  HAL_HSEM_ActivateNotification(__HAL_HSEM_SEMID_TO_MASK(HSEM_MAG));
+  HAL_HSEM_ActivateNotification(__HAL_HSEM_SEMID_TO_MASK(HSEM_GPS));
+  HAL_HSEM_ActivateNotification(__HAL_HSEM_SEMID_TO_MASK(HSEM_BARO));
+  HAL_HSEM_ActivateNotification(__HAL_HSEM_SEMID_TO_MASK(HSEM_GYRO));
+
+
 
   while (!CDC_Class_Init_Ok());
 
 
   Serializer serializer;
 
-  HAL_Delay(10000);
+  HAL_Delay(1000);
 
-
-  // Calibrate Accelerometer
-//  Calibration imu_calib;
-//  while(!imu_calib.CalibrationComplete())
-//  {
-//	  auto side = imu_calib.CalibrateNextPosition();
-//	  imu_calib.Calibrate(side);
-//  }
-//
-//  imu_calib.ComputeOffsets();
-//
-//
-//  // Calibrate Gyro
-//  // TODO Make this a separate function call
-//  imu_calib.CalibrateGyro();
-int count = 0;
 
   while (1)
   {
+
+
+	  if((HAL_GetTick() - usb_timer) >= USB_UPDATE_RATE_MS)
+	  {
+
 	  	  //Read raw data first
 	  	  sensors.ReadRawData();
-		  if((HAL_GetTick() - usb_timer) >= USB_UPDATE_RATE_MS)
-		  {
-			  if(count < 1000)
-			  {
-				  gyro_vec[count] =  sensors.GetGyroData().imu_gyro_x;
-			  }
 
-			  count++;
-
-			  usb_timer = HAL_GetTick();
-
-		  }
-
+		  char logBuf[256];
+		  // send data through USB
+		  //serializer.SendData(sensors.GetAccData());
+		//HAL_Delay(1);
+		  //serializer.SendData(sensors.GetMagData());
+		   EnableTiming();
+		   x = *DWT_CYCCNT;
+		  acc = sensors.GetAccData();
+		   y = *DWT_CYCCNT;
+		   Cycles = (y - x);
 
 
+		   sprintf(logBuf, "ax:%.7f, ay:%.7f, az:%.7f\r\n",acc.x, acc.y, acc.z);
 
+		 // serializer.SendData(sensors.GetGyroData());
+		CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
+		usb_timer = HAL_GetTick();
 
-
-
-//	  if((HAL_GetTick() - usb_timer) >= USB_UPDATE_RATE_MS)
-//	  {
-//
-//		  char logBuf[256];
-//		  // send data through USB
-//		  //serializer.SendData(sensors.GetAccData());
-//		//HAL_Delay(1);
-//		  //serializer.SendData(sensors.GetMagData());
-//		//HAL_Delay(13);
-//		  gyro_x = sensors.GetGyroData().imu_gyro_x;
-//		  gyro_y = sensors.GetGyroData().imu_gyro_y;
-//		  gyro_z = sensors.GetGyroData().imu_gyro_z;
-//
-//		  sprintf(logBuf, "gx:%.4f, gy:%.4f, gz:%.4f\r\n",gyro_x, gyro_y, gyro_z);
-//
-//		 // serializer.SendData(sensors.GetGyroData());
-//		  gyro_vec.push_back(gyro_x);
-//		CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
-//		usb_timer = HAL_GetTick();
-//
-//	  }
+	  }
   }
 }
 
@@ -301,10 +298,10 @@ void MPU_Config(void)
     MPU_InitStruct.SubRegionDisable = 0x0;
   MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL1;
     MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-    MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+    MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
     MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
-    MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
-    MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
+    MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+    MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
 
     HAL_MPU_ConfigRegion(&MPU_InitStruct);
     /* Enables the MPU */
@@ -343,6 +340,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   }
 
 }
+
+//void HAL_HSEM_FreeCallback(uint32_t SemMask)
+//{
+//  //Notif_Recieved = 1;
+//	notify_cm4 |= SemMask;
+//}
 //
 //
 #ifdef  USE_FULL_ASSERT

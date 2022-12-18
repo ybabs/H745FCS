@@ -1,0 +1,16 @@
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:58:1:ringbuff_init	24	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:82:1:ringbuff_is_ready	16	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:93:1:ringbuff_free	16	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:105:1:ringbuff_set_evt_fn	16	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:123:1:ringbuff_write	40	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:168:1:ringbuff_read	40	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:212:1:ringbuff_peek	40	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:259:1:ringbuff_get_free	32	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:287:1:ringbuff_get_full	32	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:312:1:ringbuff_reset	16	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:326:1:ringbuff_get_linear_block_read_address	16	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:339:1:ringbuff_get_linear_block_read_length	32	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:369:1:ringbuff_skip	24	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:392:1:ringbuff_get_linear_block_write_address	16	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:405:1:ringbuff_get_linear_block_write_length	32	static
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Src/ringbuff.c:447:1:ringbuff_advance	24	static

@@ -28,9 +28,9 @@ GPS::GPS()
 }
 
 
-gps_data GPS::GetGPSData()
+gpsData GPS::GetGPSData()
 {
-  gps_data gps;
+  gpsData gps;
   gps.gps_latitude = latitude;
   gps.gps_longitude = longitude;
   gps.gps_altitude = altitude;

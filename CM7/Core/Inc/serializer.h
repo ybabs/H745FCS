@@ -47,11 +47,11 @@ public:
 	~Serializer();
 	int SendDataPacket(const sensor_cmd_code_t& code, const uint8_t* data, size_t len );
 	//__attribute__((unused)) int SendResponse(const sensor_cmd_code_t& code);
-	void SendData(const gyro_data& data);
-	void SendData(const mag_data& data);
-	void SendData(const acc_data& data);
-	void SendData(const baro_data& data) ;
-	void SendData(const gps_data& data);
+	void SendData(const gyroData& data);
+	void SendData(const magData& data);
+	void SendData(const accelData& data);
+	void SendData(const baroData& data) ;
+	void SendData(const gpsData& data);
 	uint8_t ComputeCRC8(uint8_t* data, size_t len);
 private:
 	uint32_t usb_timer = 0;

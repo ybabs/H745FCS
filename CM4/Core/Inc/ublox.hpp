@@ -76,7 +76,7 @@ class GPS{
 
 public:
   GPS();
-  gps_data GetGPSData();
+  gpsData GetGPSData();
   //static void CalcChecksum(unsigned char* ck);
   static NAV_PVT GetPVTStruct();
   static int GetDataSize();

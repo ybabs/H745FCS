@@ -1,33 +1,36 @@
 #include "mainproj.hpp"
 #include "helpers.hpp"
+#include "intercore_comms.h"
 
-static volatile uint32_t notif_rx;
 
+
+//uint32_t x, y;
+//uint32_t Cycles;
+volatile int notify_cm7 = 0;
+//volatile unsigned int *DWT_CYCCNT   = (volatile unsigned int *)0xE0001004;
+//volatile unsigned int *DWT_CONTROL  = (volatile unsigned int *)0xE0001000;
+//volatile unsigned int *DWT_LAR      = (volatile unsigned int *)0xE0001FB0;
+//volatile unsigned int *SCB_DHCSR    = (volatile unsigned int *)0xE000EDF0;
+//volatile unsigned int *SCB_DEMCR    = (volatile unsigned int *)0xE000EDFC;
+//volatile unsigned int *ITM_TER      = (volatile unsigned int *)0xE0000E00;
+//volatile unsigned int *ITM_TCR      = (volatile unsigned int *)0xE0000E80;
+//
+//static int Debug_ITMDebug = 0;
+
+//inline void EnableTiming(void)
+//{
+//  if ((*SCB_DHCSR & 1) && (*ITM_TER & 1)) // Enabled?
+//    Debug_ITMDebug = 1;
+//
+//  *SCB_DEMCR |= 0x01000000;
+//  *DWT_LAR = 0xC5ACCE55; // enable access
+//  *DWT_CYCCNT = 0; // reset the counter
+//  *DWT_CONTROL |= 1 ; // enable the counter
+//}
 
 EntryApp::EntryApp()
 {
 
-}
-
-/*
- * @brief Processes barometer data from the
- * BMP280
- * @retval None
- */
-void EntryApp::BaroTask()
-{
-    baro.Run();
-    M4DataToM7(BARO_DATA_TYPE);
-}
-
-/*
- * @brief Processes the GPS data
- * @retval none
- */
-void EntryApp::GPSTask()
-{
-   gps.ProcessGPS();
-   M4DataToM7(GPS_DATA_TYPE);
 }
 
 /*
@@ -39,9 +42,9 @@ void EntryApp::GPSTask()
  */
 void EntryApp::RunSensors()
 {
-   BaroTask();
+    //BaroTask();
 
-   GPSTask();
+   //GPSTask();
 
    AccelTask();
 
@@ -58,8 +61,17 @@ void EntryApp::RunSensors()
  */
 void EntryApp::AccelTask()
 {
-  imu.GetAccelData();
-  M4DataToM7(ACC_DATA_TYPE);
+	HAL_HSEM_FastTake(HSEM_ACC);
+//	EnableTiming();
+//	x = *DWT_CYCCNT;
+	accelData accel = imu.GetAccelData();
+//	y = *DWT_CYCCNT;
+//	Cycles = (y - x);
+	acc_values_m4->x = accel.x;
+	acc_values_m4->y = accel.y;
+	acc_values_m4->z = accel.z;
+	//HAL_HSEM_FastTake(HSEM_ACC);
+	HAL_HSEM_Release(HSEM_ACC, 0);
 }
 
 /*
@@ -68,10 +80,13 @@ void EntryApp::AccelTask()
  */
 void EntryApp::MagTask()
 {
-
-  imu.GetMagData();
-  M4DataToM7(MAG_DATA_TYPE);
-
+	HAL_HSEM_FastTake(HSEM_MAG);
+	magData mag = imu.GetMagData();
+	mag_values_m4->x = mag.x;
+	mag_values_m4->y = mag.y;
+	mag_values_m4->z = mag.z;
+	//HAL_HSEM_FastTake(HSEM_MAG);
+	HAL_HSEM_Release(HSEM_MAG, 0);
 }
 
 /*
@@ -81,94 +96,42 @@ void EntryApp::MagTask()
  */
 void EntryApp::GyroTask()
 {
-
-  imu.GetGyroData();
-  M4DataToM7(GYRO_DATA_TYPE);
+	HAL_HSEM_FastTake(HSEM_GYRO);
+	gyroData gyro = imu.GetGyroData();
+	gyro_values_m4->x = gyro.x;
+	gyro_values_m4->y = gyro.y;
+	gyro_values_m4->z = gyro.z;
+//	HAL_HSEM_FastTake(HSEM_GYRO);
+	HAL_HSEM_Release(HSEM_GYRO, 0);
 
 }
 
 /*
- * @brief Uses the Hardware Semaphore to send sensor data
- * from the M4 core to the M7.
- * @param data_type Sensor data type to send
+ * @brief Processes barometer data from the
+ * BMP280
  * @retval None
  */
-void EntryApp::M4DataToM7(const uint8_t data_type)
+void EntryApp::BaroTask()
 {
-	switch(data_type)
-	{
-		case GPS_DATA_TYPE:
-		{
+	HAL_HSEM_FastTake(HSEM_BARO);
+    baro.Run();
+    baro_values_m4->baro_altitude = baro.GetAltitude();
+    baro_values_m4->baro_pressure = baro.GetPressure();
+//	HAL_HSEM_FastTake(HSEM_BARO);
+	HAL_HSEM_Release(HSEM_BARO, 0);
+}
 
-			if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
-			    {
-
-			      gps_values_m4->gps_latitude = gps.GetGPSData().gps_latitude;
-			      gps_values_m4->gps_longitude = gps.GetGPSData().gps_longitude;
-			      gps_values_m4->gps_altitude = gps.GetGPSData().gps_altitude;
-			      gps_values_m4->gps_velocity_x = gps.GetGPSData().gps_velocity_x;
-			      gps_values_m4->gps_velocity_y = gps.GetGPSData().gps_velocity_y;
-			      gps_values_m4->gps_velocity_z = gps.GetGPSData().gps_velocity_z;
-			      gps_values_m4->gnd_speed = gps.GetGPSData().gnd_speed;
-			      gps_values_m4->gps_satellites = gps.GetGPSData().gps_satellites;
-			    }
-			    // Release semaphore
-			    HAL_HSEM_Release(HSEM_ID_0, 0);
-			break;
-		}
-
-		case ACC_DATA_TYPE:
-		{
-		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
-		    {
-		      acc_values_m4->imu_acc_x = imu.GetAccelData().x;
-		      acc_values_m4->imu_acc_y = imu.GetAccelData().y;
-		      acc_values_m4->imu_acc_z = imu.GetAccelData().z;
-		    }
-		    // Release semaphore
-		    HAL_HSEM_Release(HSEM_ID_0, 0);
-			break;
-		}
-
-		case GYRO_DATA_TYPE:
-		{
-		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
-		    {
-		      gyro_values_m4->imu_gyro_x = imu.GetGyroData().x;
-		      gyro_values_m4->imu_gyro_y = imu.GetGyroData().y;
-		      gyro_values_m4->imu_gyro_z = imu.GetGyroData().z;
-		    }
-		    // Release semaphore
-		    HAL_HSEM_Release(HSEM_ID_0, 0);
-
-			break;
-		}
-
-		case MAG_DATA_TYPE:
-		{
-		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
-		    {
-		      mag_values_m4->imu_mag_x = imu.GetMagData().x;
-		      mag_values_m4->imu_mag_y = imu.GetMagData().y;
-		      mag_values_m4->imu_mag_z = imu.GetMagData().z;
-		    }
-		    // Release semaphore
-		    HAL_HSEM_Release(HSEM_ID_0, 0);
-			break;
-		}
-
-		case BARO_DATA_TYPE:
-		{
-		    if (HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
-		    {
-		      baro_values_m4->baro_altitude = baro.GetAltitude();
-		      baro_values_m4->baro_pressure = baro.GetPressure();
-		    }
-		    // Release semaphore
-		    HAL_HSEM_Release(HSEM_ID_0, 0);
-			break;
-		}
-	}
+/*
+ * @brief Processes the GPS data
+ * @retval none
+ */
+void EntryApp::GPSTask()
+{
+   HAL_HSEM_FastTake(HSEM_GPS);
+   gps.ProcessGPS();
+   //gpsData = gps.GetGPSData();
+   //gps_values_m4->
+   HAL_HSEM_Release(HSEM_GPS, 0);
 }
 
 
@@ -179,6 +142,6 @@ void EntryApp::M4DataToM7(const uint8_t data_type)
   */
 void HAL_HSEM_FreeCallback(uint32_t SemMask)
 {
-  notif_rx = 1;
+  //notify_cm7 |= SemMask;
 }
 

@@ -1,5 +1,5 @@
 ../Core/Src/ublox.cpp:15:6:void CalcChecksum(unsigned char*)	4	static
-../Core/Src/ublox.cpp:31:10:gps_data GPS::GetGPSData()	0	static
+../Core/Src/ublox.cpp:31:9:gpsData GPS::GetGPSData()	0	static
 ../Core/Src/ublox.cpp:48:5:static int GPS::GetDataSize()	0	static
 ../Core/Src/ublox.cpp:56:7:void GPS::ProcessGPS()	16	static
 ../Core/Src/ublox.cpp:72:7:void GPS::Config()	8	static

@@ -13,20 +13,20 @@ IMU::IMU()
 
 }
 
-IMU::gyroData IMU::GetGyroData()
+gyroData IMU::GetGyroData()
 {
   ReadGyro();
 
   return gyro_values;
 }
 
-IMU::accelData IMU::GetAccelData()
+accelData IMU::GetAccelData()
 {
   ReadAccel();
   return accel_values;
 }
 
-IMU::magData IMU::GetMagData()
+magData IMU::GetMagData()
 {
   ReadMag();
 
@@ -793,7 +793,7 @@ uint8_t IMU::I2CReadBytes(const uint8_t &address, const uint8_t &reg,  uint8_t* 
 {
   HAL_StatusTypeDef status;
   status = HAL_I2C_Mem_Read_DMA(&hi2c1, address<<1, reg, I2C_MEMADD_SIZE_8BIT, buffer, numBytes);
-  HAL_Delay(5);
+  HAL_Delay(1);
   if(status !=HAL_OK)
   {
     return HAL_ERROR;
@@ -813,7 +813,7 @@ HAL_StatusTypeDef IMU::WriteByte(const uint8_t &address, const uint8_t &reg, uin
   HAL_StatusTypeDef status;
 //  status = HAL_I2C_Mem_Write(&hi2c1, address<<1, (uint16_t) reg, I2C_MEMADD_SIZE_8BIT, &data, 1,100);
   status = HAL_I2C_Mem_Write_DMA(&hi2c1, address<<1, (uint16_t) reg, I2C_MEMADD_SIZE_8BIT, &data, 1);
-  HAL_Delay(5);
+  HAL_Delay(1);
   if(status !=HAL_OK)
   {
     return HAL_ERROR;

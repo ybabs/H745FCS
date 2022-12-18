@@ -39,7 +39,8 @@ App/Src/mainproj.o: ../App/Src/mainproj.cpp \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  ../Core/Inc/lsm9ds1.hpp ../Core/Inc/lsm9ds1_registers.hpp \
- ../Core/Inc/i2c.h ../Core/Inc/main.h
+ ../Core/Inc/i2c.h ../Core/Inc/main.h \
+ C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/intercore_comms.h
 C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/CM4/App/Inc/mainproj.hpp:
 ../Core/Inc/bmp280.hpp:
 ../Core/Inc/bmp_280_registers.hpp:
@@ -84,3 +85,4 @@ C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp
 ../Core/Inc/lsm9ds1_registers.hpp:
 ../Core/Inc/i2c.h:
 ../Core/Inc/main.h:
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/intercore_comms.h:

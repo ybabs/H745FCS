@@ -49,7 +49,7 @@ int Serializer::SendDataPacket(const sensor_cmd_code_t& code, const uint8_t* dat
 //	return 0;
 //}
 
-void Serializer::SendData(const gyro_data& data)
+void Serializer::SendData(const gyroData& data)
 {
   //if((HAL_GetTick() - gyro_timer) >= GYRO_UPDATE_RATE_MS)
 	//{
@@ -60,7 +60,7 @@ void Serializer::SendData(const gyro_data& data)
 	//}
 }
 
-void Serializer::SendData(const mag_data& data)
+void Serializer::SendData(const magData& data)
 {
   //if((HAL_GetTick() - mag_timer) >= MAG_UPDATE_RATE_MS)
   //{
@@ -71,7 +71,7 @@ void Serializer::SendData(const mag_data& data)
    //}
 }
 
-void Serializer::SendData(const acc_data& data)
+void Serializer::SendData(const accelData& data)
 {
   //if((HAL_GetTick() - acc_timer) >= ACC_UPDATE_RATE_MS)
   //{
@@ -82,7 +82,7 @@ void Serializer::SendData(const acc_data& data)
   //}
 }
 
-void Serializer::SendData(const baro_data& data)
+void Serializer::SendData(const baroData& data)
 {
   if((HAL_GetTick() - baro_timer) >= BARO_UPDATE_RATE_MS)
 	{
@@ -93,7 +93,7 @@ void Serializer::SendData(const baro_data& data)
 	}
 }
 
-void Serializer::SendData(const gps_data& data)
+void Serializer::SendData(const gpsData& data)
 {
   if((HAL_GetTick() - gps_timer) >= GPS_UPDATE_RATE_MS)
 	{

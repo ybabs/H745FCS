@@ -38,7 +38,8 @@ Core/Src/sensors.o: ../Core/Src/sensors.cpp ../Core/Inc/sensors.hpp \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
- ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h
+ ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
+ C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/intercore_comms.h
 ../Core/Inc/sensors.hpp:
 C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp:
 ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h:
@@ -80,3 +81,4 @@ C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/helpers.hpp
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h:
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h:
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
+C:/Users/Daniel/STM32CubeIDE/workspace_1.10.1/baremetal_2/Common/Inc/intercore_comms.h:

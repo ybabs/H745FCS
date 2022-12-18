@@ -102,7 +102,7 @@
 //        filter->roll *= RAD_TO_DEG;
 //}
 //
-//int MadgwickQuaternionUpdate(madgwick_filter_t* filter,struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag)
+//int MadgwickQuaternionUpdate(madgwick_filter_t* filter,struct accelData *acc, struct gyroData *gyro, struct magData *mag)
 //{
 //// float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];   // short name local variable for readability
 //  float q1 = Q->q0, q2 = Q->q1, q3 = Q->q2, q4 = Q->q3;   // short name local variable for readability
@@ -136,9 +136,9 @@
 // float q3q4 = q3 * q4;
 // float q4q4 = q4 * q4;
 //
-// float ax = -acc->imu_acc_x;
-// float ay = acc->imu_acc_y;
-// float az = acc->imu_acc_z;
+// float ax = -acc->x;
+// float ay = acc->y;
+// float az = acc->z;
 //
 // float gx = gyro->imu_gyro_x;
 // float gy = -gyro->imu_gyro_y;
@@ -253,7 +253,7 @@
 //
 //// Similar to Madgwick scheme but uses proportional and integral filtering on
 //// the error between estimated reference vectors and measured ones.
-//int MahonyQuaternionUpdate(madgwick_filter_t* filter,struct acc_data *acc, struct gyro_data *gyro, struct mag_data *mag)
+//int MahonyQuaternionUpdate(madgwick_filter_t* filter,struct accelData *acc, struct gyroData *gyro, struct magData *mag)
 //{
 //
 //  // short name local variable for readability
@@ -278,9 +278,9 @@
 //  float q3q4 = q3 * q4;
 //  float q4q4 = q4 * q4;
 //
-//  float ax = acc->imu_acc_x;
-//  float ay = acc->imu_acc_y;
-//  float az = acc->imu_acc_z;
+//  float ax = acc->x;
+//  float ay = acc->y;
+//  float az = acc->z;
 //
 //  float gx = gyro->imu_gyro_x;
 //  float gy = gyro->imu_gyro_y;

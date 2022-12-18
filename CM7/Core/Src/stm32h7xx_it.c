@@ -24,6 +24,7 @@
 #include "stm32h7xx_it.h"
 #include "string.h"
 #include "common.h"
+#include "intercore_comms.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -395,6 +396,16 @@ void OTG_FS_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+void HSEM1_IRQHandler(void)
+{
+//    uint32_t status_reg = HSEM_COMMON->MISR;
+//    HSEM_COMMON->ICR = (status_reg);
+//    NVIC_ClearPendingIRQ(HSEM1_IRQn);
+//
+//    lock_unlock_callback(status_reg);
+	HAL_HSEM_IRQHandler();
+}
+
 
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
