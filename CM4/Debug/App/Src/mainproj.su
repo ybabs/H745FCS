@@ -1,8 +1,8 @@
-../App/Src/mainproj.cpp:31:1:EntryApp::EntryApp()	8	static
+../App/Src/mainproj.cpp:31:1:EntryApp::EntryApp()	16	static
+../App/Src/mainproj.cpp:64:6:void EntryApp::AccelTask()	24	static
+../App/Src/mainproj.cpp:83:6:void EntryApp::MagTask()	24	static
+../App/Src/mainproj.cpp:99:6:void EntryApp::GyroTask()	24	static
+../App/Src/mainproj.cpp:116:6:void EntryApp::BaroTask()	16	static
+../App/Src/mainproj.cpp:130:6:void EntryApp::GPSTask()	56	static
 ../App/Src/mainproj.cpp:43:6:void EntryApp::RunSensors()	32	static
-../App/Src/mainproj.cpp:62:6:void EntryApp::AccelTask()	24	static
-../App/Src/mainproj.cpp:81:6:void EntryApp::MagTask()	24	static
-../App/Src/mainproj.cpp:97:6:void EntryApp::GyroTask()	24	static
-../App/Src/mainproj.cpp:114:6:void EntryApp::BaroTask()	16	static
-../App/Src/mainproj.cpp:128:6:void EntryApp::GPSTask()	8	static
-../App/Src/mainproj.cpp:143:6:void HAL_HSEM_FreeCallback(uint32_t)	0	static
+../App/Src/mainproj.cpp:153:6:void HAL_HSEM_FreeCallback(uint32_t)	0	static

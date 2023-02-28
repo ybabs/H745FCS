@@ -1,8 +1,8 @@
 ../Core/Src/serializer.cpp:10:1:Serializer::Serializer()	0	static
 ../Core/Src/serializer.cpp:21:9:uint8_t Serializer::ComputeCRC8(uint8_t*, size_t)	4	static
 ../Core/Src/serializer.cpp:33:5:int Serializer::SendDataPacket(const sensor_cmd_code_t&, const uint8_t*, size_t)	16	static
-../Core/Src/serializer.cpp:52:6:void Serializer::SendData(const gyroData&)	24	static
-../Core/Src/serializer.cpp:63:6:void Serializer::SendData(const magData&)	24	static
-../Core/Src/serializer.cpp:74:6:void Serializer::SendData(const accelData&)	24	static
-../Core/Src/serializer.cpp:85:6:void Serializer::SendData(const baroData&)	24	static
-../Core/Src/serializer.cpp:96:6:void Serializer::SendData(const gpsData&)	56	static
+../Core/Src/serializer.cpp:57:6:void Serializer::SendData(const gyroData&)	24	static
+../Core/Src/serializer.cpp:64:6:void Serializer::SendData(const magData&)	24	static
+../Core/Src/serializer.cpp:71:6:void Serializer::SendData(const accelData&)	24	static
+../Core/Src/serializer.cpp:79:6:void Serializer::SendData(const baroData&)	24	static
+../Core/Src/serializer.cpp:88:6:void Serializer::SendData(const gpsData&)	64	static

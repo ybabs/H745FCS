@@ -42,15 +42,17 @@ EntryApp::EntryApp()
  */
 void EntryApp::RunSensors()
 {
-    //BaroTask();
+   BaroTask();
 
-   //GPSTask();
-
-   AccelTask();
+   GPSTask();
 
    MagTask();
 
+   AccelTask();
+
    GyroTask();
+
+
 }
 
 
@@ -129,8 +131,16 @@ void EntryApp::GPSTask()
 {
    HAL_HSEM_FastTake(HSEM_GPS);
    gps.ProcessGPS();
-   //gpsData = gps.GetGPSData();
-   //gps_values_m4->
+   gpsData gpsData = gps.GetGPSData();
+   gps_values_m4->gps_latitude = gpsData.gps_latitude;
+   gps_values_m4->gps_longitude = gpsData.gps_longitude;
+   gps_values_m4->gps_altitude = gpsData.gps_altitude;
+   gps_values_m4->gps_velocity_x = gpsData.gps_velocity_x;
+   gps_values_m4->gps_velocity_y = gpsData.gps_velocity_y;
+   gps_values_m4->gps_velocity_z = gpsData.gps_velocity_z;
+   gps_values_m4->gps_satellites = gpsData.gps_satellites;
+   gps_values_m4->iTOW = gpsData.iTOW;
+   gps_values_m4->magDec = gpsData.magDec;
    HAL_HSEM_Release(HSEM_GPS, 0);
 }
 

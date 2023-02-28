@@ -119,11 +119,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  	EnableTiming();
-	  	x = *DWT_CYCCNT;
+	  	//EnableTiming();
+	  //	x = *DWT_CYCCNT;
 	  app.RunSensors();
-	  y = *DWT_CYCCNT;
-	  Cycles = (y - x);
+	 // y = *DWT_CYCCNT;
+	 // Cycles = (y - x);
 
   }
   /* USER CODE END 3 */

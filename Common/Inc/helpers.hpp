@@ -24,13 +24,14 @@
 #define BARO_D3_ADDRESS	 0x38000030          // 0x380000C0
 #define GPS_D3_ADDRESS   0x38000040         //0x38000100
 
-static constexpr uint8_t USB_UPDATE_RATE_MS     =       10;      // 100 Hz Update Rate
+static constexpr uint8_t USB_UPDATE_RATE_MS     =       7;      // 100 Hz Update Rate
 static constexpr uint16_t HEART_BEAT_RATE_MS     =       1000;    // 1 Hz
 static constexpr uint8_t GPS_UPDATE_RATE_MS     =       100;     // 10 Hz
 static constexpr uint8_t BARO_UPDATE_RATE_MS    =       38;      //~26 Hz
-static constexpr uint8_t MAG_UPDATE_RATE_MS     =       12;      // ~80Hz
+static constexpr uint8_t MAG_UPDATE_RATE_MS     =       10;      // ~80Hz
 static constexpr uint8_t GYRO_UPDATE_RATE_MS    =       10;      // ~952 Hz
 static constexpr uint8_t ACC_UPDATE_RATE_MS     =       10;       // ~952 Hz
+static constexpr uint8_t MAX_USB_RETRY_COUNT    = 1;
 
 static constexpr uint8_t SEM_MASK_ACC = 2;
 static constexpr uint8_t SEM_MASK_GYRO = 4;
@@ -180,8 +181,10 @@ struct magData
      float gps_velocity_y;
      float gps_velocity_z;
      float gnd_speed;
-     int   gps_satellites;
- };
+     unsigned long iTOW;
+     short magDec;
+     uint8_t  gps_satellites;
+ }__attribute__((__packed__));;
 
  struct baroData
  {

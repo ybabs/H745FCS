@@ -1,12 +1,14 @@
 #pragma once
 
+#include "stdint.h"
+
 static constexpr uint8_t UART_PREAMBLE_1 = 0x7E;
 static constexpr uint8_t UART_PREAMBLE_2 = 0x7F;
 
 static constexpr uint8_t gyroData_LEN = 12;
 static constexpr uint8_t accelData_LEN  = 12;
-static constexpr uint8_t GPS_DATA_LEN  = 29;
-static constexpr uint8_t baroData_LEN = 12;
+static constexpr uint8_t GPS_DATA_LEN  = 35;
+static constexpr uint8_t baroData_LEN = 8;
 static constexpr uint8_t  magData_LEN = 12;
 
 
@@ -31,7 +33,15 @@ struct usb_packet_t {
   uint8_t preamble[2];
   uint8_t command_code;
   uint8_t data_length;
-  uint8_t data[32];
+  uint8_t data[36];
+  uint8_t crc;
+}__attribute__((__packed__));
+
+struct gps_packet_t{
+  uint8_t preamble[2];
+  uint8_t command_code;
+  uint8_t data_length;
+  uint8_t data[GPS_DATA_LEN];
   uint8_t crc;
 }__attribute__((__packed__));
 

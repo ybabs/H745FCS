@@ -28,10 +28,10 @@ void SensorData::ReadRawData()
 	//EnableTiming();
 //	  x = *DWT_CYCCNT;
     ReadAcc();
-//    ReadGPS();
     ReadGyro();
     ReadMag();
-  //  ReadBaro();
+    ReadGPS();
+    ReadBaro();
 //    y = *DWT_CYCCNT;
 //    Cycles = (y - x);
 
@@ -45,17 +45,23 @@ void SensorData::ReadFilteredData()
 
 void SensorData::ReadGPS()
 {
-//	  if(HAL_HSEM_FastTake(HSEM_ID_0) == HAL_OK)
-//	      {
-//	        gps_values.gps_latitude = gps_values_m7->gps_latitude;
-//	        gps_values.gps_longitude = gps_values_m7->gps_longitude;
-//	        gps_values.gps_altitude = gps_values_m7->gps_altitude;
-//	        gps_values.gps_velocity_x = gps_values_m7->gps_velocity_x;
-//	        gps_values.gps_velocity_y = gps_values_m7->gps_velocity_y;
-//	        gps_values.gps_velocity_z = gps_values_m7->gps_velocity_z;
-//	        gps_values.gps_satellites = gps_values_m7->gps_satellites;
-//	      }
-//	      HAL_HSEM_Release(HSEM_ID_0,0);
+
+	if((HAL_GetTick() - gps_timer) >= GPS_UPDATE_RATE_MS)
+	{
+		gps_notify = 0;
+		HAL_HSEM_ActivateNotification(__HAL_HSEM_SEMID_TO_MASK(HSEM_GPS));
+		while(gps_notify == 0){}
+		gps_values.gps_latitude = gps_values_m7->gps_latitude;
+		gps_values.gps_longitude = gps_values_m7->gps_longitude;
+		gps_values.gps_altitude = gps_values_m7->gps_altitude;
+		gps_values.gps_velocity_x = gps_values_m7->gps_velocity_x;
+		gps_values.gps_velocity_y = gps_values_m7->gps_velocity_y;
+		gps_values.gps_velocity_z = gps_values_m7->gps_velocity_z;
+		gps_values.gps_satellites = gps_values_m7->gps_satellites;
+		gps_values.iTOW = gps_values_m7->iTOW;
+		gps_values.magDec = gps_values_m7->magDec;
+	}
+
 }
 
 
@@ -106,7 +112,7 @@ void SensorData::ReadBaro()
 {
 	if((HAL_GetTick() - baro_timer) >= BARO_UPDATE_RATE_MS)
 	{
-		gyro_notify = 0;
+		baro_notify = 0;
 		HAL_HSEM_ActivateNotification(__HAL_HSEM_SEMID_TO_MASK(HSEM_BARO));
 		while(baro_notify == 0){}
 		baro_values.baro_altitude = baro_values_m7->baro_altitude;

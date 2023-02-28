@@ -1,6 +1,6 @@
-../Core/Src/main.cpp:206:6:void SystemClock_Config()	128	static,ignoring_inline_asm
-../Core/Src/main.cpp:86:5:int main()	384	static,ignoring_inline_asm
-../Core/Src/main.cpp:315:6:void Error_Handler()	0	static,ignoring_inline_asm
-../Core/Src/main.cpp:326:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	8	static
-../Core/Src/main.cpp:342:1:cpp)	8	static
-../Core/Src/main.cpp:342:1:cpp)	0	static
+../Core/Src/main.cpp:226:6:void SystemClock_Config()	128	static,ignoring_inline_asm
+../Core/Src/main.cpp:90:5:int main()	152	static,ignoring_inline_asm
+../Core/Src/main.cpp:335:6:void Error_Handler()	0	static,ignoring_inline_asm
+../Core/Src/main.cpp:346:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	8	static
+../Core/Src/main.cpp:362:1:cpp)	8	static
+../Core/Src/main.cpp:362:1:cpp)	0	static

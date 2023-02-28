@@ -1,9 +1,9 @@
 ../Core/Src/ublox.cpp:15:6:void CalcChecksum(unsigned char*)	4	static
-../Core/Src/ublox.cpp:31:9:gpsData GPS::GetGPSData()	0	static
-../Core/Src/ublox.cpp:48:5:static int GPS::GetDataSize()	0	static
-../Core/Src/ublox.cpp:56:7:void GPS::ProcessGPS()	16	static
-../Core/Src/ublox.cpp:72:7:void GPS::Config()	8	static
+../Core/Src/ublox.cpp:31:9:gpsData GPS::GetGPSData()	4	static
+../Core/Src/ublox.cpp:50:5:static int GPS::GetDataSize()	0	static
+../Core/Src/ublox.cpp:58:7:void GPS::ProcessGPS()	16	static
+../Core/Src/ublox.cpp:76:7:void GPS::Config()	8	static
 ../Core/Src/ublox.cpp:25:1:GPS::GPS()	8	static
-../Core/Src/ublox.cpp:94:7:void ProcessUART()	4	static
-../Core/Src/ublox.cpp:147:7:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	4	static
-../Core/Src/ublox.cpp:198:8:void HAL_UART_TxCpltCallback(UART_HandleTypeDef*)	0	static
+../Core/Src/ublox.cpp:98:7:void ProcessUART()	4	static
+../Core/Src/ublox.cpp:151:7:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	4	static
+../Core/Src/ublox.cpp:202:8:void HAL_UART_TxCpltCallback(UART_HandleTypeDef*)	0	static

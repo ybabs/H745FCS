@@ -94,7 +94,9 @@ private:
   float vel_y;
   float vel_z;
   float gndSpeed;
-  int num_satellites;
+  uint8_t num_satellites;
+  short magnetic_declination;
+  unsigned long time_of_week;
 //  static const int data_size = sizeof(NAV_PVT);
   void Config();
 

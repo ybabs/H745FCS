@@ -48,6 +48,10 @@ static void MPU_Config(void);
 SensorData sensors;
 
 accelData acc;
+magData mag;
+gyroData gyro;
+gpsData gps;
+baroData baro;
 
 uint32_t usb_timer = 0;
 
@@ -160,12 +164,8 @@ Error_Handler();
 
 
   while (!CDC_Class_Init_Ok());
-
-
   Serializer serializer;
-
   HAL_Delay(1000);
-
 
   while (1)
   {
@@ -177,22 +177,42 @@ Error_Handler();
 	  	  //Read raw data first
 	  	  sensors.ReadRawData();
 
-		  char logBuf[256];
-		  // send data through USB
-		  //serializer.SendData(sensors.GetAccData());
-		//HAL_Delay(1);
-		  //serializer.SendData(sensors.GetMagData());
-		   EnableTiming();
-		   x = *DWT_CYCCNT;
+		  //char logBuf[256];
 		  acc = sensors.GetAccData();
-		   y = *DWT_CYCCNT;
-		   Cycles = (y - x);
+		  gyro = sensors.GetGyroData();
+		  mag = sensors.GetMagData();
+		  gps = sensors.GetGpsData();
+		  baro = sensors.GetBaroData();
+		  // send data through USB
+
+		//HAL_Delay(1);
+		   //EnableTiming();
+		   //x = *DWT_CYCCNT;
+		   serializer.SendData(acc);
+		   delay_us(500);
+		   serializer.SendData(mag);
+		   delay_us(500);
+		   serializer.SendData(gyro);
+		   delay_us(500);
+		   serializer.SendData(gps);
+ 		   delay_us(500);
+		   serializer.SendData(baro);
+		   //delay_us(500);
+//		   y = *DWT_CYCCNT;
+//		   Cycles = (y - x);
+
+		  // sprintf(logBuf, "lat:%.10f lon:%.10f baro_alt:%.6f\r\n", gps.gps_latitude, gps.gps_longitude, baro.baro_altitude);
 
 
-		   sprintf(logBuf, "ax:%.7f, ay:%.7f, az:%.7f\r\n",acc.x, acc.y, acc.z);
-
-		 // serializer.SendData(sensors.GetGyroData());
-		CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
+		   //		   //mag = sensors.GetMagData();
+		   //		   gyro = sensors.GetGyroData();
+//		   sprintf(logBuf, "ax:%.7f, ay:%.7f, az:%.7f\r\n",acc.x, acc.y, acc.z);
+//		   //sprintf(logBuf, "ax:%.7f, ay:%.7f, az:%.7f\r\n",mag.x, mag.y, mag.z);
+//		   sprintf(logBuf, "ax:%.7f, ay:%.7f, az:%.7f\r\n",gyro.x, gyro.y, gyro.z);
+//
+//		 // serializer.SendData(sensors.GetGyroData());
+//		CDC_Transmit_FS((uint8_t *) logBuf, strlen(logBuf));
+//		   HAL_Delay(500);
 		usb_timer = HAL_GetTick();
 
 	  }

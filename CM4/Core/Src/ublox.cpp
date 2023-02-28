@@ -39,6 +39,8 @@ gpsData GPS::GetGPSData()
   gps.gps_velocity_z = vel_z;
   gps.gps_satellites = num_satellites;
   gps.gnd_speed= gndSpeed;
+  gps.magDec = magnetic_declination;
+  gps.iTOW = time_of_week;
 
   return gps;
 
@@ -67,6 +69,8 @@ int GPS::GetDataSize()
    gndSpeed = pvt.gSpeed / 1000.0f;
    /* Retrieve number of satellites used */
    num_satellites = pvt.numSV;
+   magnetic_declination = pvt.magDec;
+   time_of_week = pvt.iTOW;
  }
 
  void GPS::Config()
